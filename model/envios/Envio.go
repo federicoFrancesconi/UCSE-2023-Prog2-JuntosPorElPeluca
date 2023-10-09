@@ -1,6 +1,7 @@
-package model
+package envios
 
 import (
+	"UCSE-2023-Prog2-TPIntegrador/model"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -12,7 +13,7 @@ type Envio struct {
 	FechaCreacion            time.Time          `bson:"fechaCreacion"`
 	FechaUltimaActualizacion time.Time          `bson:"fechaUltimaActualizacion"`
 	PatenteCamion            string             `bson:"patente-amion"`
-	Paradas                  []Parada           `bson:"paradas"`
+	Paradas                  []model.Parada     `bson:"paradas"`
 	IdCreador                int                `bson:"idCreador"`
 	Estado                   EstadoEnvio        `bson:"estado"`
 }

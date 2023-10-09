@@ -1,4 +1,4 @@
-package model
+package productos
 
 type TipoProducto int
 

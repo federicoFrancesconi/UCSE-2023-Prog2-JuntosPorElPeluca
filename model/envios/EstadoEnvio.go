@@ -1,4 +1,4 @@
-package model
+package envios
 
 type EstadoEnvio int
 

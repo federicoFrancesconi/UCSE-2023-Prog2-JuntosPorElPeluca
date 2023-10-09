@@ -1,4 +1,4 @@
-package model
+package pedidos
 
 type EstadoPedido int
 
