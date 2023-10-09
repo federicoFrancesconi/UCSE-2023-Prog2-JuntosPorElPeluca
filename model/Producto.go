@@ -9,7 +9,7 @@ import (
 type Producto struct {
 	ObjectId                 primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
 	CodigoProducto           int                `bson:"codigoProducto" json:"codigoProducto"`
-	TipoDeProducto           string             `bson:"tipoDeProducto" json:"tipoDeProducto"`
+	TipoDeProducto           TipoProducto       `bson:"tipoDeProducto" json:"tipoDeProducto"`
 	Nombre                   string             `bson:"nombre" json:"nombre"`
 	PesoUnitario             int                `bson:"pesoUnitario" json:"pesoUnitario"`
 	PrecioUnitario           float32            `bson:"precioUnitario" json:"precioUnitario"`

@@ -11,7 +11,8 @@ type Envio struct {
 	Id                       int                `bson:"id"`
 	FechaCreacion            time.Time          `bson:"fechaCreacion"`
 	FechaUltimaActualizacion time.Time          `bson:"fechaUltimaActualizacion"`
-	CamionId                 int                `bson:"camionId"`
+	PatenteCamion            string             `bson:"patente-amion"`
 	Paradas                  []Parada           `bson:"paradas"`
 	IdCreador                int                `bson:"idCreador"`
+	Estado                   EstadoEnvio        `bson:"estado"`
 }

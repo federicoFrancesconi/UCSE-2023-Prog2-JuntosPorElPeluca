@@ -11,7 +11,7 @@ type Pedido struct {
 	FechaCreacion            time.Time          `bson:"fechaCreacion"`
 	FechaUltimaActualizacion time.Time          `bson:"fechaUltimaActualizacion"`
 	IdCreador                int                `bson:"idCreador"`
-	ProductosPedido          []ProductoPedido   `bson:"productosPedido"`
+	ProductosElegidos        []ProductoPedido   `bson:"productosPedido"`
 	CiudadDestino            string             `bson:"ciudadDestino"`
-	Estado                   string             `bson:"estado"`
+	Estado                   EstadoPedido       `bson:"estado"`
 }
