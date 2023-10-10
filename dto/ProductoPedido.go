@@ -23,7 +23,7 @@ func NewProductoPedidoFromProducto(producto *productos.Producto, cantidad int) *
 	}
 }
 
-// Crea el dto a partir del dto
+// Crea el dto a partir del model
 func NewProductoPedido(productoPedido *productos.ProductoPedido) *ProductoPedido {
 	return &ProductoPedido{
 		CodigoProducto: productoPedido.CodigoProducto,
