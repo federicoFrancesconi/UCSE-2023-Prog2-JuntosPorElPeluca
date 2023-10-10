@@ -9,8 +9,8 @@ import (
 type Camion struct {
 	ObjectId                 primitive.ObjectID `bson:"_id,omitempty"`
 	Patente                  string             `bson:"patente"`
-	PesoMaximo               int                `bson:"pesoMaximo"`
-	FechaCreacion            time.Time          `bson:"fechaCreacion"`
-	FechaUltimaActualizacion time.Time          `bson:"fechaUltimaActualizacion"`
-	IdCreador                int                `bson:"idCreador"`
+	PesoMaximo               int                `bson:"peso_maximo"`
+	FechaCreacion            time.Time          `bson:"fecha_creacion"`
+	FechaUltimaActualizacion time.Time          `bson:"fecha_ultima_actualizacion"`
+	IdCreador                int                `bson:"id_creador"`
 }

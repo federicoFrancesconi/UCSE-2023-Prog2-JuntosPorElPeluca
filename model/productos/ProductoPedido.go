@@ -1,9 +1,9 @@
 package productos
 
 type ProductoPedido struct {
-	CodigoProducto int     `bson:"codigoProducto" json:"codigoProducto,omitempty"`
-	Nombre         string  `bson:"nombreProducto" json:"nombreProducto,omitempty"`
+	CodigoProducto int     `bson:"codigo_producto"`
+	Nombre         string  `bson:"nombre_producto"`
 	Cantidad       int     `bson:"cantidad"`
-	PrecioUnitario float32 `bson:"precioUnitario"`
-	PesoUnitario   float32 `bson:"pesoUnitario"`
+	PrecioUnitario float32 `bson:"precio_unitario"`
+	PesoUnitario   float32 `bson:"peso_unitario"`
 }

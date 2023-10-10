@@ -7,14 +7,14 @@ import (
 )
 
 type Producto struct {
-	ObjectId                 primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
-	CodigoProducto           int                `bson:"codigoProducto" json:"codigoProducto"`
-	TipoDeProducto           TipoProducto       `bson:"tipoDeProducto" json:"tipoDeProducto"`
-	Nombre                   string             `bson:"nombre" json:"nombre"`
-	PesoUnitario             int                `bson:"pesoUnitario" json:"pesoUnitario"`
-	PrecioUnitario           float32            `bson:"precioUnitario" json:"precioUnitario"`
-	StockMinimo              int                `bson:"stockMinimo" json:"stockMinimo"`
-	FechaCreacion            time.Time          `bson:"fechaCreacion" json:"fechaCreacion"`
-	FechaUltimaActualizacion time.Time          `bson:"fechaUltimaActualizacion" json:"fechaUltimaActualizacion"`
-	IdCreador                int                `bson:"idCreador" json:"idCreador"`
+	ObjectId                 primitive.ObjectID `bson:"_id,omitempty"`
+	CodigoProducto           int                `bson:"codigo_producto"`
+	TipoDeProducto           TipoProducto       `bson:"tipo_producto"`
+	Nombre                   string             `bson:"nombre"`
+	PesoUnitario             int                `bson:"peso_unitario"`
+	PrecioUnitario           float32            `bson:"precio_unitario"`
+	StockMinimo              int                `bson:"stock_minimo"`
+	FechaCreacion            time.Time          `bson:"fecha_creacion"`
+	FechaUltimaActualizacion time.Time          `bson:"fecha_ultima_actualizacion"`
+	IdCreador                int                `bson:"id_creador"`
 }
