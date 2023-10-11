@@ -34,11 +34,11 @@ func (repository *ProductoRepository) CrearProducto(producto *model.Producto) er
 
 func (repository *ProductoRepository) ObtenerProductoPorCodigo(codigoProducto int) (*model.Producto, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
-	
+
 	filtro := bson.M{"codigo_producto": codigoProducto}
 
 	var producto model.Producto
-	
+
 	err := collection.FindOne(context.Background(), filtro).Decode(&producto)
 
 	if err != nil {
@@ -63,7 +63,7 @@ func (repository *ProductoRepository) ObtenerProductos() ([]*model.Producto, err
 		var producto model.Producto
 
 		err := cursor.Decode(&producto)
-		
+
 		if err != nil {
 			return nil, err
 		}
@@ -72,4 +72,25 @@ func (repository *ProductoRepository) ObtenerProductos() ([]*model.Producto, err
 	}
 
 	return productosList, err
+}
+
+func (repository *ProductoRepository) ActualizarProducto(producto *model.Producto) error {
+	collection := repository.db.GetClient().Database("empresa").Collection("productos")
+
+	filtro := bson.M{"codigo_producto": producto.CodigoProducto}
+
+	//TODO: ver si anda este tipo de set
+	_, err := collection.UpdateOne(context.Background(), filtro, bson.M{"$set": producto})
+
+	return err
+}
+
+func (repository *ProductoRepository) EliminarProducto(id int) error {
+	collection := repository.db.GetClient().Database("empresa").Collection("productos")
+
+	filtro := bson.M{"codigo_producto": id}
+
+	_, err := collection.DeleteOne(context.Background(), filtro)
+
+	return err
 }

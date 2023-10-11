@@ -8,6 +8,7 @@ import (
 
 type Envio struct {
 	ObjectId                 primitive.ObjectID `bson:"_id,omitempty"`
+	//Por qué el Id es un string?
 	Id                       string             `bson:"id"`
 	FechaCreacion            time.Time          `bson:"fecha_creacion"`
 	FechaUltimaActualizacion time.Time          `bson:"fecha_ultima_actualizacion"`

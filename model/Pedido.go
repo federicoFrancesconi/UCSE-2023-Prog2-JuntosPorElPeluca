@@ -8,6 +8,7 @@ import (
 
 type Pedido struct {
 	ObjectId                 primitive.ObjectID         `bson:"_id,omitempty"`
+	Id                       int                        `bson:"id,omitempty"`
 	FechaCreacion            time.Time                  `bson:"fecha_creacion"`
 	FechaUltimaActualizacion time.Time                  `bson:"fecha_ultima_actualizacion"`
 	IdCreador                int                        `bson:"id_creador"`
