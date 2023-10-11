@@ -6,15 +6,14 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type CamionRepositoryInterface interface {
-	CrearCamion(camion model.Camion) (*mongo.InsertOneResult, error)
+	CrearCamion(camion model.Camion) error
 	ObtenerCamionPorPatente(patente string) (model.Camion, error)
 	ObtenerCamiones() ([]model.Camion, error)
-	ActualizarCamion(camion model.Camion) (*mongo.UpdateResult, error)
-	EliminarCamion(patente string) (*mongo.DeleteResult, error)
+	ActualizarCamion(camion model.Camion) error
+	EliminarCamion(patente string) error
 }
 
 type CamionRepository struct {
@@ -70,23 +69,23 @@ func (repository CamionRepository) ObtenerCamionPorPatente(patente string) (mode
 	return camion, err
 }
 
-func (repository CamionRepository) CrearCamion(camion model.Camion) (*mongo.InsertOneResult, error) {
+func (repository CamionRepository) CrearCamion(camion model.Camion) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
-	resultado, err := collection.InsertOne(context.Background(), camion)
-	return resultado, err
+	_, err := collection.InsertOne(context.Background(), camion)
+	return err
 }
 
-func (repository CamionRepository) ActualizarCamion(camion model.Camion) (*mongo.UpdateResult, error) {
+func (repository CamionRepository) ActualizarCamion(camion model.Camion) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
 	filtro := bson.M{"patente": camion.Patente}
 	actualizacion := bson.M{"$set": camion}
-	resultado, err := collection.UpdateOne(context.TODO(), filtro, actualizacion)
-	return resultado, err
+	_, err := collection.UpdateOne(context.TODO(), filtro, actualizacion)
+	return err
 }
 
-func (repository CamionRepository) EliminarCamion(patente string) (*mongo.DeleteResult, error) {
+func (repository CamionRepository) EliminarCamion(patente string) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
 	filtro := bson.M{"patente": patente}
-	resultado, err := collection.DeleteOne(context.Background(), filtro)
-	return resultado, err
+	_, err := collection.DeleteOne(context.Background(), filtro)
+	return err
 }

@@ -6,11 +6,11 @@ import (
 )
 
 type CamionInterface interface {
-	ObtenerCamiones() []*dto.Camion
-	ObtenerCamionPorPatente(patente string) *dto.Camion
-	CrearCamion(camion *dto.Camion) bool
-	ActualizarCamion(camion *dto.Camion) bool
-	EliminarCamion(patente string) bool
+	ObtenerCamiones() ([]*dto.Camion, error)
+	ObtenerCamionPorPatente(patente string) (*dto.Camion, error)
+	CrearCamion(camion *dto.Camion) error
+	ActualizarCamion(camion *dto.Camion) error
+	EliminarCamion(patente string) error
 }
 
 type CamionService struct {
@@ -21,37 +21,42 @@ func NewCamionService(camionRepository repositories.CamionRepositoryInterface) *
 	return &CamionService{camionRepository: camionRepository}
 }
 
-func (service *CamionService) ObtenerCamiones() []*dto.Camion {
+func (service *CamionService) ObtenerCamiones() ([]*dto.Camion, error) {
 	//Falta controlar el error
-	camionesDB, _ := service.camionRepository.ObtenerCamiones()
+	camionesDB, err := service.camionRepository.ObtenerCamiones()
+
+	if err != nil {
+		return nil, err
+	}
+
 	var camiones []*dto.Camion
 	for _, camionDB := range camionesDB {
 		camion := dto.NewCamion(camionDB)
 		camiones = append(camiones, camion)
 	}
-	return camiones
+	return camiones, nil
 }
 
-func (service *CamionService) ObtenerCamionPorPatente(patente string) *dto.Camion {
+func (service *CamionService) ObtenerCamionPorPatente(patente string) (*dto.Camion, error) {
 	camionDB, err := service.camionRepository.ObtenerCamionPorPatente(patente)
 	var camion *dto.Camion
-	if err == nil {
-		camion = dto.NewCamion(camionDB)
+	if err != nil {
+		return nil, err
 	}
-	return camion
+
+	camion = dto.NewCamion(camionDB)
+
+	return camion, nil
 }
 
-func (service *CamionService) CrearCamion(camion *dto.Camion) bool {
-	service.camionRepository.CrearCamion(camion.GetModel())
-	return true
+func (service *CamionService) CrearCamion(camion *dto.Camion) error {
+	return service.camionRepository.CrearCamion(camion.GetModel())
 }
 
-func (service *CamionService) ActualizarCamion(camion *dto.Camion) bool {
-	service.camionRepository.ActualizarCamion(camion.GetModel())
-	return true
+func (service *CamionService) ActualizarCamion(camion *dto.Camion) error {
+	return service.camionRepository.ActualizarCamion(camion.GetModel())
 }
 
-func (service *CamionService) EliminarCamion(patente string) bool {
-	service.camionRepository.EliminarCamion(patente)
-	return true
+func (service *CamionService) EliminarCamion(patente string) error {
+	return service.camionRepository.EliminarCamion(patente)
 }
