@@ -2,8 +2,6 @@ package dto
 
 import (
 	"UCSE-2023-Prog2-TPIntegrador/model"
-	"UCSE-2023-Prog2-TPIntegrador/model/envios"
-	"UCSE-2023-Prog2-TPIntegrador/model/pedidos"
 	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"time"
 )
@@ -16,10 +14,10 @@ type Envio struct {
 	Paradas                  []Parada
 	Pedidos                  []Pedido
 	IdCreador                int
-	Estado                   envios.EstadoEnvio
+	Estado                   model.EstadoEnvio
 }
 
-func NewEnvio(envio envios.Envio) *Envio {
+func NewEnvio(envio model.Envio) *Envio {
 	return &Envio{
 		Id:                       utils.GetStringIDFromObjectID(envio.ObjectId),
 		FechaCreacion:            envio.FechaCreacion,
@@ -32,8 +30,8 @@ func NewEnvio(envio envios.Envio) *Envio {
 	}
 }
 
-func (envio Envio) GetModel() envios.Envio {
-	return envios.Envio{
+func (envio Envio) GetModel() model.Envio {
+	return model.Envio{
 		FechaCreacion:            envio.FechaCreacion,
 		FechaUltimaActualizacion: envio.FechaUltimaActualizacion,
 		PatenteCamion:            envio.PatenteCamion,
@@ -63,8 +61,8 @@ func NewParadas(paradas []model.Parada) []Parada {
 }
 
 // Metodo para convertir una lista de pedidos del dto a una lista de pedidos del modelo
-func (envio Envio) getPedidos() []pedidos.Pedido {
-	var pedidosEnvio []pedidos.Pedido
+func (envio Envio) getPedidos() []model.Pedido {
+	var pedidosEnvio []model.Pedido
 	for _, pedido := range envio.Pedidos {
 		pedidosEnvio = append(pedidosEnvio, pedido.GetModel())
 	}
@@ -72,7 +70,7 @@ func (envio Envio) getPedidos() []pedidos.Pedido {
 }
 
 // Metodo para convertir una lista de Pedidos del modelo a una lista de Pedidos del dto
-func NewPedidos(pedidos []pedidos.Pedido) []Pedido {
+func NewPedidos(pedidos []model.Pedido) []Pedido {
 	var pedidosEnvio []Pedido
 	for _, pedido := range pedidos {
 		pedidosEnvio = append(pedidosEnvio, *NewPedido(&pedido))

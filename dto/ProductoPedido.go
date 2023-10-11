@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"UCSE-2023-Prog2-TPIntegrador/model/productos"
+	"UCSE-2023-Prog2-TPIntegrador/model"
 )
 
 type ProductoPedido struct {
@@ -13,7 +13,7 @@ type ProductoPedido struct {
 }
 
 // Metodo que sirve para crear un ProductoPedido para un pedido
-func NewProductoPedidoFromProducto(producto *productos.Producto, cantidad int) *ProductoPedido {
+func NewProductoPedidoFromProducto(producto *model.Producto, cantidad int) *ProductoPedido {
 	return &ProductoPedido{
 		CodigoProducto: producto.CodigoProducto,
 		Nombre:         producto.Nombre,
@@ -24,7 +24,7 @@ func NewProductoPedidoFromProducto(producto *productos.Producto, cantidad int) *
 }
 
 // Crea el dto a partir del model
-func NewProductoPedido(productoPedido *productos.ProductoPedido) *ProductoPedido {
+func NewProductoPedido(productoPedido *model.ProductoPedido) *ProductoPedido {
 	return &ProductoPedido{
 		CodigoProducto: productoPedido.CodigoProducto,
 		Nombre:         productoPedido.Nombre,
@@ -34,8 +34,8 @@ func NewProductoPedido(productoPedido *productos.ProductoPedido) *ProductoPedido
 	}
 }
 
-func (productoPedido ProductoPedido) GetModel() productos.ProductoPedido {
-	return productos.ProductoPedido{
+func (productoPedido ProductoPedido) GetModel() model.ProductoPedido {
+	return model.ProductoPedido{
 		CodigoProducto: productoPedido.CodigoProducto,
 		Nombre:         productoPedido.Nombre,
 		Cantidad:       productoPedido.Cantidad,
