@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -15,7 +14,7 @@ type CamionRepositoryInterface interface {
 	ObtenerCamionPorPatente(patente string) (model.Camion, error)
 	ObtenerCamiones() ([]model.Camion, error)
 	ActualizarCamion(camion model.Camion) (*mongo.UpdateResult, error)
-	EliminarCamion(id primitive.ObjectID) (*mongo.DeleteResult, error)
+	EliminarCamion(patente string) (*mongo.DeleteResult, error)
 }
 
 type CamionRepository struct {
@@ -85,9 +84,9 @@ func (repository CamionRepository) ActualizarCamion(camion model.Camion) (*mongo
 	return resultado, err
 }
 
-func (repository CamionRepository) EliminarCamion(id primitive.ObjectID) (*mongo.DeleteResult, error) {
+func (repository CamionRepository) EliminarCamion(patente string) (*mongo.DeleteResult, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
-	filtro := bson.M{"_id": id}
+	filtro := bson.M{"patente": patente}
 	resultado, err := collection.DeleteOne(context.Background(), filtro)
 	return resultado, err
 }
