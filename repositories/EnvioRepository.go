@@ -6,16 +6,15 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type EnvioRepositoryInterface interface {
-	CrearEnvio(envio *model.Envio) (*mongo.InsertOneResult, error)
-	ObtenerEnvioPorId(id int) (model.Envio, error)
+	CrearEnvio(envio model.Envio) (*mongo.InsertOneResult, error)
+	ObtenerEnvioPorId(id string) (model.Envio, error)
 	ObtenerEnvios() ([]model.Envio, error)
-	ActualizarEnvio(envio *model.Envio) (*mongo.UpdateResult, error)
-	EliminarEnvio(id primitive.ObjectID) (*mongo.DeleteResult, error)
+	ActualizarEnvio(envio model.Envio) (*mongo.UpdateResult, error)
+	EliminarEnvio(id string) (*mongo.DeleteResult, error)
 }
 
 type EnvioRepository struct {
@@ -88,7 +87,7 @@ func (repository EnvioRepository) ActualizarEnvio(envio model.Envio) (*mongo.Upd
 	return result, err
 }
 
-func (repository EnvioRepository) EliminarEnvio(id primitive.ObjectID) (*mongo.DeleteResult, error) {
+func (repository EnvioRepository) EliminarEnvio(id string) (*mongo.DeleteResult, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 	filtro := bson.M{"id": id}
 
