@@ -6,15 +6,13 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type EnvioRepositoryInterface interface {
-	CrearEnvio(envio model.Envio) (*mongo.InsertOneResult, error)
+	CrearEnvio(envio model.Envio) error
 	ObtenerEnvioPorId(id string) (model.Envio, error)
 	ObtenerEnvios() ([]model.Envio, error)
-	ActualizarEnvio(envio model.Envio) (*mongo.UpdateResult, error)
-	EliminarEnvio(id string) (*mongo.DeleteResult, error)
+	ActualizarEnvio(envio model.Envio) error
 }
 
 type EnvioRepository struct {
@@ -68,30 +66,21 @@ func (repository EnvioRepository) ObtenerEnvioPorId(id string) (model.Envio, err
 	return envio, err
 }
 
-func (repository EnvioRepository) CrearEnvio(envio model.Envio) (*mongo.InsertOneResult, error) {
+func (repository EnvioRepository) CrearEnvio(envio model.Envio) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 
-	result, err := collection.InsertOne(context.Background(), envio)
+	_, err := collection.InsertOne(context.Background(), envio)
 
-	return result, err
+	return err
 }
 
-func (repository EnvioRepository) ActualizarEnvio(envio model.Envio) (*mongo.UpdateResult, error) {
+func (repository EnvioRepository) ActualizarEnvio(envio model.Envio) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 	filtro := bson.M{"id": envio.Id}
 
 	actualizacion := bson.M{"$set": envio}
 
-	result, err := collection.UpdateOne(context.Background(), filtro, actualizacion)
+	_, err := collection.UpdateOne(context.Background(), filtro, actualizacion)
 
-	return result, err
-}
-
-func (repository EnvioRepository) EliminarEnvio(id string) (*mongo.DeleteResult, error) {
-	collection := repository.db.GetClient().Database("empresa").Collection("envios")
-	filtro := bson.M{"id": id}
-
-	result, err := collection.DeleteOne(context.Background(), filtro)
-
-	return result, err
+	return err
 }

@@ -21,12 +21,20 @@ func NewEnvioHandler(envioService services.EnvioInterface) *EnvioHandler {
 func (handler *EnvioHandler) ObtenerEnvios(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	aulas := handler.envioService.ObtenerEnvios()
+	envios, err := handler.envioService.ObtenerEnvios()
+
+	//Si hay un error, lo devolvemos
+	if err != nil {
+		log.Printf("[handler:EnvioHandler][method:ObtenerEnvios][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:AulaHandler][method:ObtenerAulas][cantidad:%d][user:%s]", len(aulas), user.Codigo)
+	log.Printf("[handler:AulaHandler][method:ObtenerEnvios][cantidad:%d][user:%s]", len(envios), user.Codigo)
 
-	c.JSON(http.StatusOK, aulas)
+	c.JSON(http.StatusOK, envios)
 }
 
 func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
@@ -34,7 +42,15 @@ func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
 
 	id := c.Param("id")
 
-	envio := handler.envioService.ObtenerEnvioPorId(id)
+	envio, err := handler.envioService.ObtenerEnvioPorId(id)
+
+	//Si hay un error, lo devolvemos
+	if err != nil {
+		log.Printf("[handler:EnvioHandler][method:ObtenerEnvioPorId][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	//Agregamos un log para indicar información relevante del resultado
 	log.Printf("[handler:EnvioHandler][method:ObtenerEnvioPorId][id:%s][user:%s]", id, user.Codigo)
@@ -51,7 +67,13 @@ func (handler *EnvioHandler) CrearEnvio(c *gin.Context) {
 		return
 	}
 
-	handler.envioService.CrearEnvio(&envio)
+	//Si hay un error, lo devolvemos
+	if err := handler.envioService.CrearEnvio(&envio); err != nil {
+		log.Printf("[handler:EnvioHandler][method:CrearEnvio][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	//Agregamos un log para indicar información relevante del resultado
 	log.Printf("[handler:EnvioHandler][method:CrearEnvio][envio:%+v][user:%s]", envio, user.Codigo)
@@ -59,7 +81,7 @@ func (handler *EnvioHandler) CrearEnvio(c *gin.Context) {
 	c.JSON(http.StatusOK, envio)
 }
 
-func (handler *EnvioHandler) ActualizarEnvio(c *gin.Context) {
+func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
 	var envio dto.Envio
@@ -68,23 +90,83 @@ func (handler *EnvioHandler) ActualizarEnvio(c *gin.Context) {
 		return
 	}
 
-	handler.envioService.ActualizarEnvio(&envio)
+	operacion, err := handler.envioService.AgregarParada(&envio)
+	if err != nil {
+		log.Printf("[handler:EnvioHandler][method:AgregarParada][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if operacion == false {
+		log.Printf("[handler:EnvioHandler][method:AgregarParada][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})
+		return
+	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:EnvioHandler][method:ActualizarEnvio][envio:%+v][user:%s]", envio, user.Codigo)
+	log.Printf("[handler:EnvioHandler][method:AgregarParada][envio:%+v][user:%s]", envio, user.Codigo)
 
 	c.JSON(http.StatusOK, envio)
 }
 
-func (handler *EnvioHandler) EliminarEnvio(c *gin.Context) {
+func (handler *EnvioHandler) IniciarViaje(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	id := c.Param("id")
+	var envio dto.Envio
+	if err := c.ShouldBindJSON(&envio); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-	handler.envioService.EliminarEnvio(id)
+	operacion, err := handler.envioService.IniciarViaje(&envio)
+	if err != nil {
+		log.Printf("[handler:EnvioHandler][method:IniciarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if operacion == false {
+		log.Printf("[handler:EnvioHandler][method:IniciarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})
+		return
+	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:EnvioHandler][method:EliminarEnvio][id:%s][user:%s]", id, user.Codigo)
+	log.Printf("[handler:EnvioHandler][method:IniciarViaje][envio:%+v][user:%s]", envio, user.Codigo)
 
-	c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	c.JSON(http.StatusOK, envio)
+}
+
+func (handler *EnvioHandler) FinalizarViaje(c *gin.Context) {
+	user := dto.NewUser(utils.GetUserInfoFromContext(c))
+
+	var envio dto.Envio
+	if err := c.ShouldBindJSON(&envio); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	operacion, err := handler.envioService.FinalizarViaje(&envio)
+	if err != nil {
+		log.Printf("[handler:EnvioHandler][method:FinalizarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if operacion == false {
+		log.Printf("[handler:EnvioHandler][method:FinalizarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})
+		return
+	}
+
+	//Agregamos un log para indicar información relevante del resultado
+	log.Printf("[handler:EnvioHandler][method:FinalizarViaje][envio:%+v][user:%s]", envio, user.Codigo)
+
+	c.JSON(http.StatusOK, envio)
 }
