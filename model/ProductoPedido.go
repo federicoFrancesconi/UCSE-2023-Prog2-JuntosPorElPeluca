@@ -1,4 +1,4 @@
-package productos
+package model
 
 type ProductoPedido struct {
 	CodigoProducto int     `bson:"codigo_producto"`
