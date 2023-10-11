@@ -10,7 +10,7 @@ import (
 
 type EnvioRepositoryInterface interface {
 	CrearEnvio(envio model.Envio) error
-	ObtenerEnvioPorId(id string) (model.Envio, error)
+	ObtenerEnvioPorId(id int) (model.Envio, error)
 	ObtenerEnvios() ([]model.Envio, error)
 	ActualizarEnvio(envio model.Envio) error
 }
@@ -48,7 +48,7 @@ func (repository EnvioRepository) ObtenerEnvios() ([]model.Envio, error) {
 	return envios, err
 }
 
-func (repository EnvioRepository) ObtenerEnvioPorId(id string) (model.Envio, error) {
+func (repository EnvioRepository) ObtenerEnvioPorId(id int) (model.Envio, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 	filtro := bson.M{"id": id}
 

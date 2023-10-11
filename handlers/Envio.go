@@ -6,6 +6,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,7 +43,17 @@ func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
 
 	id := c.Param("id")
 
-	envio, err := handler.envioService.ObtenerEnvioPorId(id)
+	//convertir id a int
+	idInt, err := strconv.Atoi(id)
+
+	if err != nil {
+		log.Printf("[handler:EnvioHandler][method:ObtenerEnvioPorId][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	envio, err := handler.envioService.ObtenerEnvioPorId(idInt)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {

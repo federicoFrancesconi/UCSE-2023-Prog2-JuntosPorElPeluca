@@ -8,7 +8,7 @@ import (
 
 type EnvioInterface interface {
 	ObtenerEnvios() ([]*dto.Envio, error)
-	ObtenerEnvioPorId(id string) (*dto.Envio, error)
+	ObtenerEnvioPorId(id int) (*dto.Envio, error)
 	CrearEnvio(envio *dto.Envio) error
 	AgregarParada(envio *dto.Envio) (bool, error)
 	IniciarViaje(envio *dto.Envio) (bool, error)
@@ -38,7 +38,7 @@ func (service *EnvioService) ObtenerEnvios() ([]*dto.Envio, error) {
 	return envios, nil
 }
 
-func (service *EnvioService) ObtenerEnvioPorId(id string) (*dto.Envio, error) {
+func (service *EnvioService) ObtenerEnvioPorId(id int) (*dto.Envio, error) {
 	envioDB, err := service.envioRepository.ObtenerEnvioPorId(id)
 	var envio *dto.Envio
 	if err != nil {
