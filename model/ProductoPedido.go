@@ -7,3 +7,7 @@ type ProductoPedido struct {
 	PrecioUnitario float32 `bson:"precio_unitario"`
 	PesoUnitario   float32 `bson:"peso_unitario"`
 }
+
+func (productoPedido ProductoPedido) ObtenerPesoProductoPedido() float32 {
+	return productoPedido.PesoUnitario * float32(productoPedido.Cantidad)
+}

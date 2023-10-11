@@ -9,10 +9,10 @@ import (
 )
 
 type PedidoRepositoryInterface interface {
-	CrearPedido(pedido *model.Pedido) error
+	CrearPedido(pedido model.Pedido) error
 	ObtenerPedidoPorId(id int) (*model.Pedido, error)
 	ObtenerPedidos() ([]*model.Pedido, error)
-	ActualizarPedido(pedido *model.Pedido) error
+	ActualizarPedido(pedido model.Pedido) error
 }
 
 type PedidoRepository struct {
@@ -25,7 +25,7 @@ func NewPedidoRepository(db database.DB) *PedidoRepository {
 	}
 }
 
-func (repository *PedidoRepository) CrearPedido(pedido *model.Pedido) error {
+func (repository *PedidoRepository) CrearPedido(pedido model.Pedido) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")
 	_, err := collection.InsertOne(context.Background(), pedido)
 	return err
@@ -73,7 +73,7 @@ func (repository *PedidoRepository) ObtenerPedidos() ([]*model.Pedido, error) {
 	return pedidos, err
 }
 
-func (repository *PedidoRepository) ActualizarPedido(pedido *model.Pedido) error {
+func (repository *PedidoRepository) ActualizarPedido(pedido model.Pedido) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")
 
 	filtro := bson.M{"id": pedido.Id}

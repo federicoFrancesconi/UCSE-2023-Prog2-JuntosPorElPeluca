@@ -6,12 +6,13 @@ import (
 )
 
 type Pedido struct {
-	ProductosElegidos        []ProductoPedido     `json:"productos_elegidos"`
-	CiudadDestino            string               `json:"ciudad_destino"`
+	Id                       int                `json:"id,omitempty"`
+	ProductosElegidos        []ProductoPedido   `json:"productos_elegidos"`
+	CiudadDestino            string             `json:"ciudad_destino"`
 	Estado                   model.EstadoPedido `json:"estado"`
-	FechaCreacion            time.Time            `json:"fecha_creacion"`
-	FechaUltimaActualizacion time.Time            `json:"fecha_ultima_actualizacion"`
-	IdCreador                int                  `json:"id_creador"`
+	FechaCreacion            time.Time          `json:"fecha_creacion"`
+	FechaUltimaActualizacion time.Time          `json:"fecha_ultima_actualizacion"`
+	IdCreador                int                `json:"id_creador"`
 }
 
 // Metodo para obtener el modelo a partir del dto

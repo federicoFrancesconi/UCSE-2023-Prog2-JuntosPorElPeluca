@@ -22,6 +22,7 @@ func NewCamionService(camionRepository repositories.CamionRepositoryInterface) *
 }
 
 func (service *CamionService) ObtenerCamiones() []*dto.Camion {
+	//Falta controlar el error
 	camionesDB, _ := service.camionRepository.ObtenerCamiones()
 	var camiones []*dto.Camion
 	for _, camionDB := range camionesDB {

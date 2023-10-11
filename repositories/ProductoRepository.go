@@ -9,10 +9,10 @@ import (
 )
 
 type ProductoRepositoryInterface interface {
-	CrearProducto(producto *model.Producto) error
+	CrearProducto(producto model.Producto) error
 	ObtenerProductoPorCodigo(codigoProducto int) (*model.Producto, error)
 	ObtenerProductos() ([]*model.Producto, error)
-	ActualizarProducto(producto *model.Producto) error
+	ActualizarProducto(producto model.Producto) error
 	EliminarProducto(id int) error
 }
 
@@ -26,7 +26,7 @@ func NewProductoRepository(db database.DB) *ProductoRepository {
 	}
 }
 
-func (repository *ProductoRepository) CrearProducto(producto *model.Producto) error {
+func (repository *ProductoRepository) CrearProducto(producto model.Producto) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 	_, err := collection.InsertOne(context.Background(), producto)
 	return err
@@ -74,7 +74,7 @@ func (repository *ProductoRepository) ObtenerProductos() ([]*model.Producto, err
 	return productosList, err
 }
 
-func (repository *ProductoRepository) ActualizarProducto(producto *model.Producto) error {
+func (repository *ProductoRepository) ActualizarProducto(producto model.Producto) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 
 	filtro := bson.M{"codigo_producto": producto.CodigoProducto}
