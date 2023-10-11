@@ -13,7 +13,8 @@ type PedidoService struct {
 type PedidoServiceInterface interface {
 	CrearPedido(pedido *dto.Pedido) error
 	ObtenerPedidos() ([]dto.Pedido, error)
-	ObtenerPesoPedido(id int) (float32, error)
+	//Es privado porque es auxiliar para CabeEnCamion
+	obtenerPesoPedido(id int) (float32, error)
 	CabeEnCamion(pedido *dto.Pedido) (bool, error)
 	EnviarPedido(pedido *dto.Pedido) error
 	AceptarPedido(pedido *dto.Pedido) error
