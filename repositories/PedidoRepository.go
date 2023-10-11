@@ -2,14 +2,14 @@ package repositories
 
 import (
 	"UCSE-2023-Prog2-TPIntegrador/database"
-	"UCSE-2023-Prog2-TPIntegrador/model/pedidos"
+	"UCSE-2023-Prog2-TPIntegrador/model"
 )
 
 type PedidoRepositoryInterface interface {
-	CrearPedido(pedido *pedidos.Pedido) error
-	ObtenerPedidoPorId(id int) (*pedidos.Pedido, error)
-	ObtenerPedidos() ([]*pedidos.Pedido, error)
-	ActualizarPedido(pedido *pedidos.Pedido) error
+	CrearPedido(pedido *model.Pedido) error
+	ObtenerPedidoPorId(id int) (*model.Pedido, error)
+	ObtenerPedidos() ([]*model.Pedido, error)
+	ActualizarPedido(pedido *model.Pedido) error
 }
 
 type PedidoRepository struct {

@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"UCSE-2023-Prog2-TPIntegrador/database"
-	"UCSE-2023-Prog2-TPIntegrador/model/envios"
+	"UCSE-2023-Prog2-TPIntegrador/model"
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -11,10 +11,10 @@ import (
 )
 
 type EnvioRepositoryInterface interface {
-	CrearEnvio(envio *envios.Envio) (*mongo.InsertOneResult, error)
-	ObtenerEnvioPorId(id int) (envios.Envio, error)
-	ObtenerEnvios() ([]envios.Envio, error)
-	ActualizarEnvio(envio *envios.Envio) (*mongo.UpdateResult, error)
+	CrearEnvio(envio *model.Envio) (*mongo.InsertOneResult, error)
+	ObtenerEnvioPorId(id int) (model.Envio, error)
+	ObtenerEnvios() ([]model.Envio, error)
+	ActualizarEnvio(envio *model.Envio) (*mongo.UpdateResult, error)
 	EliminarEnvio(id primitive.ObjectID) (*mongo.DeleteResult, error)
 }
 
@@ -28,7 +28,7 @@ func NewEnvioRepository(db database.DB) *EnvioRepository {
 	}
 }
 
-func (repository EnvioRepository) ObtenerEnvios() ([]envios.Envio, error) {
+func (repository EnvioRepository) ObtenerEnvios() ([]model.Envio, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 	filtro := bson.M{}
 
@@ -36,28 +36,28 @@ func (repository EnvioRepository) ObtenerEnvios() ([]envios.Envio, error) {
 
 	defer cursor.Close(context.Background())
 
-	var listaEnvios []envios.Envio
+	var envios []model.Envio
 
 	for cursor.Next(context.Background()) {
-		var envio envios.Envio
+		var envio model.Envio
 		err := cursor.Decode(&envio)
 		if err != nil {
 			return nil, err
 		}
 
-		listaEnvios = append(listaEnvios, envio)
+		envios = append(envios, envio)
 	}
 
-	return listaEnvios, err
+	return envios, err
 }
 
-func (repository EnvioRepository) ObtenerEnvioPorId(id string) (envios.Envio, error) {
+func (repository EnvioRepository) ObtenerEnvioPorId(id string) (model.Envio, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 	filtro := bson.M{"id": id}
 
 	cursor, err := collection.Find(context.TODO(), filtro)
 
-	var envio envios.Envio
+	var envio model.Envio
 
 	for cursor.Next(context.Background()) {
 		err := cursor.Decode(&envio)
@@ -69,7 +69,7 @@ func (repository EnvioRepository) ObtenerEnvioPorId(id string) (envios.Envio, er
 	return envio, err
 }
 
-func (repository EnvioRepository) CrearEnvio(envio envios.Envio) (*mongo.InsertOneResult, error) {
+func (repository EnvioRepository) CrearEnvio(envio model.Envio) (*mongo.InsertOneResult, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 
 	result, err := collection.InsertOne(context.Background(), envio)
@@ -77,7 +77,7 @@ func (repository EnvioRepository) CrearEnvio(envio envios.Envio) (*mongo.InsertO
 	return result, err
 }
 
-func (repository EnvioRepository) ActualizarEnvio(envio envios.Envio) (*mongo.UpdateResult, error) {
+func (repository EnvioRepository) ActualizarEnvio(envio model.Envio) (*mongo.UpdateResult, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 	filtro := bson.M{"id": envio.Id}
 
