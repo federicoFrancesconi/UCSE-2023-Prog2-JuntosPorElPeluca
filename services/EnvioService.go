@@ -50,6 +50,18 @@ func (service *EnvioService) ObtenerEnvioPorId(id int) (*dto.Envio, error) {
 }
 
 func (service *EnvioService) CrearEnvio(envio *dto.Envio) error {
+	for _, pedido := range envio.Pedidos {
+		//pasar el pedido en estado para enviar
+
+		//verificar que la suma de los pesos de cada producto en pedido no sobrepase el limite de peso del vehiculo
+		var sumaPesos float32 = 0
+		for _, producto := range pedido.ProductosElegidos {
+			sumaPesos += producto.PesoUnitario
+		}
+
+		//ver como obtener el camion para verificar la suma de los pesos
+	}
+
 	return service.envioRepository.CrearEnvio(envio.GetModel())
 }
 
@@ -66,6 +78,8 @@ func (service *EnvioService) IniciarViaje(envio *dto.Envio) (bool, error) {
 		return false, nil
 	}
 
+	envio.Estado = model.EnRuta
+
 	return true, service.envioRepository.ActualizarEnvio(envio.GetModel())
 }
 
@@ -73,6 +87,8 @@ func (service *EnvioService) FinalizarViaje(envio *dto.Envio) (bool, error) {
 	if envio.Estado == model.Despachado {
 		return false, nil
 	}
+
+	envio.Estado = model.Despachado
 
 	service.envioRepository.ActualizarEnvio(envio.GetModel())
 	//pasar pedidos a estado enviado

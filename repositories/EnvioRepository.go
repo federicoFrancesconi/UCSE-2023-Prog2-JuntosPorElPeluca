@@ -4,6 +4,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/database"
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"context"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -69,6 +70,13 @@ func (repository EnvioRepository) ObtenerEnvioPorId(id int) (model.Envio, error)
 func (repository EnvioRepository) CrearEnvio(envio model.Envio) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 
+	//al crearlo coloco el envio en estado despachar
+	envio.Estado = model.EstadoEnvio(model.ParaEnviar)
+
+	//coloco las fechas
+	envio.FechaCreacion = time.Now()
+	envio.FechaUltimaActualizacion = time.Now()
+
 	_, err := collection.InsertOne(context.Background(), envio)
 
 	return err
@@ -77,6 +85,9 @@ func (repository EnvioRepository) CrearEnvio(envio model.Envio) error {
 func (repository EnvioRepository) ActualizarEnvio(envio model.Envio) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 	filtro := bson.M{"id": envio.Id}
+
+	//seteo la fecha de actualizacion
+	envio.FechaUltimaActualizacion = time.Now()
 
 	actualizacion := bson.M{"$set": envio}
 
