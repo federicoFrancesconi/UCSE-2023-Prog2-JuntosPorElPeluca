@@ -6,6 +6,7 @@ import (
 
 type ConexionServiceInterface interface {
 	EnvioCabeEnCamion(*dto.Envio) (bool, error)
+	EnvarPedidosDeEnvio(*dto.Envio) error
 	EntregarPedidosDeEnvio(*dto.Envio) error
 	DescontarStockProductosDeEnvio(*dto.Envio) error
 }
@@ -49,6 +50,16 @@ func (service *ConexionService) EnvioCabeEnCamion(envio *dto.Envio) (bool, error
 	} else {
 		return false, nil
 	}
+}
+
+func (service *ConexionService) EnvarPedidosDeEnvio(envio *dto.Envio) error {
+	for _, idPedido := range envio.Pedidos {
+		err := service.pedidoService.EnviarPedido(idPedido)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (service *ConexionService) EntregarPedidosDeEnvio(envio *dto.Envio) error {

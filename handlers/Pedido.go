@@ -62,32 +62,6 @@ func (handler *PedidoHandler) CrearPedido(c *gin.Context) {
 	c.JSON(http.StatusOK, pedido)
 }
 
-func (handler *PedidoHandler) EnviarPedido(c *gin.Context) {
-	user := dto.NewUser(utils.GetUserInfoFromContext(c))
-
-	id := c.Param("id")
-
-	//convertir id a int
-	idInt, err := strconv.Atoi(id)
-
-	if err != nil {
-		log.Printf("[handler:PedidoHandler][method:EnviarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	//Enviamos el pedido
-	if err := handler.pedidoService.EnviarPedido(idInt); err != nil {
-		log.Printf("[handler:PedidoHandler][method:EnviarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	//TODO: capaz este mal que devuelva nil
-	c.JSON(http.StatusOK, nil)
-}
-
 func (handler *PedidoHandler) AceptarPedido(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
@@ -137,32 +111,6 @@ func (handler *PedidoHandler) CancelarPedido(c *gin.Context) {
 		return
 	}
 
-	//TODO: capaz este mal que devuelva nil
-	c.JSON(http.StatusOK, nil)
-}
-
-func (handler *PedidoHandler) EntregarPedido(c *gin.Context) {
-	user := dto.NewUser(utils.GetUserInfoFromContext(c))
-
-	id := c.Param("id")
-
-	//convertir id a int
-	idInt, err := strconv.Atoi(id)
-
-	if err != nil {
-		log.Printf("[handler:PedidoHandler][method:EnviarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	//Entregamos el pedido
-	if err := handler.pedidoService.EntregarPedido(idInt); err != nil {
-		log.Printf("[handler:PedidoHandler][method:EntregarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
 	//TODO: capaz este mal que devuelva nil
 	c.JSON(http.StatusOK, nil)
 }

@@ -66,6 +66,9 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio) error {
 	//al crearlo coloco el envio en estado despachar
 	envio.Estado = model.EstadoEnvio(model.ParaEnviar)
 
+	//Cambio el estado de los pedidos del envio
+	service.conexionService.EnvarPedidosDeEnvio(envio)
+
 	return service.envioRepository.CrearEnvio(envio.GetModel())
 }
 

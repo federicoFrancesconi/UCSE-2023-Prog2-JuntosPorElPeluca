@@ -3,10 +3,10 @@ package dto
 import "UCSE-2023-Prog2-TPIntegrador/clients/responses"
 
 type User struct {
-	Codigo   string `json:codigo`
-	Email    string `json:email`
-	Username string `json:username`
-	Rol      string `json:rol`
+	Codigo   string `json:"codigo"`
+	Email    string `json:"email"`
+	Username string `json:"username"`
+	Rol      string `json:"rol"`
 }
 
 func NewUser(userInfo *responses.UserInfo) User {
