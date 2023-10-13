@@ -21,8 +21,11 @@ type EnvioService struct {
 	conexionService ConexionServiceInterface
 }
 
-func NewEnvioService(envioRepository repositories.EnvioRepositoryInterface) *EnvioService {
-	return &EnvioService{envioRepository: envioRepository}
+func NewEnvioService(envioRepository repositories.EnvioRepositoryInterface, conexionService ConexionServiceInterface) *EnvioService {
+	return &EnvioService{
+		envioRepository: envioRepository,
+		conexionService: conexionService,
+	}
 }
 
 func (service *EnvioService) ObtenerEnvios() ([]*dto.Envio, error) {
