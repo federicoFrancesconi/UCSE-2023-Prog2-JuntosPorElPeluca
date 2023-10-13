@@ -12,14 +12,13 @@ type PedidoService struct {
 
 type PedidoServiceInterface interface {
 	CrearPedido(pedido *dto.Pedido) error
+	ObtenerPedidoPorId(id int) (*dto.Pedido, error)
 	ObtenerPedidos() ([]dto.Pedido, error)
-	//Es privado porque es auxiliar para CabeEnCamion
-	obtenerPesoPedido(id int) (float32, error)
-	CabeEnCamion(pedido *dto.Pedido) (bool, error)
-	EnviarPedido(pedido *dto.Pedido) error
-	AceptarPedido(pedido *dto.Pedido) error
-	CancelarPedido(pedido *dto.Pedido) error
-	EntregarPedido(pedido *dto.Pedido) error
+	ObtenerPesoPedido(id int) (float32, error)
+	EnviarPedido(id int) error
+	AceptarPedido(id int) error
+	CancelarPedido(id int) error
+	EntregarPedido(id int) error
 }
 
 func NewPedidoService(repository repositories.PedidoRepositoryInterface) *PedidoService {
@@ -53,8 +52,21 @@ func (service *PedidoService) ObtenerPedidos() ([]dto.Pedido, error) {
 	return pedidosDTO, nil
 }
 
-func (service *PedidoService) obtenerPesoPedido(id int) (float32, error) {
+func (service *PedidoService) ObtenerPedidoPorId(id int) (*dto.Pedido, error) {
 	pedido, err := service.repository.ObtenerPedidoPorId(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	pedidoDTO := dto.NewPedido(pedido)
+
+	return pedidoDTO, nil
+}
+
+// Si se usa, en ConexionService, pero marca como que no es usado
+func (service *PedidoService) ObtenerPesoPedido(idPedido int) (float32, error) {
+	pedido, err := service.repository.ObtenerPedidoPorId(idPedido)
 
 	if err != nil {
 		return 0, err
@@ -69,14 +81,14 @@ func (service *PedidoService) obtenerPesoPedido(id int) (float32, error) {
 	return peso, nil
 }
 
-//Charlar como hacer esto
-// func (service *PedidoService) CabeEnCamion(pedido *dto.Pedido, patente string) (bool, error) {
-// 	pesoPedido, err := service.obtenerPesoPedido(pedido.Id)
+func (service *PedidoService) EnviarPedido(idPedido int) error {
+	//Primero buscamos el pedido a enviar
+	pedido, err := service.repository.ObtenerPedidoPorId(idPedido)
 
-// 	return service.repository.CabeEnCamion(pedido.GetModel())
-// }
+	if err != nil {
+		return err
+	}
 
-func (service *PedidoService) EnviarPedido(pedido *dto.Pedido) error {
 	//Valida que el pedido esté en estado Aceptado
 	if pedido.Estado != model.Aceptado {
 		return nil
@@ -88,10 +100,17 @@ func (service *PedidoService) EnviarPedido(pedido *dto.Pedido) error {
 	}
 
 	//Actualiza el pedido en la base de datos
-	return service.repository.ActualizarPedido(pedido.GetModel())
+	return service.repository.ActualizarPedido(*pedido)
 }
 
-func (service *PedidoService) AceptarPedido(pedido *dto.Pedido) error {
+func (service *PedidoService) AceptarPedido(idPedido int) error {
+	//Primero buscamos el pedido a aceptar
+	pedido, err := service.repository.ObtenerPedidoPorId(idPedido)
+
+	if err != nil {
+		return err
+	}
+
 	//Valida que el pedido esté en estado Pendiente
 	if pedido.Estado != model.Pendiente {
 		return nil
@@ -103,10 +122,17 @@ func (service *PedidoService) AceptarPedido(pedido *dto.Pedido) error {
 	}
 
 	//Actualiza el pedido en la base de datos
-	return service.repository.ActualizarPedido(pedido.GetModel())
+	return service.repository.ActualizarPedido(*pedido)
 }
 
-func (service *PedidoService) CancelarPedido(pedido *dto.Pedido) error {
+func (service *PedidoService) CancelarPedido(idPedido int) error {
+	//Primero buscamos el pedido a cancelar
+	pedido, err := service.repository.ObtenerPedidoPorId(idPedido)
+
+	if err != nil {
+		return err
+	}
+
 	//Valida que el pedido esté en estado Pendiente
 	if pedido.Estado != model.Pendiente {
 		return nil
@@ -118,10 +144,17 @@ func (service *PedidoService) CancelarPedido(pedido *dto.Pedido) error {
 	}
 
 	//Actualiza el pedido en la base de datos
-	return service.repository.ActualizarPedido(pedido.GetModel())
+	return service.repository.ActualizarPedido(*pedido)
 }
 
-func (service *PedidoService) EntregarPedido(pedido *dto.Pedido) error {
+func (service *PedidoService) EntregarPedido(idPedido int) error {
+	//Primero buscamos el pedido a entregar
+	pedido, err := service.repository.ObtenerPedidoPorId(idPedido)
+
+	if err != nil {
+		return err
+	}
+
 	//Valida que el pedido esté en estado Para enviar
 	if pedido.Estado != model.ParaEnviar {
 		return nil
@@ -133,7 +166,7 @@ func (service *PedidoService) EntregarPedido(pedido *dto.Pedido) error {
 	}
 
 	//Actualiza el pedido en la base de datos
-	return service.repository.ActualizarPedido(pedido.GetModel())
+	return service.repository.ActualizarPedido(*pedido)
 
 	//Descuenta el stock de los productos
 }

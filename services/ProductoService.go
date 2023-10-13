@@ -12,8 +12,7 @@ type ProductoService struct {
 type ProductoServiceInterface interface {
 	CrearProducto(producto *dto.Producto) error
 	ObtenerProductos() ([]dto.Producto, error)
-	ActualizarStockProducto(producto *dto.Producto) error
-	ActualizarStockProductos(productos *[]dto.Producto) error
+	DescontarStockProducto(idProducto int, cantidadDescontada int) error
 	EliminarProducto(producto *dto.Producto) error
 }
 
@@ -43,18 +42,19 @@ func (service *ProductoService) ObtenerProductos() ([]dto.Producto, error) {
 	return productosDTO, nil
 }
 
-func (service *ProductoService) ActualizarStockProducto(producto *dto.Producto) error {
-	return service.repository.ActualizarProducto(producto.GetModel())
-}
+func (service *ProductoService) DescontarStockProducto(idProducto int, cantidadDescontada int) error {
+	//Buscamos el producto del que hay que descontar la cantidad
+	producto, err := service.repository.ObtenerProductoPorCodigo(idProducto)
 
-func (service *ProductoService) ActualizarStockProductos(productos *[]dto.Producto) error {
-	for _, producto := range *productos {
-		err := service.repository.ActualizarProducto(producto.GetModel())
-		if err != nil {
-			return err
-		}
+	if err != nil {
+		return err
 	}
-	return nil
+
+	//Modificamos el stock
+	producto.StockActual = producto.StockActual - cantidadDescontada
+
+	//Actualizamos la base de datos
+	return service.repository.ActualizarProducto(*producto)
 }
 
 func (service *ProductoService) EliminarProducto(producto *dto.Producto) error {

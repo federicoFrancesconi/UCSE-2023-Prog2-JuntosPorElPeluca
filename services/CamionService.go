@@ -5,7 +5,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
 )
 
-type CamionInterface interface {
+type CamionServiceInterface interface {
 	ObtenerCamiones() ([]*dto.Camion, error)
 	ObtenerCamionPorPatente(patente string) (*dto.Camion, error)
 	CrearCamion(camion *dto.Camion) error
@@ -22,7 +22,6 @@ func NewCamionService(camionRepository repositories.CamionRepositoryInterface) *
 }
 
 func (service *CamionService) ObtenerCamiones() ([]*dto.Camion, error) {
-	//Falta controlar el error
 	camionesDB, err := service.camionRepository.ObtenerCamiones()
 
 	if err != nil {

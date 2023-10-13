@@ -4,9 +4,10 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/dto"
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
+	"errors"
 )
 
-type EnvioInterface interface {
+type EnvioServiceInterface interface {
 	ObtenerEnvios() ([]*dto.Envio, error)
 	ObtenerEnvioPorId(id int) (*dto.Envio, error)
 	CrearEnvio(envio *dto.Envio) error
@@ -17,6 +18,7 @@ type EnvioInterface interface {
 
 type EnvioService struct {
 	envioRepository repositories.EnvioRepositoryInterface
+	conexionService ConexionServiceInterface
 }
 
 func NewEnvioService(envioRepository repositories.EnvioRepositoryInterface) *EnvioService {
@@ -50,16 +52,15 @@ func (service *EnvioService) ObtenerEnvioPorId(id int) (*dto.Envio, error) {
 }
 
 func (service *EnvioService) CrearEnvio(envio *dto.Envio) error {
-	for _, pedido := range envio.Pedidos {
-		//pasar el pedido en estado para enviar
+	envioCabeEnCamion, err := service.conexionService.EnvioCabeEnCamion(envio)
 
-		//verificar que la suma de los pesos de cada producto en pedido no sobrepase el limite de peso del vehiculo
-		var sumaPesos float32 = 0
-		for _, producto := range pedido.ProductosElegidos {
-			sumaPesos += producto.PesoUnitario
-		}
+	if err != nil {
+		return err
+	}
 
-		//ver como obtener el camion para verificar la suma de los pesos
+	if !envioCabeEnCamion {
+		//Devuelve un error diciendo que el envio no cabe en el camion
+		return errors.New("el envio no cabe en el camion")
 	}
 
 	//al crearlo coloco el envio en estado despachar
@@ -94,8 +95,12 @@ func (service *EnvioService) FinalizarViaje(envio *dto.Envio) (bool, error) {
 	envio.Estado = model.Despachado
 
 	service.envioRepository.ActualizarEnvio(envio.GetModel())
+
 	//pasar pedidos a estado enviado
+	service.conexionService.EntregarPedidosDeEnvio(envio)
+
 	//descontar stock de productos
+	service.conexionService.DescontarStockProductosDeEnvio(envio)
 
 	return true, nil
 }

@@ -11,10 +11,10 @@ import (
 )
 
 type CamionHandler struct {
-	camionService services.CamionInterface
+	camionService services.CamionServiceInterface
 }
 
-func NewCamionHandler(camionService services.CamionInterface) *CamionHandler {
+func NewCamionHandler(camionService services.CamionServiceInterface) *CamionHandler {
 	return &CamionHandler{camionService: camionService}
 }
 

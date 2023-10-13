@@ -12,10 +12,10 @@ import (
 )
 
 type EnvioHandler struct {
-	envioService services.EnvioInterface
+	envioService services.EnvioServiceInterface
 }
 
-func NewEnvioHandler(envioService services.EnvioInterface) *EnvioHandler {
+func NewEnvioHandler(envioService services.EnvioServiceInterface) *EnvioHandler {
 	return &EnvioHandler{envioService: envioService}
 }
 
@@ -109,7 +109,7 @@ func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 		return
 	}
 
-	if operacion == false {
+	if !operacion {
 		log.Printf("[handler:EnvioHandler][method:AgregarParada][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})
@@ -139,7 +139,7 @@ func (handler *EnvioHandler) IniciarViaje(c *gin.Context) {
 		return
 	}
 
-	if operacion == false {
+	if !operacion {
 		log.Printf("[handler:EnvioHandler][method:IniciarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})
@@ -169,7 +169,7 @@ func (handler *EnvioHandler) FinalizarViaje(c *gin.Context) {
 		return
 	}
 
-	if operacion == false {
+	if !operacion {
 		log.Printf("[handler:EnvioHandler][method:FinalizarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})

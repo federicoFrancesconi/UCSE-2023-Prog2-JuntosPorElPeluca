@@ -11,7 +11,7 @@ type Envio struct {
 	FechaUltimaActualizacion time.Time
 	PatenteCamion            string
 	Paradas                  []Parada
-	Pedidos                  []Pedido
+	Pedidos                  []int
 	IdCreador                int
 	Estado                   model.EstadoEnvio
 }
@@ -23,7 +23,7 @@ func NewEnvio(envio model.Envio) *Envio {
 		FechaUltimaActualizacion: envio.FechaUltimaActualizacion,
 		PatenteCamion:            envio.PatenteCamion,
 		Paradas:                  NewParadas(envio.Paradas),
-		Pedidos:                  NewPedidos(envio.Pedidos),
+		Pedidos:                  envio.Pedidos,
 		IdCreador:                envio.IdCreador,
 		Estado:                   envio.Estado,
 	}
@@ -36,7 +36,7 @@ func (envio Envio) GetModel() model.Envio {
 		FechaUltimaActualizacion: envio.FechaUltimaActualizacion,
 		PatenteCamion:            envio.PatenteCamion,
 		Paradas:                  envio.getParadas(),
-		Pedidos:                  envio.getPedidos(),
+		Pedidos:                  envio.Pedidos,
 		IdCreador:                envio.IdCreador,
 		Estado:                   envio.Estado,
 	}
@@ -61,19 +61,19 @@ func NewParadas(paradas []model.Parada) []Parada {
 }
 
 // Metodo para convertir una lista de pedidos del dto a una lista de pedidos del modelo
-func (envio Envio) getPedidos() []model.Pedido {
-	var pedidosEnvio []model.Pedido
-	for _, pedido := range envio.Pedidos {
-		pedidosEnvio = append(pedidosEnvio, pedido.GetModel())
-	}
-	return pedidosEnvio
-}
+// func (envio Envio) getPedidos() []model.Pedido {
+// 	var pedidosEnvio []model.Pedido
+// 	for _, pedido := range envio.Pedidos {
+// 		pedidosEnvio = append(pedidosEnvio, pedido.GetModel())
+// 	}
+// 	return pedidosEnvio
+// }
 
 // Metodo para convertir una lista de Pedidos del modelo a una lista de Pedidos del dto
-func NewPedidos(pedidos []model.Pedido) []Pedido {
-	var pedidosEnvio []Pedido
-	for _, pedido := range pedidos {
-		pedidosEnvio = append(pedidosEnvio, *NewPedido(&pedido))
-	}
-	return pedidosEnvio
-}
+// func NewPedidos(pedidos []model.Pedido) []Pedido {
+// 	var pedidosEnvio []Pedido
+// 	for _, pedido := range pedidos {
+// 		pedidosEnvio = append(pedidosEnvio, *NewPedido(&pedido))
+// 	}
+// 	return pedidosEnvio
+// }

@@ -13,7 +13,7 @@ type Envio struct {
 	FechaUltimaActualizacion time.Time          `bson:"fecha_ultima_actualizacion"`
 	PatenteCamion            string             `bson:"patente_camion"`
 	Paradas                  []Parada           `bson:"paradas"`
-	Pedidos                  []Pedido           `bson:"pedidos"`
+	Pedidos                  []int           `bson:"pedidos"`
 	IdCreador                int                `bson:"id_creador"`
 	Estado                   EstadoEnvio        `bson:"estado"`
 }

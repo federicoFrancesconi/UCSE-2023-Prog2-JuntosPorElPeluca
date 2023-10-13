@@ -6,6 +6,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -64,10 +65,12 @@ func (handler *PedidoHandler) CrearPedido(c *gin.Context) {
 func (handler *PedidoHandler) EnviarPedido(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	var pedido dto.Pedido
+	id := c.Param("id")
 
-	//Parseamos el body del request y lo guardamos en el objeto pedido
-	if err := c.ShouldBindJSON(&pedido); err != nil {
+	//convertir id a int
+	idInt, err := strconv.Atoi(id)
+
+	if err != nil {
 		log.Printf("[handler:PedidoHandler][method:EnviarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -75,84 +78,91 @@ func (handler *PedidoHandler) EnviarPedido(c *gin.Context) {
 	}
 
 	//Enviamos el pedido
-	if err := handler.pedidoService.EnviarPedido(&pedido); err != nil {
+	if err := handler.pedidoService.EnviarPedido(idInt); err != nil {
+		log.Printf("[handler:PedidoHandler][method:EnviarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	//TODO: capaz este mal que devuelva nil
+	c.JSON(http.StatusOK, nil)
+}
+
+func (handler *PedidoHandler) AceptarPedido(c *gin.Context) {
+	user := dto.NewUser(utils.GetUserInfoFromContext(c))
+
+	id := c.Param("id")
+
+	//convertir id a int
+	idInt, err := strconv.Atoi(id)
+
+	if err != nil {
 		log.Printf("[handler:PedidoHandler][method:EnviarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, pedido)
-}
-
-func (handler *PedidoHandler) AceptarPedido(c *gin.Context) {
-	user := dto.NewUser(utils.GetUserInfoFromContext(c))
-
-	var pedido dto.Pedido
-
-	//Parseamos el body del request y lo guardamos en el objeto pedido
-	if err := c.ShouldBindJSON(&pedido); err != nil {
-		log.Printf("[handler:PedidoHandler][method:AceptarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	//Aceptamos el pedido
-	if err := handler.pedidoService.AceptarPedido(&pedido); err != nil {
+	if err := handler.pedidoService.AceptarPedido(idInt); err != nil {
 		log.Printf("[handler:PedidoHandler][method:AceptarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	c.JSON(http.StatusOK, pedido)
+	//TODO: capaz este mal que devuelva nil
+	c.JSON(http.StatusOK, nil)
 }
 
 func (handler *PedidoHandler) CancelarPedido(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	var pedido dto.Pedido
+	id := c.Param("id")
 
-	//Parseamos el body del request y lo guardamos en el objeto pedido
-	if err := c.ShouldBindJSON(&pedido); err != nil {
-		log.Printf("[handler:PedidoHandler][method:CancelarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
+	//convertir id a int
+	idInt, err := strconv.Atoi(id)
+
+	if err != nil {
+		log.Printf("[handler:PedidoHandler][method:EnviarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	//Cancelamos el pedido
-	if err := handler.pedidoService.CancelarPedido(&pedido); err != nil {
+	if err := handler.pedidoService.CancelarPedido(idInt); err != nil {
 		log.Printf("[handler:PedidoHandler][method:CancelarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, pedido)
+	//TODO: capaz este mal que devuelva nil
+	c.JSON(http.StatusOK, nil)
 }
 
 func (handler *PedidoHandler) EntregarPedido(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	var pedido dto.Pedido
+	id := c.Param("id")
 
-	//Parseamos el body del request y lo guardamos en el objeto pedido
-	if err := c.ShouldBindJSON(&pedido); err != nil {
-		log.Printf("[handler:PedidoHandler][method:EntregarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
+	//convertir id a int
+	idInt, err := strconv.Atoi(id)
+
+	if err != nil {
+		log.Printf("[handler:PedidoHandler][method:EnviarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	//Entregamos el pedido
-	if err := handler.pedidoService.EntregarPedido(&pedido); err != nil {
+	if err := handler.pedidoService.EntregarPedido(idInt); err != nil {
 		log.Printf("[handler:PedidoHandler][method:EntregarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	c.JSON(http.StatusOK, pedido)
+	//TODO: capaz este mal que devuelva nil
+	c.JSON(http.StatusOK, nil)
 }
