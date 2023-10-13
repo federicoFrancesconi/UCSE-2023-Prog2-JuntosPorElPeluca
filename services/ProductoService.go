@@ -10,10 +10,10 @@ type ProductoService struct {
 }
 
 type ProductoServiceInterface interface {
-	// - ActualizarStockProductos????? (para tirarle directamente la lista? nose)
 	CrearProducto(producto *dto.Producto) error
 	ObtenerProductos() ([]dto.Producto, error)
 	ActualizarStockProducto(producto *dto.Producto) error
+	ActualizarStockProductos(productos *[]dto.Producto) error
 	EliminarProducto(producto *dto.Producto) error
 }
 
@@ -45,6 +45,16 @@ func (service *ProductoService) ObtenerProductos() ([]dto.Producto, error) {
 
 func (service *ProductoService) ActualizarStockProducto(producto *dto.Producto) error {
 	return service.repository.ActualizarProducto(producto.GetModel())
+}
+
+func (service *ProductoService) ActualizarStockProductos(productos *[]dto.Producto) error {
+	for _, producto := range *productos {
+		err := service.repository.ActualizarProducto(producto.GetModel())
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (service *ProductoService) EliminarProducto(producto *dto.Producto) error {
