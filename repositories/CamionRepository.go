@@ -4,6 +4,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/database"
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"context"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -32,6 +33,10 @@ func (repository CamionRepository) ObtenerCamiones() ([]model.Camion, error) {
 
 	cursor, err := collection.Find(context.TODO(), filtro)
 
+	if err != nil {
+		return nil, err
+	}
+
 	defer cursor.Close(context.Background())
 
 	var camiones []model.Camion
@@ -55,6 +60,10 @@ func (repository CamionRepository) ObtenerCamionPorPatente(patente string) (mode
 
 	cursor, err := collection.Find(context.TODO(), filtro)
 
+	if err != nil {
+		return model.Camion{}, err
+	}
+
 	defer cursor.Close(context.Background())
 
 	var camion model.Camion
@@ -70,12 +79,19 @@ func (repository CamionRepository) ObtenerCamionPorPatente(patente string) (mode
 }
 
 func (repository CamionRepository) CrearCamion(camion model.Camion) error {
+	//Seteamos las fechas para el objeto camion
+	camion.FechaCreacion = time.Now()
+	camion.FechaUltimaActualizacion = time.Now()
+
 	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
 	_, err := collection.InsertOne(context.Background(), camion)
 	return err
 }
 
 func (repository CamionRepository) ActualizarCamion(camion model.Camion) error {
+	//Actualizamos la fecha de actualizacion del camion
+	camion.FechaUltimaActualizacion = time.Now()
+
 	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
 	filtro := bson.M{"patente": camion.Patente}
 	actualizacion := bson.M{"$set": camion}

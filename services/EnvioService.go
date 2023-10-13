@@ -62,6 +62,9 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio) error {
 		//ver como obtener el camion para verificar la suma de los pesos
 	}
 
+	//al crearlo coloco el envio en estado despachar
+	envio.Estado = model.EstadoEnvio(model.ParaEnviar)
+
 	return service.envioRepository.CrearEnvio(envio.GetModel())
 }
 

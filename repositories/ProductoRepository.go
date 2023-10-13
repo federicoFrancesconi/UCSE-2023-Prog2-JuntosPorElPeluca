@@ -4,6 +4,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/database"
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"context"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -27,6 +28,10 @@ func NewProductoRepository(db database.DB) *ProductoRepository {
 }
 
 func (repository *ProductoRepository) CrearProducto(producto model.Producto) error {
+	//Seteamos las fechas del producto
+	producto.FechaCreacion = time.Now()
+	producto.FechaUltimaActualizacion = time.Now()
+
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 	_, err := collection.InsertOne(context.Background(), producto)
 	return err
@@ -75,6 +80,9 @@ func (repository *ProductoRepository) ObtenerProductos() ([]*model.Producto, err
 }
 
 func (repository *ProductoRepository) ActualizarProducto(producto model.Producto) error {
+	//Actualizamos la fecha de actualizacion del producto
+	producto.FechaUltimaActualizacion = time.Now()
+
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 
 	filtro := bson.M{"codigo_producto": producto.CodigoProducto}

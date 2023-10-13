@@ -4,6 +4,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/database"
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"context"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -26,6 +27,9 @@ func NewPedidoRepository(db database.DB) *PedidoRepository {
 }
 
 func (repository *PedidoRepository) CrearPedido(pedido model.Pedido) error {
+	pedido.FechaCreacion = time.Now()
+	pedido.FechaUltimaActualizacion = time.Now()
+
 	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")
 	_, err := collection.InsertOne(context.Background(), pedido)
 	return err
@@ -74,6 +78,8 @@ func (repository *PedidoRepository) ObtenerPedidos() ([]*model.Pedido, error) {
 }
 
 func (repository *PedidoRepository) ActualizarPedido(pedido model.Pedido) error {
+	pedido.FechaUltimaActualizacion = time.Now()
+
 	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")
 
 	filtro := bson.M{"id": pedido.Id}

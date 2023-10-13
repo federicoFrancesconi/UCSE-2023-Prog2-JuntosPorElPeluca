@@ -32,6 +32,10 @@ func (repository EnvioRepository) ObtenerEnvios() ([]model.Envio, error) {
 
 	cursor, err := collection.Find(context.TODO(), filtro)
 
+	if err != nil {
+		return nil, err
+	}
+
 	defer cursor.Close(context.Background())
 
 	var envios []model.Envio
@@ -70,10 +74,7 @@ func (repository EnvioRepository) ObtenerEnvioPorId(id int) (model.Envio, error)
 func (repository EnvioRepository) CrearEnvio(envio model.Envio) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 
-	//al crearlo coloco el envio en estado despachar
-	envio.Estado = model.EstadoEnvio(model.ParaEnviar)
-
-	//coloco las fechas
+	//Coloco las fechas
 	envio.FechaCreacion = time.Now()
 	envio.FechaUltimaActualizacion = time.Now()
 
