@@ -112,7 +112,7 @@ func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 	if !operacion {
 		log.Printf("[handler:EnvioHandler][method:AgregarParada][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
-		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) //es correcto devolver bad request aca?
 		return
 	}
 
@@ -142,7 +142,7 @@ func (handler *EnvioHandler) IniciarViaje(c *gin.Context) {
 	if !operacion {
 		log.Printf("[handler:EnvioHandler][method:IniciarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
-		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -172,7 +172,7 @@ func (handler *EnvioHandler) FinalizarViaje(c *gin.Context) {
 	if !operacion {
 		log.Printf("[handler:EnvioHandler][method:FinalizarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
-		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 

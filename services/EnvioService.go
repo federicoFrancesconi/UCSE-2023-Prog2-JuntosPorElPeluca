@@ -77,7 +77,7 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio) error {
 
 func (service *EnvioService) AgregarParada(envio *dto.Envio) (bool, error) {
 	if envio.Estado != model.EnRuta {
-		return false, nil
+		return false, errors.New("el envio no esta en ruta")
 	}
 
 	return true, service.envioRepository.ActualizarEnvio(envio.GetModel())
