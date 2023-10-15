@@ -12,7 +12,9 @@ import (
 type ProductoRepositoryInterface interface {
 	CrearProducto(producto model.Producto) error
 	ObtenerProductoPorCodigo(codigoProducto int) (*model.Producto, error)
-	ObtenerProductos() ([]*model.Producto, error)
+	obtenerProductos(filtro bson.M) ([]*model.Producto, error)
+	ObtenerProductosConStockMenorAlMinimo() ([]*model.Producto, error)
+	ObtenerProductosConStockMenorAlMinimoPorTipo(model.TipoProducto) ([]*model.Producto, error)
 	ActualizarProducto(producto model.Producto) error
 	EliminarProducto(id int) error
 }
@@ -53,16 +55,18 @@ func (repository *ProductoRepository) ObtenerProductoPorCodigo(codigoProducto in
 	return &producto, err
 }
 
-func (repository *ProductoRepository) ObtenerProductos() ([]*model.Producto, error) {
+func (repository *ProductoRepository) obtenerProductos(filtro bson.M) ([]*model.Producto, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 
 	var productosList []*model.Producto
 
-	cursor, err := collection.Find(context.Background(), bson.M{})
+	cursor, err := collection.Find(context.Background(), filtro)
 
 	if err != nil {
 		return nil, err
 	}
+
+	defer cursor.Close(context.Background())
 
 	for cursor.Next(context.Background()) {
 		var producto model.Producto
@@ -76,7 +80,30 @@ func (repository *ProductoRepository) ObtenerProductos() ([]*model.Producto, err
 		productosList = append(productosList, &producto)
 	}
 
-	return productosList, err
+	if err := cursor.Err(); err != nil {
+        return nil, err
+    }
+
+	return productosList, nil
+}
+
+func (repository *ProductoRepository) ObtenerProductosConStockMenorAlMinimo() ([]*model.Producto, error) {
+	//Creamos un filtro que tenga en cuenta que el stock actual sea menor al minimo
+	filtro := bson.M{
+		"stock_actual": bson.M{"$lt": "$stock_minimo"},
+	}
+
+	return repository.obtenerProductos(filtro)
+}
+
+func (repository *ProductoRepository) ObtenerProductosConStockMenorAlMinimoPorTipo(tipoProducto model.TipoProducto) ([]*model.Producto, error) {
+	//Creamos un filtro que tenga en cuenta tipo de producto, y que el stock actual sea menor al minimo
+    filtro := bson.M{
+        "tipo_producto": tipoProducto,
+        "stock_actual": bson.M{"$lt": "$stock_minimo"},
+    }
+
+	return repository.obtenerProductos(filtro)
 }
 
 func (repository *ProductoRepository) ActualizarProducto(producto model.Producto) error {

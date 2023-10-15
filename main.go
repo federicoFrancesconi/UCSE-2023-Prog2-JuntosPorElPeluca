@@ -3,21 +3,21 @@ package main
 import (
 	"log"
 
-	"UCSE-2023-Prog2-TPIntegrador/clients"
 	"UCSE-2023-Prog2-TPIntegrador/database"
 	"UCSE-2023-Prog2-TPIntegrador/handlers"
-	"UCSE-2023-Prog2-TPIntegrador/middlewares"
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
 	"UCSE-2023-Prog2-TPIntegrador/services"
 
 	"github.com/gin-gonic/gin"
+	//"UCSE-2023-Prog2-TPIntegrador/middlewares"
+	//"UCSE-2023-Prog2-TPIntegrador/clients"
 )
 
 var (
-	camionHandler *handlers.CamionHandler
-	pedidoHandler *handlers.PedidoHandler
+	camionHandler   *handlers.CamionHandler
+	pedidoHandler   *handlers.PedidoHandler
 	productoHandler *handlers.ProductoHandler
-	envioHandler *handlers.EnvioHandler
+	envioHandler    *handlers.EnvioHandler
 
 	router *gin.Engine
 )
@@ -34,25 +34,28 @@ func main() {
 }
 
 func mappingRoutes() {
+	//-------------------- Middleware --------------------
 	//middleware para permitir peticiones del mismo server localhost
 
 	//cliente para api externa
-	var authClient clients.AuthClientInterface
-	authClient = clients.NewAuthClient()
-	
+	// var authClient clients.AuthClientInterface
+	// authClient = clients.NewAuthClient()
+
 	//creacion de middleware de autenticacion
-	authMiddleware := middlewares.NewAuthMiddleware(authClient)
+	//authMiddleware := middlewares.NewAuthMiddleware(authClient)
+
+	//Uso del middleware para todas las rutas del grupo
+	//group.Use(authMiddleware.ValidateToken)
+
+	//group.Use(middlewares.CORSMiddleware())
+
+	//------------------------------------------------------
 
 	//Listado de rutas
 	pedidos := router.Group("/pedidos")
 	envios := router.Group("/envios")
 	camiones := router.Group("/camiones")
 	productos := router.Group("/productos")
-
-	//Uso del middleware para todas las rutas del grupo
-	//group.Use(authMiddleware.ValidateToken)
-
-	//group.Use(middlewares.CORSMiddleware())
 
 	//TODO: definir rutas
 }

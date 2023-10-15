@@ -2,6 +2,7 @@ package services
 
 import (
 	"UCSE-2023-Prog2-TPIntegrador/dto"
+	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
 )
 
@@ -11,7 +12,9 @@ type ProductoService struct {
 
 type ProductoServiceInterface interface {
 	CrearProducto(producto *dto.Producto) error
-	ObtenerProductos() ([]dto.Producto, error)
+	//ObtenerProductos() ([]dto.Producto, error)
+	ObtenerProductosConStockMenorAlMinimo() ([]dto.Producto, error)
+	ObtenerProductosConStockMenorAlMinimoPorTipo(tipoProducto model.TipoProducto) ([]dto.Producto, error)
 	DescontarStockProducto(idProducto int, cantidadDescontada int) error
 	EliminarProducto(producto *dto.Producto) error
 }
@@ -26,8 +29,26 @@ func (service *ProductoService) CrearProducto(producto *dto.Producto) error {
 	return service.repository.CrearProducto(producto.GetModel())
 }
 
-func (service *ProductoService) ObtenerProductos() ([]dto.Producto, error) {
-	productos, err := service.repository.ObtenerProductos()
+func (service *ProductoService) ObtenerProductosConStockMenorAlMinimo() ([]dto.Producto, error) {
+	productos, err := service.repository.ObtenerProductosConStockMenorAlMinimo()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var productosDTO []dto.Producto
+
+	for _, producto := range productos {
+		productoDTO := *dto.NewProducto(producto)
+		productosDTO = append(productosDTO, productoDTO)
+	}
+
+	return productosDTO, nil
+}
+
+func (service *ProductoService) ObtenerProductosConStockMenorAlMinimoPorTipo(tipoProducto model.TipoProducto) ([]dto.Producto, error) {
+	productos, err := service.repository.ObtenerProductosConStockMenorAlMinimoPorTipo(tipoProducto)
+
 	if err != nil {
 		return nil, err
 	}
