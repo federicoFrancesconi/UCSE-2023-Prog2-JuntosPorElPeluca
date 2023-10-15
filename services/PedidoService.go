@@ -36,21 +36,21 @@ func (service *PedidoService) CrearPedido(pedido *dto.Pedido) error {
 	return service.repository.CrearPedido(pedido.GetModel())
 }
 
-func (service *PedidoService) ObtenerPedidos() ([]dto.Pedido, error) {
-	pedidos, err := service.repository.ObtenerPedidos()
-	if err != nil {
-		return nil, err
-	}
+// func (service *PedidoService) ObtenerPedidos() ([]dto.Pedido, error) {
+// 	pedidos, err := service.repository.ObtenerPedidos()
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	var pedidosDTO []dto.Pedido
+// 	var pedidosDTO []dto.Pedido
 
-	for _, pedido := range pedidos {
-		pedidoDTO := *dto.NewPedido(pedido)
-		pedidosDTO = append(pedidosDTO, pedidoDTO)
-	}
+// 	for _, pedido := range pedidos {
+// 		pedidoDTO := *dto.NewPedido(pedido)
+// 		pedidosDTO = append(pedidosDTO, pedidoDTO)
+// 	}
 
-	return pedidosDTO, nil
-}
+// 	return pedidosDTO, nil
+// }
 
 func (service *PedidoService) ObtenerPedidoPorId(id int) (*dto.Pedido, error) {
 	pedido, err := service.repository.ObtenerPedidoPorId(id)

@@ -12,7 +12,8 @@ import (
 type PedidoRepositoryInterface interface {
 	CrearPedido(pedido model.Pedido) error
 	ObtenerPedidoPorId(id int) (*model.Pedido, error)
-	ObtenerPedidos() ([]*model.Pedido, error)
+	obtenerPedidos(bson.M) ([]*model.Pedido, error)
+	ObtenerPedidos(id int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]*model.Pedido, error)
 	ActualizarPedido(pedido model.Pedido) error
 }
 
@@ -51,11 +52,8 @@ func (repository *PedidoRepository) ObtenerPedidoPorId(id int) (*model.Pedido, e
 	return &pedido, err
 }
 
-func (repository *PedidoRepository) ObtenerPedidos() ([]*model.Pedido, error) {
+func (repository *PedidoRepository) obtenerPedidos(filtro bson.M) ([]*model.Pedido, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")
-
-	//Creamos un filtro vacío para que traiga todos los pedidos
-	filtro := bson.M{}
 
 	cursor, err := collection.Find(context.Background(), filtro)
 
@@ -64,6 +62,8 @@ func (repository *PedidoRepository) ObtenerPedidos() ([]*model.Pedido, error) {
 	}
 
 	var pedidos []*model.Pedido
+
+	defer cursor.Close(context.Background())
 
 	for cursor.Next(context.Background()) {
 		var pedido model.Pedido
@@ -74,8 +74,41 @@ func (repository *PedidoRepository) ObtenerPedidos() ([]*model.Pedido, error) {
 		pedidos = append(pedidos, &pedido)
 	}
 
-	return pedidos, err
+	if err := cursor.Err(); err != nil {
+        return nil, err
+    }
+
+	return pedidos, nil
 }
+
+//Falta lo de idEnvio
+func (repository *PedidoRepository) ObtenerPedidos(idEnvio int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]*model.Pedido, error) {
+    filter := bson.M{}
+
+    // Agrego filtros segun los parametros que se pasen
+	//Tomo el id en -1 como la ausencia de filtro
+    if idEnvio != (-1) {
+        filter["id"] = idEnvio
+    }
+	//Tomo el estado en -1 como la ausencia de filtro
+    if estado != (-1) {
+        filter["estado"] = estado
+    }
+	//Tomo la fecha de creacion en 0001-01-01 como la ausencia de filtro
+    if !fechaCreacionComienzo.IsZero() || !fechaCreacionFin.IsZero() {
+        filtroFecha := bson.M{}
+        if !fechaCreacionComienzo.IsZero() {
+            filtroFecha["$gte"] = fechaCreacionComienzo
+        }
+        if !fechaCreacionFin.IsZero() {
+            filtroFecha["$lte"] = fechaCreacionFin
+        }
+        filter["fecha_creacion"] = filtroFecha
+    }
+
+	return repository.obtenerPedidos(filter)
+}
+
 
 func (repository *PedidoRepository) ActualizarPedido(pedido model.Pedido) error {
 	pedido.FechaUltimaActualizacion = time.Now()
