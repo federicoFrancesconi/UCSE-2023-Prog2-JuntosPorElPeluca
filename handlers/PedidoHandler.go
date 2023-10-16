@@ -2,11 +2,13 @@ package handlers
 
 import (
 	"UCSE-2023-Prog2-TPIntegrador/dto"
+	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/services"
 	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +24,43 @@ func NewPedidoHandler(pedidoService services.PedidoServiceInterface) *PedidoHand
 func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	pedidos, err := handler.pedidoService.ObtenerPedidos()
+	idEnvioStr := c.DefaultQuery("idEnvio", "0")
+	idEnvio, err := strconv.Atoi(idEnvioStr)
+
+	if err != nil {
+		log.Printf("[handler:PedidoHandler][method:ObtenerPedidos][error:%s][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	//Convierto el estado a integer para buscar el Estado en el "enum" de EstadoPedido
+	estadoStr := c.DefaultQuery("estado", "-1")
+	estado, err := strconv.Atoi(estadoStr)
+
+	if err != nil {
+		log.Printf("[handler:PedidoHandler][method:ObtenerPedidos][error:%s][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Convierte las fechas string a time.Time
+	fechaCreacionComienzoStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01T00:00:00Z")
+	fechaCreacionComienzo, err := time.Parse(time.RFC3339, fechaCreacionComienzoStr)
+	if err != nil {
+		// Si hay un error en el parseo, devuelve una fecha default
+		fechaCreacionComienzo = time.Time{}
+	}
+
+	fechaCreacionFinStr := c.DefaultQuery("fechaCreacionFin", "0001-01-01T00:00:00Z")
+	fechaCreacionFin, err := time.Parse(time.RFC3339, fechaCreacionFinStr)
+	if err != nil {
+		// Si hay un error en el parseo, devuelve una fecha default
+		fechaCreacionFin = time.Time{}
+	}
+
+	pedidos, err := handler.pedidoService.ObtenerPedidosFiltrados(idEnvio, model.EstadoPedido(estado), fechaCreacionComienzo, fechaCreacionFin)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {

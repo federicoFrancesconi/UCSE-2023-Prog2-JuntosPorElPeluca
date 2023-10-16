@@ -15,7 +15,7 @@ type PedidoService struct {
 type PedidoServiceInterface interface {
 	CrearPedido(pedido *dto.Pedido) error
 	ObtenerPedidoPorId(id int) (*dto.Pedido, error)
-	ObtenerPedidosFiltrados() ([]dto.Pedido, error)
+	ObtenerPedidosFiltrados(idEnvio int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]dto.Pedido, error)
 	ObtenerPesoPedido(id int) (float32, error)
 	EnviarPedido(id int) error
 	AceptarPedido(id int) error
@@ -39,7 +39,7 @@ func (service *PedidoService) CrearPedido(pedido *dto.Pedido) error {
 	return service.pedidoRepository.CrearPedido(pedido.GetModel())
 }
 
-func (service *PedidoService) ObtenerPedidos(idEnvio int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]dto.Pedido, error) {
+func (service *PedidoService) ObtenerPedidosFiltrados(idEnvio int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]dto.Pedido, error) {
 	var idPedidos []int
 	
 	//Lo primero es ver si hace falta filtrar por envio
