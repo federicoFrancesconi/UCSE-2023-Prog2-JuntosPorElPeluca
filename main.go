@@ -57,7 +57,32 @@ func mappingRoutes() {
 	camiones := router.Group("/camiones")
 	productos := router.Group("/productos")
 
-	//TODO: definir rutas
+	//Rutas de pedidos
+	pedidos.GET("", pedidoHandler.ObtenerPedidos)
+	pedidos.POST("", pedidoHandler.CrearPedido)
+	pedidos.PUT("/:id/aceptar", pedidoHandler.AceptarPedido)
+	pedidos.PUT("/:id/cancelar", pedidoHandler.CancelarPedido)
+
+	//Rutas de envios
+	envios.GET("", envioHandler.ObtenerEnvios)
+	envios.GET("/:id", envioHandler.ObtenerEnvioPorId)
+	envios.POST("", envioHandler.CrearEnvio)
+	//TODO: hay que modificar estos metodos en el repo, service y handler
+	// envios.PUT("/:id/nuevaParada", envioHandler.AgregarParada)
+	// envios.PUT("/:id/finalizar", envioHandler.FinalizarViaje)
+	// envios.PUT("/:id/iniciar", envioHandler.IniciarViaje)
+
+	//Rutas de camiones
+	camiones.GET("", camionHandler.ObtenerCamiones)
+	camiones.GET("/:patente", camionHandler.ObtenerCamionPorPatente)
+	camiones.POST("", camionHandler.CrearCamion)
+	camiones.PUT("", camionHandler.ActualizarCamion)
+	camiones.DELETE("", camionHandler.EliminarCamion)
+
+	//Rutas de productos
+	productos.GET("", productoHandler.ObtenerProductos)
+	productos.POST("", productoHandler.CrearProducto)
+	productos.DELETE("", productoHandler.EliminarProducto)
 }
 
 func dependencies() {
