@@ -5,10 +5,11 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
 	"errors"
+	"time"
 )
 
 type EnvioServiceInterface interface {
-	ObtenerEnvios() ([]*dto.Envio, error)
+	ObtenerEnviosFiltrados(patente string, estado model.EstadoEnvio, ultimaParada string, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]*dto.Envio, error)
 	ObtenerEnvioPorId(id int) (*dto.Envio, error)
 	CrearEnvio(envio *dto.Envio) error
 	AgregarParada(envio *dto.Envio) (bool, error)
@@ -28,8 +29,8 @@ func NewEnvioService(envioRepository repositories.EnvioRepositoryInterface, cone
 	}
 }
 
-func (service *EnvioService) ObtenerEnvios() ([]*dto.Envio, error) {
-	enviosDB, err := service.envioRepository.ObtenerEnvios()
+func (service *EnvioService) ObtenerEnviosFiltrados(patente string, estado model.EstadoEnvio, ultimaParada string, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]*dto.Envio, error) {
+	enviosDB, err := service.envioRepository.ObtenerEnviosFiltrados(patente, estado, ultimaParada, fechaCreacionComienzo, fechaCreacionFin)
 
 	if err != nil {
 		return nil, err

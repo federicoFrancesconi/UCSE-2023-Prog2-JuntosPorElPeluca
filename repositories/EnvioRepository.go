@@ -12,7 +12,8 @@ import (
 type EnvioRepositoryInterface interface {
 	CrearEnvio(envio model.Envio) error
 	ObtenerEnvioPorId(id int) (model.Envio, error)
-	ObtenerEnvios() ([]model.Envio, error)
+	ObtenerEnvios(filtro bson.M) ([]model.Envio, error)
+	ObtenerEnviosFiltrados(patente string, estado model.EstadoEnvio, ultimaParada string, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]model.Envio, error)
 	ActualizarEnvio(envio model.Envio) error
 }
 
@@ -26,9 +27,8 @@ func NewEnvioRepository(db database.DB) *EnvioRepository {
 	}
 }
 
-func (repository EnvioRepository) ObtenerEnvios() ([]model.Envio, error) {
+func (repository EnvioRepository) ObtenerEnvios(filtro bson.M) ([]model.Envio, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
-	filtro := bson.M{}
 
 	cursor, err := collection.Find(context.TODO(), filtro)
 
@@ -51,6 +51,46 @@ func (repository EnvioRepository) ObtenerEnvios() ([]model.Envio, error) {
 	}
 
 	return envios, err
+}
+
+func (repository EnvioRepository) ObtenerEnviosFiltrados(patente string, estado model.EstadoEnvio, ultimaParada string, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]model.Envio, error) {
+	filtro := bson.M{}
+
+	//Solo filtra por patente si le pasamos un valor distinto de ""
+	if patente != "" {
+		filtro["patente_camion"] = patente
+	}
+
+	//Solo filtra por estado si le pasamos un estado positivo
+	if estado != (-1) {
+		filtro["estado"] = estado
+	}
+
+	//Tomo la fecha de creacion en 0001-01-01 como la ausencia de filtro
+	if !fechaCreacionComienzo.IsZero() || !fechaCreacionFin.IsZero() {
+		filtroFecha := bson.M{}
+		if !fechaCreacionComienzo.IsZero() {
+			filtroFecha["$gte"] = fechaCreacionComienzo
+		}
+		if !fechaCreacionFin.IsZero() {
+			filtroFecha["$lte"] = fechaCreacionFin
+		}
+		filtro["fecha_creacion"] = filtroFecha
+	}
+
+	//TODO: hay que probar esta parte
+	if ultimaParada != "" {
+		if ultimaParada != "" {
+			filtro["paradas"] = bson.M{
+				"$elemMatch": bson.M{
+					"ciudad": ultimaParada,
+				},
+			}
+			filtro["paradas.$slice"] = -1
+		}
+	}
+
+	return repository.ObtenerEnvios(filtro)
 }
 
 func (repository EnvioRepository) ObtenerEnvioPorId(id int) (model.Envio, error) {
