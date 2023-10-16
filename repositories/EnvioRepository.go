@@ -14,7 +14,7 @@ type EnvioRepositoryInterface interface {
 	ObtenerEnvioPorId(id int) (model.Envio, error)
 	ObtenerEnvios(filtro bson.M) ([]model.Envio, error)
 	ObtenerEnviosFiltrados(patente string, estado model.EstadoEnvio, ultimaParada string, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]model.Envio, error)
-	ObtenerCantdidadEnviosPorEstado(estado model.EstadoEnvio) (int, error)
+	ObtenerCantidadEnviosPorEstado(estado model.EstadoEnvio) (int, error)
 	ActualizarEnvio(envio model.Envio) error
 }
 
@@ -112,7 +112,7 @@ func (repository EnvioRepository) ObtenerEnvioPorId(id int) (model.Envio, error)
 	return envio, err
 }
 
-func (repository EnvioRepository) ObtenerCantdidadEnviosPorEstado(estado model.EstadoEnvio) (int, error) {
+func (repository EnvioRepository) ObtenerCantidadEnviosPorEstado(estado model.EstadoEnvio) (int, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 
 	filtro := bson.M{"estado": estado}

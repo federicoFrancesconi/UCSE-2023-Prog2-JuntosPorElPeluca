@@ -22,7 +22,13 @@ func NewEnvioHandler(envioService services.EnvioServiceInterface) *EnvioHandler 
 func (handler *EnvioHandler) ObtenerEnvios(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	envios, err := handler.envioService.ObtenerEnvios()
+	patente := c.DefaultQuery("patente", "")
+	estado := c.DefaultQuery("estado", "")
+	ultimaParada := c.DefaultQuery("ultimaParada", "")
+	fechaCreacionComienzo := c.DefaultQuery("fechaCreacionComienzo", "")
+	fechaCreacionFin := c.DefaultQuery("fechaCreacionFin", "")
+
+	envios, err := handler.envioService.ObtenerEnviosFiltrados(patente, estado, ultimaParada, fechaCreacionComienzo, fechaCreacionFin)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
