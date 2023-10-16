@@ -12,9 +12,8 @@ import (
 type ProductoRepositoryInterface interface {
 	CrearProducto(producto model.Producto) error
 	ObtenerProductoPorCodigo(codigoProducto int) (*model.Producto, error)
-	obtenerProductos(filtro bson.M) ([]*model.Producto, error)
-	ObtenerProductosConStockMenorAlMinimo() ([]*model.Producto, error)
-	ObtenerProductosConStockMenorAlMinimoPorTipo(model.TipoProducto) ([]*model.Producto, error)
+	ObtenerProductos(filtro bson.M) ([]*model.Producto, error)
+	ObtenerProductosFiltrados(model.TipoProducto) ([]*model.Producto, error)
 	ActualizarProducto(producto model.Producto) error
 	EliminarProducto(id int) error
 }
@@ -55,7 +54,7 @@ func (repository *ProductoRepository) ObtenerProductoPorCodigo(codigoProducto in
 	return &producto, err
 }
 
-func (repository *ProductoRepository) obtenerProductos(filtro bson.M) ([]*model.Producto, error) {
+func (repository *ProductoRepository) ObtenerProductos(filtro bson.M) ([]*model.Producto, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 
 	var productosList []*model.Producto
@@ -87,24 +86,18 @@ func (repository *ProductoRepository) obtenerProductos(filtro bson.M) ([]*model.
 	return productosList, nil
 }
 
-func (repository *ProductoRepository) ObtenerProductosConStockMenorAlMinimo() ([]*model.Producto, error) {
-	//Creamos un filtro que tenga en cuenta que el stock actual sea menor al minimo
-	filtro := bson.M{
-		"stock_actual": bson.M{"$lt": "$stock_minimo"},
-	}
-
-	return repository.obtenerProductos(filtro)
-}
-
-func (repository *ProductoRepository) ObtenerProductosConStockMenorAlMinimoPorTipo(tipoProducto model.TipoProducto) ([]*model.Producto, error) {
-	//Creamos un filtro que tenga en cuenta tipo de producto, y que el stock actual sea menor al minimo
+func (repository *ProductoRepository) ObtenerProductosFiltrados(tipoProducto model.TipoProducto) ([]*model.Producto, error) {
     filtro := bson.M{
-        "tipo_producto": tipoProducto,
         "stock_actual": bson.M{"$lt": "$stock_minimo"},
     }
 
-	return repository.obtenerProductos(filtro)
+    if tipoProducto != (-1) {
+        filtro["tipo_producto"] = tipoProducto
+    }
+
+    return repository.ObtenerProductos(filtro)
 }
+
 
 func (repository *ProductoRepository) ActualizarProducto(producto model.Producto) error {
 	//Actualizamos la fecha de actualizacion del producto

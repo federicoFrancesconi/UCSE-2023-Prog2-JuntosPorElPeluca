@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"UCSE-2023-Prog2-TPIntegrador/dto"
+	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/services"
 	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,10 +20,22 @@ func NewProductoHandler(productoService services.ProductoServiceInterface) *Prod
 	return &ProductoHandler{productoService: productoService}
 }
 
+//Obtiene los productos con stock menor al minimo
 func (handler *ProductoHandler) ObtenerProductos(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	productos, err := handler.productoService.ObtenerProductos()
+	//Obtiene el tipo de producto por el que se desea filtrar
+	tipoProductoStr := c.DefaultQuery("tipoProducto", "-1")
+	tipoProducto, err := strconv.Atoi(tipoProductoStr)
+
+	if err != nil {
+		log.Printf("[handler:ProductoHandler][method:ObtenerProductos][error:%s][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	productos, err := handler.productoService.ObtenerProductosFiltrados(model.TipoProducto(tipoProducto))
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
