@@ -23,7 +23,7 @@ type PedidoServiceInterface interface {
 	EntregarPedido(id int) error
 }
 
-func NewPedidoService(pedidoRepository repositories.PedidoRepositoryInterface, envioRepository repositories.EnvioRepository) *PedidoService {
+func NewPedidoService(pedidoRepository repositories.PedidoRepositoryInterface, envioRepository repositories.EnvioRepositoryInterface) *PedidoService {
 	return &PedidoService{
 		pedidoRepository: pedidoRepository,
 		envioRepository: envioRepository,
