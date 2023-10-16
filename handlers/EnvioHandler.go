@@ -2,11 +2,13 @@ package handlers
 
 import (
 	"UCSE-2023-Prog2-TPIntegrador/dto"
+	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/services"
 	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,12 +25,36 @@ func (handler *EnvioHandler) ObtenerEnvios(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
 	patente := c.DefaultQuery("patente", "")
-	estado := c.DefaultQuery("estado", "")
 	ultimaParada := c.DefaultQuery("ultimaParada", "")
-	fechaCreacionComienzo := c.DefaultQuery("fechaCreacionComienzo", "")
-	fechaCreacionFin := c.DefaultQuery("fechaCreacionFin", "")
 
-	envios, err := handler.envioService.ObtenerEnviosFiltrados(patente, estado, ultimaParada, fechaCreacionComienzo, fechaCreacionFin)
+	//Convierto el estado a integer para buscar el Estado en el "enum" de EstadoEnvio
+	estadoStr := c.DefaultQuery("estado", "-1")
+	estado, err := strconv.Atoi(estadoStr)
+
+	if err != nil {
+		log.Printf("[handler:EnvioHandler][method:ObtenerEnvios][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Convierte las fechas string a time.Time
+	fechaCreacionComienzoStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01T00:00:00Z")
+	fechaCreacionComienzo, err := time.Parse(time.RFC3339, fechaCreacionComienzoStr)
+	if err != nil {
+		// Si hay un error en el parseo, devuelve una fecha default
+		fechaCreacionComienzo = time.Time{}
+	}
+
+	fechaCreacionFinStr := c.DefaultQuery("fechaCreacionFin", "0001-01-01T00:00:00Z")
+	fechaCreacionFin, err := time.Parse(time.RFC3339, fechaCreacionFinStr)
+	if err != nil {
+		// Si hay un error en el parseo, devuelve una fecha default
+		fechaCreacionFin = time.Time{}
+	}
+
+	//Llama al service
+	envios, err := handler.envioService.ObtenerEnviosFiltrados(patente, model.EstadoEnvio(estado), ultimaParada, fechaCreacionComienzo, fechaCreacionFin)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
