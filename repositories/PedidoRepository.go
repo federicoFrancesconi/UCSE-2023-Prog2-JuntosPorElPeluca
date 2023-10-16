@@ -14,6 +14,7 @@ type PedidoRepositoryInterface interface {
 	ObtenerPedidoPorId(id int) (*model.Pedido, error)
 	ObtenerPedidos(bson.M) ([]*model.Pedido, error)
 	ObtenerPedidosFiltrados(idPedidos []int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]*model.Pedido, error)
+	ObtenerCantidadPedidosPorEstado(estado model.EstadoPedido) (int, error)
 	ActualizarPedido(pedido model.Pedido) error
 }
 
@@ -111,6 +112,19 @@ func (repository *PedidoRepository) ObtenerPedidosFiltrados(idPedidos []int, est
 	return repository.ObtenerPedidos(filter)
 }
 
+func (repository *PedidoRepository) ObtenerCantidadPedidosPorEstado(estado model.EstadoPedido) (int, error) {
+	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")
+
+	filtro := bson.M{"estado": estado}
+
+	cantidad, err := collection.CountDocuments(context.Background(), filtro)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return int(cantidad), nil
+}
 
 func (repository *PedidoRepository) ActualizarPedido(pedido model.Pedido) error {
 	pedido.FechaUltimaActualizacion = time.Now()
