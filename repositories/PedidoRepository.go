@@ -12,8 +12,8 @@ import (
 type PedidoRepositoryInterface interface {
 	CrearPedido(pedido model.Pedido) error
 	ObtenerPedidoPorId(id int) (*model.Pedido, error)
-	obtenerPedidos(bson.M) ([]*model.Pedido, error)
-	ObtenerPedidos(id int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]*model.Pedido, error)
+	ObtenerPedidos(bson.M) ([]*model.Pedido, error)
+	ObtenerPedidosFiltrados(idPedidos []int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]*model.Pedido, error)
 	ActualizarPedido(pedido model.Pedido) error
 }
 
@@ -52,7 +52,7 @@ func (repository *PedidoRepository) ObtenerPedidoPorId(id int) (*model.Pedido, e
 	return &pedido, err
 }
 
-func (repository *PedidoRepository) obtenerPedidos(filtro bson.M) ([]*model.Pedido, error) {
+func (repository *PedidoRepository) ObtenerPedidos(filtro bson.M) ([]*model.Pedido, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")
 
 	cursor, err := collection.Find(context.Background(), filtro)
@@ -82,18 +82,20 @@ func (repository *PedidoRepository) obtenerPedidos(filtro bson.M) ([]*model.Pedi
 }
 
 //Falta lo de idEnvio
-func (repository *PedidoRepository) ObtenerPedidos(idEnvio int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]*model.Pedido, error) {
+func (repository *PedidoRepository) ObtenerPedidosFiltrados(idPedidos []int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]*model.Pedido, error) {
     filter := bson.M{}
 
     // Agrego filtros segun los parametros que se pasen
-	//Tomo el id en -1 como la ausencia de filtro
-    if idEnvio != (-1) {
-        filter["id"] = idEnvio
+	//Si el array de idPedidos es mayor a 0, uso el filtro, sino no
+    if len(idPedidos) > 0 {
+        filter["id"] = bson.M{"$in": idPedidos}
     }
+
 	//Tomo el estado en -1 como la ausencia de filtro
     if estado != (-1) {
         filter["estado"] = estado
     }
+
 	//Tomo la fecha de creacion en 0001-01-01 como la ausencia de filtro
     if !fechaCreacionComienzo.IsZero() || !fechaCreacionFin.IsZero() {
         filtroFecha := bson.M{}
@@ -106,7 +108,7 @@ func (repository *PedidoRepository) ObtenerPedidos(idEnvio int, estado model.Est
         filter["fecha_creacion"] = filtroFecha
     }
 
-	return repository.obtenerPedidos(filter)
+	return repository.ObtenerPedidos(filter)
 }
 
 

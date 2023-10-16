@@ -4,16 +4,18 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/dto"
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
+	"time"
 )
 
 type PedidoService struct {
-	repository repositories.PedidoRepositoryInterface
+	pedidoRepository repositories.PedidoRepositoryInterface
+	envioRepository repositories.EnvioRepositoryInterface
 }
 
 type PedidoServiceInterface interface {
 	CrearPedido(pedido *dto.Pedido) error
 	ObtenerPedidoPorId(id int) (*dto.Pedido, error)
-	ObtenerPedidos() ([]dto.Pedido, error)
+	ObtenerPedidosFiltrados() ([]dto.Pedido, error)
 	ObtenerPesoPedido(id int) (float32, error)
 	EnviarPedido(id int) error
 	AceptarPedido(id int) error
@@ -21,9 +23,10 @@ type PedidoServiceInterface interface {
 	EntregarPedido(id int) error
 }
 
-func NewPedidoService(repository repositories.PedidoRepositoryInterface) *PedidoService {
+func NewPedidoService(pedidoRepository repositories.PedidoRepositoryInterface, envioRepository repositories.EnvioRepository) *PedidoService {
 	return &PedidoService{
-		repository: repository,
+		pedidoRepository: pedidoRepository,
+		envioRepository: envioRepository,
 	}
 }
 
@@ -33,27 +36,42 @@ func (service *PedidoService) CrearPedido(pedido *dto.Pedido) error {
 		pedido.Estado = model.Pendiente
 	}
 
-	return service.repository.CrearPedido(pedido.GetModel())
+	return service.pedidoRepository.CrearPedido(pedido.GetModel())
 }
 
-// func (service *PedidoService) ObtenerPedidos() ([]dto.Pedido, error) {
-// 	pedidos, err := service.repository.ObtenerPedidos()
-// 	if err != nil {
-// 		return nil, err
-// 	}
+func (service *PedidoService) ObtenerPedidos(idEnvio int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]dto.Pedido, error) {
+	var idPedidos []int
+	
+	//Lo primero es ver si hace falta filtrar por envio
+	if idEnvio != 0 {
+		//Buscamos el envio
+		envio, err := service.envioRepository.ObtenerEnvioPorId(idEnvio)
 
-// 	var pedidosDTO []dto.Pedido
+		if err != nil {
+			return nil, err
+		}
 
-// 	for _, pedido := range pedidos {
-// 		pedidoDTO := *dto.NewPedido(pedido)
-// 		pedidosDTO = append(pedidosDTO, pedidoDTO)
-// 	}
+		//Si el envio existe, obtenemos la lista de pedidos del mismo
+		idPedidos = envio.Pedidos
+	}
+	
+	pedidos, err := service.pedidoRepository.ObtenerPedidosFiltrados(idPedidos, estado, fechaCreacionComienzo, fechaCreacionFin)
+	if err != nil {
+		return nil, err
+	}
 
-// 	return pedidosDTO, nil
-// }
+	var pedidosDTO []dto.Pedido
+
+	for _, pedido := range pedidos {
+		pedidoDTO := *dto.NewPedido(pedido)
+		pedidosDTO = append(pedidosDTO, pedidoDTO)
+	}
+
+	return pedidosDTO, nil
+}
 
 func (service *PedidoService) ObtenerPedidoPorId(id int) (*dto.Pedido, error) {
-	pedido, err := service.repository.ObtenerPedidoPorId(id)
+	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(id)
 
 	if err != nil {
 		return nil, err
@@ -64,9 +82,8 @@ func (service *PedidoService) ObtenerPedidoPorId(id int) (*dto.Pedido, error) {
 	return pedidoDTO, nil
 }
 
-// Si se usa, en ConexionService, pero marca como que no es usado
 func (service *PedidoService) ObtenerPesoPedido(idPedido int) (float32, error) {
-	pedido, err := service.repository.ObtenerPedidoPorId(idPedido)
+	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(idPedido)
 
 	if err != nil {
 		return 0, err
@@ -83,7 +100,7 @@ func (service *PedidoService) ObtenerPesoPedido(idPedido int) (float32, error) {
 
 func (service *PedidoService) EnviarPedido(idPedido int) error {
 	//Primero buscamos el pedido a enviar
-	pedido, err := service.repository.ObtenerPedidoPorId(idPedido)
+	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(idPedido)
 
 	if err != nil {
 		return err
@@ -100,12 +117,12 @@ func (service *PedidoService) EnviarPedido(idPedido int) error {
 	}
 
 	//Actualiza el pedido en la base de datos
-	return service.repository.ActualizarPedido(*pedido)
+	return service.pedidoRepository.ActualizarPedido(*pedido)
 }
 
 func (service *PedidoService) AceptarPedido(idPedido int) error {
 	//Primero buscamos el pedido a aceptar
-	pedido, err := service.repository.ObtenerPedidoPorId(idPedido)
+	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(idPedido)
 
 	if err != nil {
 		return err
@@ -122,12 +139,12 @@ func (service *PedidoService) AceptarPedido(idPedido int) error {
 	}
 
 	//Actualiza el pedido en la base de datos
-	return service.repository.ActualizarPedido(*pedido)
+	return service.pedidoRepository.ActualizarPedido(*pedido)
 }
 
 func (service *PedidoService) CancelarPedido(idPedido int) error {
 	//Primero buscamos el pedido a cancelar
-	pedido, err := service.repository.ObtenerPedidoPorId(idPedido)
+	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(idPedido)
 
 	if err != nil {
 		return err
@@ -144,12 +161,12 @@ func (service *PedidoService) CancelarPedido(idPedido int) error {
 	}
 
 	//Actualiza el pedido en la base de datos
-	return service.repository.ActualizarPedido(*pedido)
+	return service.pedidoRepository.ActualizarPedido(*pedido)
 }
 
 func (service *PedidoService) EntregarPedido(idPedido int) error {
 	//Primero buscamos el pedido a entregar
-	pedido, err := service.repository.ObtenerPedidoPorId(idPedido)
+	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(idPedido)
 
 	if err != nil {
 		return err
@@ -166,7 +183,7 @@ func (service *PedidoService) EntregarPedido(idPedido int) error {
 	}
 
 	//Actualiza el pedido en la base de datos
-	return service.repository.ActualizarPedido(*pedido)
+	return service.pedidoRepository.ActualizarPedido(*pedido)
 
 	//Descuenta el stock de los productos
 }
