@@ -6,11 +6,11 @@ import (
 )
 
 type CamionServiceInterface interface {
+	CrearCamion(*dto.Camion) error
 	ObtenerCamiones() ([]*dto.Camion, error)
-	ObtenerCamionPorPatente(patente string) (*dto.Camion, error)
-	CrearCamion(camion *dto.Camion) error
-	ActualizarCamion(camion *dto.Camion) error
-	EliminarCamion(patente string) error
+	ObtenerCamionPorPatente(*dto.Camion) (*dto.Camion, error)
+	ActualizarCamion(*dto.Camion) error
+	EliminarCamion(*dto.Camion) error
 }
 
 type CamionService struct {
@@ -22,7 +22,7 @@ func NewCamionService(camionRepository repositories.CamionRepositoryInterface) *
 }
 
 func (service *CamionService) ObtenerCamiones() ([]*dto.Camion, error) {
-	camionesDB, err := service.camionRepository.ObtenerCamiones()
+	camionesDB, err := service.camionRepository.ObtenerTodosLosCamiones()
 
 	if err != nil {
 		return nil, err
@@ -36,8 +36,9 @@ func (service *CamionService) ObtenerCamiones() ([]*dto.Camion, error) {
 	return camiones, nil
 }
 
-func (service *CamionService) ObtenerCamionPorPatente(patente string) (*dto.Camion, error) {
-	camionDB, err := service.camionRepository.ObtenerCamionPorPatente(patente)
+func (service *CamionService) ObtenerCamionPorPatente(camionConPatente *dto.Camion) (*dto.Camion, error) {
+	camionDB, err := service.camionRepository.ObtenerCamionPorPatente(camionConPatente.GetModel())
+	
 	var camion *dto.Camion
 	if err != nil {
 		return nil, err
@@ -56,6 +57,6 @@ func (service *CamionService) ActualizarCamion(camion *dto.Camion) error {
 	return service.camionRepository.ActualizarCamion(camion.GetModel())
 }
 
-func (service *CamionService) EliminarCamion(patente string) error {
-	return service.camionRepository.EliminarCamion(patente)
+func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion) error {
+	return service.camionRepository.EliminarCamion(camionConPatente.GetModel())
 }

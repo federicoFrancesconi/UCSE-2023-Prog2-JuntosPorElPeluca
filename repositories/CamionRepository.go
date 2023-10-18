@@ -10,11 +10,11 @@ import (
 )
 
 type CamionRepositoryInterface interface {
-	CrearCamion(camion model.Camion) error
-	ObtenerCamionPorPatente(patente string) (model.Camion, error)
-	ObtenerCamiones() ([]model.Camion, error)
-	ActualizarCamion(camion model.Camion) error
-	EliminarCamion(patente string) error
+	CrearCamion(model.Camion) error
+	ObtenerCamionPorPatente(model.Camion) (model.Camion, error)
+	ObtenerTodosLosCamiones() ([]model.Camion, error)
+	ActualizarCamion(model.Camion) error
+	EliminarCamion(model.Camion) error
 }
 
 type CamionRepository struct {
@@ -27,9 +27,8 @@ func NewCamionRepository(db database.DB) *CamionRepository {
 	}
 }
 
-func (repository CamionRepository) ObtenerCamiones() ([]model.Camion, error) {
+func (repository CamionRepository) obtenerCamiones(filtro bson.M) ([]model.Camion, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
-	filtro := bson.M{}
 
 	cursor, err := collection.Find(context.TODO(), filtro)
 
@@ -54,28 +53,23 @@ func (repository CamionRepository) ObtenerCamiones() ([]model.Camion, error) {
 	return camiones, err
 }
 
-func (repository CamionRepository) ObtenerCamionPorPatente(patente string) (model.Camion, error) {
-	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
-	filtro := bson.M{"patente": patente}
+func (repository CamionRepository) ObtenerTodosLosCamiones() ([]model.Camion, error) {
+	//Uso un filtro vacio para que no filtre y traiga todos los camiones
+	filtroVacio := bson.M{}
 
-	cursor, err := collection.Find(context.TODO(), filtro)
+	return repository.obtenerCamiones(filtroVacio)
+}
 
-	if err != nil {
-		return model.Camion{}, err
-	}
+func (repository CamionRepository) ObtenerCamionPorPatente(camion model.Camion) (model.Camion, error) {
+	filtro := bson.M{"patente": camion.Patente}
 
-	defer cursor.Close(context.Background())
+	camiones, err := repository.obtenerCamiones(filtro)
 
-	var camion model.Camion
+	// if err != nil {
+	// 	return model.Camion{}, err
+	// }
 
-	for cursor.Next(context.Background()) {
-		err := cursor.Decode(&camion)
-		if err != nil {
-			return camion, err
-		}
-	}
-
-	return camion, err
+	return camiones[0], err
 }
 
 func (repository CamionRepository) CrearCamion(camion model.Camion) error {
@@ -99,9 +93,9 @@ func (repository CamionRepository) ActualizarCamion(camion model.Camion) error {
 	return err
 }
 
-func (repository CamionRepository) EliminarCamion(patente string) error {
+func (repository CamionRepository) EliminarCamion(camion model.Camion) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
-	filtro := bson.M{"patente": patente}
+	filtro := bson.M{"patente": camion.Patente}
 	_, err := collection.DeleteOne(context.Background(), filtro)
 	return err
 }

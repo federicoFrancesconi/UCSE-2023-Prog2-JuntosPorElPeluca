@@ -18,17 +18,17 @@ type EnvioServiceInterface interface {
 }
 
 type EnvioService struct {
-	envioRepository  repositories.EnvioRepositoryInterface
-	camionRepository repositories.CamionRepositoryInterface
-	pedidoRepository repositories.PedidoRepositoryInterface
+	envioRepository    repositories.EnvioRepositoryInterface
+	camionRepository   repositories.CamionRepositoryInterface
+	pedidoRepository   repositories.PedidoRepositoryInterface
 	productoRepository repositories.ProductoRepositoryInterface
 }
 
 func NewEnvioService(envioRepository repositories.EnvioRepositoryInterface, camionRepository repositories.CamionRepositoryInterface, pedidoRepository repositories.PedidoRepositoryInterface, productoRepository repositories.ProductoRepositoryInterface) *EnvioService {
 	return &EnvioService{
-		envioRepository:  envioRepository,
-		camionRepository: camionRepository,
-		pedidoRepository: pedidoRepository,
+		envioRepository:    envioRepository,
+		camionRepository:   camionRepository,
+		pedidoRepository:   pedidoRepository,
 		productoRepository: productoRepository,
 	}
 }
@@ -82,7 +82,9 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio) error {
 
 func (service *EnvioService) envioCabeEnCamion(envio *dto.Envio) (bool, error) {
 	//Primero buscamos el camion por patente
-	camion, err := service.camionRepository.ObtenerCamionPorPatente(envio.PatenteCamion)
+	camionConPatente := model.Camion{Patente: envio.PatenteCamion}
+	camion, err := service.camionRepository.ObtenerCamionPorPatente(camionConPatente)
+
 	if err != nil {
 		return false, err
 	}
