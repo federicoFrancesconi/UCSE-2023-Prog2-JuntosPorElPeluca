@@ -3,6 +3,7 @@ package repositories
 import (
 	"UCSE-2023-Prog2-TPIntegrador/database"
 	"UCSE-2023-Prog2-TPIntegrador/model"
+	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"context"
 	"time"
 
@@ -11,9 +12,8 @@ import (
 
 type EnvioRepositoryInterface interface {
 	CrearEnvio(envio model.Envio) error
-	ObtenerEnvioPorId(id int) (model.Envio, error)
-	ObtenerEnvios(filtro bson.M) ([]model.Envio, error)
-	ObtenerEnviosFiltrados(patente string, estado model.EstadoEnvio, ultimaParada string, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]model.Envio, error)
+	ObtenerEnvioPorId(envio model.Envio) (model.Envio, error)
+	ObtenerEnviosFiltrados(utils.FiltroEnvio) ([]model.Envio, error)
 	ObtenerCantidadEnviosPorEstado(estado model.EstadoEnvio) (int, error)
 	ActualizarEnvio(envio model.Envio) error
 }
@@ -28,7 +28,7 @@ func NewEnvioRepository(db database.DB) *EnvioRepository {
 	}
 }
 
-func (repository EnvioRepository) ObtenerEnvios(filtro bson.M) ([]model.Envio, error) {
+func (repository EnvioRepository) obtenerEnvios(filtro bson.M) ([]model.Envio, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 
 	cursor, err := collection.Find(context.TODO(), filtro)
@@ -54,7 +54,15 @@ func (repository EnvioRepository) ObtenerEnvios(filtro bson.M) ([]model.Envio, e
 	return envios, err
 }
 
-func (repository EnvioRepository) ObtenerEnviosFiltrados(patente string, estado model.EstadoEnvio, ultimaParada string, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]model.Envio, error) {
+func (repository EnvioRepository) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvio) ([]model.Envio, error) {
+	//Desestructuramos el filtro
+	patente := filtroEnvio.PatenteCamion
+	estado := filtroEnvio.Estado
+	ultimaParada := filtroEnvio.UltimaParada
+	fechaCreacionComienzo := filtroEnvio.FechaCreacionComienzo
+	fechaCreacionFin := filtroEnvio.FechaCreacionFin
+
+	//Creamos el filtro para la base de datos
 	filtro := bson.M{}
 
 	//Solo filtra por patente si le pasamos un valor distinto de ""
@@ -91,25 +99,15 @@ func (repository EnvioRepository) ObtenerEnviosFiltrados(patente string, estado 
 		}
 	}
 
-	return repository.ObtenerEnvios(filtro)
+	return repository.obtenerEnvios(filtro)
 }
 
-func (repository EnvioRepository) ObtenerEnvioPorId(id int) (model.Envio, error) {
-	collection := repository.db.GetClient().Database("empresa").Collection("envios")
-	filtro := bson.M{"id": id}
+func (repository EnvioRepository) ObtenerEnvioPorId(envio model.Envio) (model.Envio, error) {
+	filtro := bson.M{"id": envio.Id}
 
-	cursor, err := collection.Find(context.TODO(), filtro)
+	envios, err := repository.obtenerEnvios(filtro)
 
-	var envio model.Envio
-
-	for cursor.Next(context.Background()) {
-		err := cursor.Decode(&envio)
-		if err != nil {
-			return envio, err
-		}
-	}
-
-	return envio, err
+	return envios[0], err
 }
 
 func (repository EnvioRepository) ObtenerCantidadEnviosPorEstado(estado model.EstadoEnvio) (int, error) {

@@ -53,8 +53,17 @@ func (handler *EnvioHandler) ObtenerEnvios(c *gin.Context) {
 		fechaCreacionFin = time.Time{}
 	}
 
+	//Creamos el filtro
+	filtro := utils.FiltroEnvio{
+		PatenteCamion:         patente,
+		Estado:                model.EstadoEnvio(estado),
+		UltimaParada:          ultimaParada,
+		FechaCreacionComienzo: fechaCreacionComienzo,
+		FechaCreacionFin:      fechaCreacionFin,
+	}
+
 	//Llama al service
-	envios, err := handler.envioService.ObtenerEnviosFiltrados(patente, model.EstadoEnvio(estado), ultimaParada, fechaCreacionComienzo, fechaCreacionFin)
+	envios, err := handler.envioService.ObtenerEnviosFiltrados(filtro)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
@@ -85,7 +94,7 @@ func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
 		return
 	}
 
-	envio, err := handler.envioService.ObtenerEnvioPorId(idInt)
+	envio, err := handler.envioService.ObtenerEnvioPorId(&dto.Envio{Id: idInt})
 
 	//Si hay un error, lo devolvemos
 	if err != nil {

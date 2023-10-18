@@ -4,13 +4,13 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/dto"
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
+	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"errors"
-	"time"
 )
 
 type EnvioServiceInterface interface {
-	ObtenerEnviosFiltrados(patente string, estado model.EstadoEnvio, ultimaParada string, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]*dto.Envio, error)
-	ObtenerEnvioPorId(id int) (*dto.Envio, error)
+	ObtenerEnviosFiltrados(utils.FiltroEnvio) ([]*dto.Envio, error)
+	ObtenerEnvioPorId(envio *dto.Envio) (*dto.Envio, error)
 	CrearEnvio(envio *dto.Envio) error
 	AgregarParada(envio *dto.Envio) (bool, error)
 	IniciarViaje(envio *dto.Envio) (bool, error)
@@ -33,8 +33,8 @@ func NewEnvioService(envioRepository repositories.EnvioRepositoryInterface, cami
 	}
 }
 
-func (service *EnvioService) ObtenerEnviosFiltrados(patente string, estado model.EstadoEnvio, ultimaParada string, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]*dto.Envio, error) {
-	enviosDB, err := service.envioRepository.ObtenerEnviosFiltrados(patente, estado, ultimaParada, fechaCreacionComienzo, fechaCreacionFin)
+func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvio) ([]*dto.Envio, error) {
+	enviosDB, err := service.envioRepository.ObtenerEnviosFiltrados(filtroEnvio)
 
 	if err != nil {
 		return nil, err
@@ -48,14 +48,17 @@ func (service *EnvioService) ObtenerEnviosFiltrados(patente string, estado model
 	return envios, nil
 }
 
-func (service *EnvioService) ObtenerEnvioPorId(id int) (*dto.Envio, error) {
-	envioDB, err := service.envioRepository.ObtenerEnvioPorId(id)
+func (service *EnvioService) ObtenerEnvioPorId(envioConID *dto.Envio) (*dto.Envio, error) {
+	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envioConID.GetModel())
+
 	var envio *dto.Envio
+
 	if err != nil {
 		return nil, err
 	} else {
 		envio = dto.NewEnvio(envioDB)
 	}
+
 	return envio, nil
 }
 
