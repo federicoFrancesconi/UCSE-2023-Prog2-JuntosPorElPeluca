@@ -16,11 +16,8 @@ type PedidoServiceInterface interface {
 	CrearPedido(pedido *dto.Pedido) error
 	ObtenerPedidoPorId(id int) (*dto.Pedido, error)
 	ObtenerPedidosFiltrados(idEnvio int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]dto.Pedido, error)
-	ObtenerPesoPedido(id int) (float32, error)
-	EnviarPedido(id int) error
 	AceptarPedido(id int) error
 	CancelarPedido(id int) error
-	EntregarPedido(id int) error
 }
 
 func NewPedidoService(pedidoRepository repositories.PedidoRepositoryInterface, envioRepository repositories.EnvioRepositoryInterface) *PedidoService {
@@ -82,44 +79,6 @@ func (service *PedidoService) ObtenerPedidoPorId(id int) (*dto.Pedido, error) {
 	return pedidoDTO, nil
 }
 
-func (service *PedidoService) ObtenerPesoPedido(idPedido int) (float32, error) {
-	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(idPedido)
-
-	if err != nil {
-		return 0, err
-	}
-
-	//Calculo el peso del pedido sumando el peso de cada producto elegido
-	var peso float32 = 0
-	for _, producto := range pedido.ProductosElegidos {
-		peso += producto.ObtenerPesoProductoPedido()
-	}
-
-	return peso, nil
-}
-
-func (service *PedidoService) EnviarPedido(idPedido int) error {
-	//Primero buscamos el pedido a enviar
-	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(idPedido)
-
-	if err != nil {
-		return err
-	}
-
-	//Valida que el pedido esté en estado Aceptado
-	if pedido.Estado != model.Aceptado {
-		return nil
-	}
-
-	//Cambia el estado del pedido a Para enviar, si es que no estaba ya en ese estado
-	if pedido.Estado != model.ParaEnviar {
-		pedido.Estado = model.ParaEnviar
-	}
-
-	//Actualiza el pedido en la base de datos
-	return service.pedidoRepository.ActualizarPedido(*pedido)
-}
-
 func (service *PedidoService) AceptarPedido(idPedido int) error {
 	//Primero buscamos el pedido a aceptar
 	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(idPedido)
@@ -162,28 +121,4 @@ func (service *PedidoService) CancelarPedido(idPedido int) error {
 
 	//Actualiza el pedido en la base de datos
 	return service.pedidoRepository.ActualizarPedido(*pedido)
-}
-
-func (service *PedidoService) EntregarPedido(idPedido int) error {
-	//Primero buscamos el pedido a entregar
-	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(idPedido)
-
-	if err != nil {
-		return err
-	}
-
-	//Valida que el pedido esté en estado Para enviar
-	if pedido.Estado != model.ParaEnviar {
-		return nil
-	}
-
-	//Cambia el estado del pedido a Enviado, si es que no estaba ya en ese estado
-	if pedido.Estado != model.Enviado {
-		pedido.Estado = model.Enviado
-	}
-
-	//Actualiza el pedido en la base de datos
-	return service.pedidoRepository.ActualizarPedido(*pedido)
-
-	//Descuenta el stock de los productos
 }
