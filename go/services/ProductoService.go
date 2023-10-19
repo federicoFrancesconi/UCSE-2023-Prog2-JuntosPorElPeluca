@@ -2,8 +2,8 @@ package services
 
 import (
 	"UCSE-2023-Prog2-TPIntegrador/dto"
-	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
+	"UCSE-2023-Prog2-TPIntegrador/utils"
 )
 
 type ProductoService struct {
@@ -11,11 +11,9 @@ type ProductoService struct {
 }
 
 type ProductoServiceInterface interface {
-	CrearProducto(producto *dto.Producto) error
-	//ObtenerProductos() ([]dto.Producto, error)
-	ObtenerProductosFiltrados(tipoProducto model.TipoProducto) ([]dto.Producto, error)
-	DescontarStockProducto(idProducto int, cantidadDescontada int) error
-	EliminarProducto(producto *dto.Producto) error
+	CrearProducto(*dto.Producto) error
+	ObtenerProductosFiltrados(utils.FiltroProducto) ([]dto.Producto, error)
+	EliminarProducto(*dto.Producto) error
 }
 
 func NewProductoService(repository repositories.ProductoRepositoryInterface) *ProductoService {
@@ -28,8 +26,8 @@ func (service *ProductoService) CrearProducto(producto *dto.Producto) error {
 	return service.repository.CrearProducto(producto.GetModel())
 }
 
-func (service *ProductoService) ObtenerProductosFiltrados(tipoProducto model.TipoProducto) ([]dto.Producto, error) {
-	productos, err := service.repository.ObtenerProductosFiltrados(tipoProducto)
+func (service *ProductoService) ObtenerProductosFiltrados(filtro utils.FiltroProducto) ([]dto.Producto, error) {
+	productos, err := service.repository.ObtenerProductosFiltrados(filtro)
 
 	if err != nil {
 		return nil, err
@@ -42,21 +40,6 @@ func (service *ProductoService) ObtenerProductosFiltrados(tipoProducto model.Tip
 	}
 
 	return productosDTO, nil
-}
-
-func (service *ProductoService) DescontarStockProducto(idProducto int, cantidadDescontada int) error {
-	//Buscamos el producto del que hay que descontar la cantidad
-	producto, err := service.repository.ObtenerProductoPorCodigo(idProducto)
-
-	if err != nil {
-		return err
-	}
-
-	//Modificamos el stock
-	producto.StockActual = producto.StockActual - cantidadDescontada
-
-	//Actualizamos la base de datos
-	return service.repository.ActualizarProducto(*producto)
 }
 
 func (service *ProductoService) EliminarProducto(producto *dto.Producto) error {

@@ -21,6 +21,10 @@ func NewCamionService(camionRepository repositories.CamionRepositoryInterface) *
 	return &CamionService{camionRepository: camionRepository}
 }
 
+func (service *CamionService) CrearCamion(camion *dto.Camion) error {
+	return service.camionRepository.CrearCamion(camion.GetModel())
+}
+
 func (service *CamionService) ObtenerCamiones() ([]*dto.Camion, error) {
 	camionesDB, err := service.camionRepository.ObtenerTodosLosCamiones()
 
@@ -47,10 +51,6 @@ func (service *CamionService) ObtenerCamionPorPatente(camionConPatente *dto.Cami
 	camion = dto.NewCamion(camionDB)
 
 	return camion, nil
-}
-
-func (service *CamionService) CrearCamion(camion *dto.Camion) error {
-	return service.camionRepository.CrearCamion(camion.GetModel())
 }
 
 func (service *CamionService) ActualizarCamion(camion *dto.Camion) error {

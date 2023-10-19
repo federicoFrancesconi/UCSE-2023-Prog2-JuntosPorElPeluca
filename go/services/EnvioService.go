@@ -9,12 +9,12 @@ import (
 )
 
 type EnvioServiceInterface interface {
+	CrearEnvio(*dto.Envio) error
 	ObtenerEnviosFiltrados(utils.FiltroEnvio) ([]*dto.Envio, error)
-	ObtenerEnvioPorId(envio *dto.Envio) (*dto.Envio, error)
-	CrearEnvio(envio *dto.Envio) error
-	AgregarParada(envio *dto.Envio) (bool, error)
-	IniciarViaje(envio *dto.Envio) (bool, error)
-	FinalizarViaje(envio *dto.Envio) (bool, error)
+	ObtenerEnvioPorId(*dto.Envio) (*dto.Envio, error)
+	AgregarParada(*dto.Envio) (bool, error)
+	IniciarViaje(*dto.Envio) (bool, error)
+	FinalizarViaje(*dto.Envio) (bool, error)
 }
 
 type EnvioService struct {
@@ -31,6 +31,31 @@ func NewEnvioService(envioRepository repositories.EnvioRepositoryInterface, cami
 		pedidoRepository:   pedidoRepository,
 		productoRepository: productoRepository,
 	}
+}
+
+func (service *EnvioService) CrearEnvio(envio *dto.Envio) error {
+	envioCabeEnCamion, err := service.envioCabeEnCamion(envio)
+
+	if err != nil {
+		return err
+	}
+
+	if !envioCabeEnCamion {
+		//Devuelve un error diciendo que el envio no cabe en el camion
+		return errors.New("el envio no cabe en el camion")
+	}
+
+	//al crearlo coloco el envio en estado despachar
+	envio.Estado = model.EstadoEnvio(model.ParaEnviar)
+
+	//Cambio el estado de los pedidos del envio
+	err = service.enviarPedidosDeEnvio(envio)
+
+	if err != nil {
+		return err
+	}
+
+	return service.envioRepository.CrearEnvio(envio.GetModel())
 }
 
 func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvio) ([]*dto.Envio, error) {
@@ -60,31 +85,6 @@ func (service *EnvioService) ObtenerEnvioPorId(envioConID *dto.Envio) (*dto.Envi
 	}
 
 	return envio, nil
-}
-
-func (service *EnvioService) CrearEnvio(envio *dto.Envio) error {
-	envioCabeEnCamion, err := service.envioCabeEnCamion(envio)
-
-	if err != nil {
-		return err
-	}
-
-	if !envioCabeEnCamion {
-		//Devuelve un error diciendo que el envio no cabe en el camion
-		return errors.New("el envio no cabe en el camion")
-	}
-
-	//al crearlo coloco el envio en estado despachar
-	envio.Estado = model.EstadoEnvio(model.ParaEnviar)
-
-	//Cambio el estado de los pedidos del envio
-	err = service.enviarPedidosDeEnvio(envio)
-
-	if err != nil {
-		return err
-	}
-
-	return service.envioRepository.CrearEnvio(envio.GetModel())
 }
 
 func (service *EnvioService) envioCabeEnCamion(envio *dto.Envio) (bool, error) {
@@ -233,7 +233,7 @@ func (service *EnvioService) descontarStockProductosDeEnvio(envio *dto.Envio) er
 		}
 
 		for _, producto := range pedido.ProductosElegidos {
-			err = service.descontarStockProducto(producto.CodigoProducto, producto.Cantidad)
+			err = service.descontarStockProducto(*dto.NewProductoPedido(&producto))
 			if err != nil {
 				return err
 			}
@@ -242,16 +242,19 @@ func (service *EnvioService) descontarStockProductosDeEnvio(envio *dto.Envio) er
 	return nil
 }
 
-func (service *EnvioService) descontarStockProducto(codigoProducto int, cantidadDescontada int) error {
+func (service *EnvioService) descontarStockProducto(productoPedido dto.ProductoPedido) error {
+	//Generamos un producto con el codigo del producto del pedido
+	productoConId := model.Producto{CodigoProducto: productoPedido.CodigoProducto}
+
 	//Buscamos el producto del que hay que descontar la cantidad
-	producto, err := service.productoRepository.ObtenerProductoPorCodigo(codigoProducto)
+	producto, err := service.productoRepository.ObtenerProductoPorCodigo(productoConId)
 
 	if err != nil {
 		return err
 	}
 
 	//Modificamos el stock
-	producto.StockActual = producto.StockActual - cantidadDescontada
+	producto.StockActual = producto.StockActual - productoPedido.Cantidad
 
 	//Actualizamos la base de datos
 	return service.productoRepository.ActualizarProducto(*producto)

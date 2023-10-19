@@ -24,6 +24,17 @@ func NewProductoHandler(productoService services.ProductoServiceInterface) *Prod
 func (handler *ProductoHandler) ObtenerProductos(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
+	//Pregunta si desea filtrar por stock minimo o no
+	filtrarPorStockMinimoStr := c.DefaultQuery("filtrarPorStockMinimo", "false")
+	filtrarPorStockMinimo, err := strconv.ParseBool(filtrarPorStockMinimoStr)
+
+	if err != nil {
+		log.Printf("[handler:ProductoHandler][method:ObtenerProductos][error:%s][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	//Obtiene el tipo de producto por el que se desea filtrar
 	tipoProductoStr := c.DefaultQuery("tipoProducto", "-1")
 	tipoProducto, err := strconv.Atoi(tipoProductoStr)
@@ -35,7 +46,13 @@ func (handler *ProductoHandler) ObtenerProductos(c *gin.Context) {
 		return
 	}
 
-	productos, err := handler.productoService.ObtenerProductosFiltrados(model.TipoProducto(tipoProducto))
+	//Armamos el filtro
+	filtroProducto := utils.FiltroProducto{
+		FiltrarPorStockMinimo: filtrarPorStockMinimo,
+		TipoProducto:          model.TipoProducto(tipoProducto),
+	}
+
+	productos, err := handler.productoService.ObtenerProductosFiltrados(filtroProducto)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {

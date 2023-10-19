@@ -3,6 +3,7 @@ package repositories
 import (
 	"UCSE-2023-Prog2-TPIntegrador/database"
 	"UCSE-2023-Prog2-TPIntegrador/model"
+	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"context"
 	"time"
 
@@ -10,11 +11,10 @@ import (
 )
 
 type ProductoRepositoryInterface interface {
-	CrearProducto(producto model.Producto) error
-	ObtenerProductoPorCodigo(codigoProducto int) (*model.Producto, error)
-	ObtenerProductos(filtro bson.M) ([]*model.Producto, error)
-	ObtenerProductosFiltrados(model.TipoProducto) ([]*model.Producto, error)
-	ActualizarProducto(producto model.Producto) error
+	CrearProducto(model.Producto) error
+	ObtenerProductoPorCodigo(model.Producto) (*model.Producto, error)
+	ObtenerProductosFiltrados(utils.FiltroProducto) ([]*model.Producto, error)
+	ActualizarProducto(model.Producto) error
 	EliminarProducto(id int) error
 }
 
@@ -38,10 +38,10 @@ func (repository *ProductoRepository) CrearProducto(producto model.Producto) err
 	return err
 }
 
-func (repository *ProductoRepository) ObtenerProductoPorCodigo(codigoProducto int) (*model.Producto, error) {
+func (repository *ProductoRepository) ObtenerProductoPorCodigo(productoConCodigo model.Producto) (*model.Producto, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 
-	filtro := bson.M{"codigo_producto": codigoProducto}
+	filtro := bson.M{"codigo_producto": productoConCodigo.CodigoProducto}
 
 	var producto model.Producto
 
@@ -54,7 +54,24 @@ func (repository *ProductoRepository) ObtenerProductoPorCodigo(codigoProducto in
 	return &producto, err
 }
 
-func (repository *ProductoRepository) ObtenerProductos(filtro bson.M) ([]*model.Producto, error) {
+func (repository *ProductoRepository) ObtenerProductosFiltrados(filtroProducto utils.FiltroProducto) ([]*model.Producto, error) {
+	//Primero creamos el filtro vacio
+	filtroDB := bson.M{}
+
+	//Si quiere filtrar por stock minimo, lo agregamos al filtro
+	if filtroProducto.FiltrarPorStockMinimo {
+		filtroDB["stock_actual"] = bson.M{"$lt": "$stock_minimo"}
+	}
+
+	//Si quiere filtrar por tipo de producto, lo agregamos al filtro
+	if filtroProducto.TipoProducto != (-1) {
+		filtroDB["tipo_producto"] = filtroProducto.TipoProducto
+	}
+
+	return repository.obtenerProductos(filtroDB)
+}
+
+func (repository *ProductoRepository) obtenerProductos(filtro bson.M) ([]*model.Producto, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 
 	var productosList []*model.Producto
@@ -80,24 +97,11 @@ func (repository *ProductoRepository) ObtenerProductos(filtro bson.M) ([]*model.
 	}
 
 	if err := cursor.Err(); err != nil {
-        return nil, err
-    }
+		return nil, err
+	}
 
 	return productosList, nil
 }
-
-func (repository *ProductoRepository) ObtenerProductosFiltrados(tipoProducto model.TipoProducto) ([]*model.Producto, error) {
-    filtro := bson.M{
-        "stock_actual": bson.M{"$lt": "$stock_minimo"},
-    }
-
-    if tipoProducto != (-1) {
-        filtro["tipo_producto"] = tipoProducto
-    }
-
-    return repository.ObtenerProductos(filtro)
-}
-
 
 func (repository *ProductoRepository) ActualizarProducto(producto model.Producto) error {
 	//Actualizamos la fecha de actualizacion del producto
