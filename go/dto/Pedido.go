@@ -56,3 +56,11 @@ func NewProductosPedido(productosElegidos []model.ProductoPedido) []ProductoPedi
 	}
 	return productosElegidosDto
 }
+
+func (pedido Pedido) ObtenerPecioTotal() float32 {
+	var precioTotal float32 = 0
+	for _, producto := range pedido.ProductosElegidos {
+		precioTotal += producto.PrecioUnitario * float32(producto.Cantidad)
+	}
+	return precioTotal
+}

@@ -66,11 +66,11 @@ func mappingRoutes() {
 	//Rutas de envios
 	envios.GET("", envioHandler.ObtenerEnvios)
 	envios.GET("/:id", envioHandler.ObtenerEnvioPorId)
+	envios.GET("/beneficio", envioHandler.ObtenerBeneficioEntreFechas)
 	envios.POST("", envioHandler.CrearEnvio)
-	//TODO: hay que modificar estos metodos en el repo, service y handler
-	// envios.PUT("/:id/nuevaParada", envioHandler.AgregarParada)
-	// envios.PUT("/:id/finalizar", envioHandler.FinalizarViaje)
-	// envios.PUT("/:id/iniciar", envioHandler.IniciarViaje)
+	envios.PUT("/:id/nuevaParada", envioHandler.AgregarParada)
+	envios.PUT("/:id/finalizar", envioHandler.FinalizarViaje)
+	envios.PUT("/:id/iniciar", envioHandler.IniciarViaje)
 
 	//Rutas de camiones
 	camiones.GET("", camionHandler.ObtenerCamiones)

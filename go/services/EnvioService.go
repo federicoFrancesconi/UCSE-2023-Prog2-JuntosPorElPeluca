@@ -12,6 +12,7 @@ type EnvioServiceInterface interface {
 	CrearEnvio(*dto.Envio) error
 	ObtenerEnviosFiltrados(utils.FiltroEnvio) ([]*dto.Envio, error)
 	ObtenerEnvioPorId(*dto.Envio) (*dto.Envio, error)
+	ObtenerBeneficioEntreFechas(utils.FiltroEnvio) (float32, error)
 	AgregarParada(*dto.Envio) (bool, error)
 	IniciarViaje(*dto.Envio) (bool, error)
 	FinalizarViaje(*dto.Envio) (bool, error)
@@ -152,6 +153,90 @@ func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido) error {
 
 	//Actualiza el pedido en la base de datos
 	return service.pedidoRepository.ActualizarPedido(*pedido)
+}
+
+func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvio) (float32, error) {
+	//Busca los envios entre el rango de fechas pasado como parametro
+	filtroEnvio := utils.FiltroEnvio{
+		PatenteCamion:         "",
+		Estado:                -1,
+		UltimaParada:          "",
+		FechaCreacionComienzo: filtro.FechaCreacionComienzo,
+		FechaCreacionFin:      filtro.FechaCreacionFin,
+	}
+
+	envios, err := service.ObtenerEnviosFiltrados(filtroEnvio)
+
+	if err != nil {
+		return 0, err
+	}
+
+	//Suma el precio de los pedidos de cada envio
+	var beneficioBruto float32 = 0
+	for _, envio := range envios {
+		precioTotal, err := service.getPrecioTotalProductosDeEnvio(envio)
+		
+		if err != nil {
+			return 0, err
+		}
+
+		beneficioBruto += precioTotal
+	}
+
+	//Suma el costo de los envios
+	var costoEnvios float32 = 0
+	for _, envio := range envios {
+		costoEnvio, err := service.getCostoEnvio(envio)
+
+		if err != nil {
+			return 0, err
+		}
+
+		costoEnvios += costoEnvio
+	}
+
+	beneficioNeto := beneficioBruto - costoEnvios
+
+	return beneficioNeto, nil
+}
+
+func (service *EnvioService) getPrecioTotalProductosDeEnvio(envio *dto.Envio) (float32, error) {
+	var precioTotal float32 = 0
+	
+	for _, idPedido := range envio.Pedidos {
+		pedido, err := service.pedidoRepository.ObtenerPedidoPorId(model.Pedido{Id: idPedido})
+
+		if err != nil {
+			return 0, err
+		}
+
+		//Convierto el pedido a dto
+		pedidoDTO := dto.NewPedido(pedido)
+
+		precioTotal += pedidoDTO.ObtenerPecioTotal()
+	}
+
+	return precioTotal, nil
+}
+
+func (service *EnvioService) getCostoEnvio(envio *dto.Envio) (float32, error) {
+	//Obtiene el camion del envio para conocer el costoPorKilometro
+	camion, err := service.camionRepository.ObtenerCamionPorPatente(model.Camion{Patente: envio.PatenteCamion})
+
+	if err != nil {
+		return 0, err
+	}
+
+	//Suma los kilometros de cada parada
+	var kilometrosRecorridos int = 0
+	for i := 0; i < len(envio.Paradas)-1; i++ {
+		//Obtiene la distancia entre la parada i y la parada i+1
+		kilometrosRecorridos += envio.Paradas[i].KmRecorridos
+	}
+
+	costoEnvio := camion.CostoPorKilometro * float32(kilometrosRecorridos)
+
+	return costoEnvio, nil
 }
 
 func (service *EnvioService) AgregarParada(envio *dto.Envio) (bool, error) {

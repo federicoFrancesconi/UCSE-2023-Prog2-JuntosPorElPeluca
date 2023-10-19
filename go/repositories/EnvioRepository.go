@@ -28,6 +28,18 @@ func NewEnvioRepository(db database.DB) *EnvioRepository {
 	}
 }
 
+func (repository EnvioRepository) CrearEnvio(envio model.Envio) error {
+	collection := repository.db.GetClient().Database("empresa").Collection("envios")
+
+	//Coloco las fechas
+	envio.FechaCreacion = time.Now()
+	envio.FechaUltimaActualizacion = time.Now()
+
+	_, err := collection.InsertOne(context.Background(), envio)
+
+	return err
+}
+
 func (repository EnvioRepository) obtenerEnvios(filtro bson.M) ([]model.Envio, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 
@@ -122,18 +134,6 @@ func (repository EnvioRepository) ObtenerCantidadEnviosPorEstado(estado model.Es
 	}
 
 	return int(cantidad), nil
-}
-
-func (repository EnvioRepository) CrearEnvio(envio model.Envio) error {
-	collection := repository.db.GetClient().Database("empresa").Collection("envios")
-
-	//Coloco las fechas
-	envio.FechaCreacion = time.Now()
-	envio.FechaUltimaActualizacion = time.Now()
-
-	_, err := collection.InsertOne(context.Background(), envio)
-
-	return err
 }
 
 func (repository EnvioRepository) ActualizarEnvio(envio model.Envio) error {

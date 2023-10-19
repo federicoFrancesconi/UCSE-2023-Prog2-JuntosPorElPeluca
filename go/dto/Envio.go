@@ -59,21 +59,3 @@ func NewParadas(paradas []model.Parada) []Parada {
 	}
 	return paradasEnvio
 }
-
-// Metodo para convertir una lista de pedidos del dto a una lista de pedidos del modelo
-// func (envio Envio) getPedidos() []model.Pedido {
-// 	var pedidosEnvio []model.Pedido
-// 	for _, pedido := range envio.Pedidos {
-// 		pedidosEnvio = append(pedidosEnvio, pedido.GetModel())
-// 	}
-// 	return pedidosEnvio
-// }
-
-// Metodo para convertir una lista de Pedidos del modelo a una lista de Pedidos del dto
-// func NewPedidos(pedidos []model.Pedido) []Pedido {
-// 	var pedidosEnvio []Pedido
-// 	for _, pedido := range pedidos {
-// 		pedidosEnvio = append(pedidosEnvio, *NewPedido(&pedido))
-// 	}
-// 	return pedidosEnvio
-// }

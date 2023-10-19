@@ -110,6 +110,48 @@ func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
 	c.JSON(http.StatusOK, envio)
 }
 
+func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
+	// Convierte las fechas string a time.Time
+	fechaDesdeStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01T00:00:00Z")
+	fechaDesde, err := time.Parse(time.RFC3339, fechaDesdeStr)
+	if err != nil {
+		// Si hay un error en el parseo, devuelve una fecha default
+		fechaDesde = time.Time{}
+	}
+
+	fechaHastaStr := c.DefaultQuery("fechaCreacionFin", "0001-01-01T00:00:00Z")
+	fechaHasta, err := time.Parse(time.RFC3339, fechaHastaStr)
+	if err != nil {
+		// Si hay un error en el parseo, devuelve una fecha default
+		fechaHasta = time.Time{}
+	}
+
+	//Creamos el filtro
+	filtro := utils.FiltroEnvio{
+		PatenteCamion:         "",
+		Estado:                -1,
+		UltimaParada:          "",
+		FechaCreacionComienzo: fechaDesde,
+		FechaCreacionFin:      fechaHasta,
+	}
+
+	//Llama al service
+	beneficio, err := handler.envioService.ObtenerBeneficioEntreFechas(filtro)
+
+	//Si hay un error, lo devolvemos
+	if err != nil {
+		log.Printf("[handler:EnvioHandler][method:ObtenerBeneficioEntreFechas][envio:%+v]", err.Error())
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	//Agregamos un log para indicar información relevante del resultado
+	log.Printf("[handler:EnvioHandler][method:ObtenerBeneficioEntreFechas][beneficio:%f]", beneficio)
+
+	c.JSON(http.StatusOK, beneficio)
+}
+
 func (handler *EnvioHandler) CrearEnvio(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
