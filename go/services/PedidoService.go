@@ -5,7 +5,6 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
 	"UCSE-2023-Prog2-TPIntegrador/utils"
-	"time"
 )
 
 type PedidoService struct {
@@ -38,12 +37,15 @@ func (service *PedidoService) CrearPedido(pedido *dto.Pedido) error {
 }
 
 func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroPedido) ([]dto.Pedido, error) {
+	//Obtenemos el id del envio, si es que se filtró por el mismo
+	idEnvio := filtroPedido.IdEnvio
+
 	var idPedidos []int
 	
 	//Lo primero es ver si hace falta filtrar por envio
 	if idEnvio != 0 {
 		//Buscamos el envio
-		envio, err := service.envioRepository.ObtenerEnvioPorId(idEnvio)
+		envio, err := service.envioRepository.ObtenerEnvioPorId(model.Envio{Id: idEnvio})
 
 		if err != nil {
 			return nil, err
@@ -52,8 +54,11 @@ func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroP
 		//Si el envio existe, obtenemos la lista de pedidos del mismo
 		idPedidos = envio.Pedidos
 	}
+
+	//Asignamos la lista de pedidos al filtro
+	filtroPedido.IdPedidos = idPedidos
 	
-	pedidos, err := service.pedidoRepository.ObtenerPedidosFiltrados(idPedidos, estado, fechaCreacionComienzo, fechaCreacionFin)
+	pedidos, err := service.pedidoRepository.ObtenerPedidosFiltrados(filtroPedido)
 	if err != nil {
 		return nil, err
 	}
@@ -68,8 +73,8 @@ func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroP
 	return pedidosDTO, nil
 }
 
-func (service *PedidoService) ObtenerPedidoPorId(id int) (*dto.Pedido, error) {
-	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(id)
+func (service *PedidoService) ObtenerPedidoPorId(pedidoConId *dto.Pedido) (*dto.Pedido, error) {
+	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoConId.GetModel())
 
 	if err != nil {
 		return nil, err
@@ -80,9 +85,9 @@ func (service *PedidoService) ObtenerPedidoPorId(id int) (*dto.Pedido, error) {
 	return pedidoDTO, nil
 }
 
-func (service *PedidoService) AceptarPedido(idPedido int) error {
+func (service *PedidoService) AceptarPedido(pedidoPorAceptar *dto.Pedido) error {
 	//Primero buscamos el pedido a aceptar
-	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(idPedido)
+	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoPorAceptar.GetModel())
 
 	if err != nil {
 		return err
@@ -102,9 +107,9 @@ func (service *PedidoService) AceptarPedido(idPedido int) error {
 	return service.pedidoRepository.ActualizarPedido(*pedido)
 }
 
-func (service *PedidoService) CancelarPedido(idPedido int) error {
+func (service *PedidoService) CancelarPedido(pedidoPorCancelar *dto.Pedido) error {
 	//Primero buscamos el pedido a cancelar
-	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(idPedido)
+	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoPorCancelar.GetModel())
 
 	if err != nil {
 		return err

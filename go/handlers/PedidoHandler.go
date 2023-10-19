@@ -60,7 +60,15 @@ func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 		fechaCreacionFin = time.Time{}
 	}
 
-	pedidos, err := handler.pedidoService.ObtenerPedidosFiltrados(idEnvio, model.EstadoPedido(estado), fechaCreacionComienzo, fechaCreacionFin)
+	//Creamos el filtro
+	filtro := utils.FiltroPedido{
+		IdEnvio:               idEnvio,
+		Estado:                model.EstadoPedido(estado),
+		FechaCreacionComienzo: fechaCreacionComienzo,
+		FechaCreacionFin:      fechaCreacionFin,
+	}
+
+	pedidos, err := handler.pedidoService.ObtenerPedidosFiltrados(filtro)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
@@ -115,8 +123,11 @@ func (handler *PedidoHandler) AceptarPedido(c *gin.Context) {
 		return
 	}
 
+	//Generamos el objeto pedido
+	pedido := dto.Pedido{Id: idInt}
+
 	//Aceptamos el pedido
-	if err := handler.pedidoService.AceptarPedido(idInt); err != nil {
+	if err := handler.pedidoService.AceptarPedido(&pedido); err != nil {
 		log.Printf("[handler:PedidoHandler][method:AceptarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -141,8 +152,11 @@ func (handler *PedidoHandler) CancelarPedido(c *gin.Context) {
 		return
 	}
 
+	//Generamos el objeto pedido
+	pedido := dto.Pedido{Id: idInt}
+
 	//Cancelamos el pedido
-	if err := handler.pedidoService.CancelarPedido(idInt); err != nil {
+	if err := handler.pedidoService.CancelarPedido(&pedido); err != nil {
 		log.Printf("[handler:PedidoHandler][method:CancelarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

@@ -7,6 +7,7 @@ import (
 
 type FiltroPedido struct {
 	IdPedidos             []int
+	IdEnvio               int
 	Estado                model.EstadoPedido
 	FechaCreacionComienzo time.Time
 	FechaCreacionFin      time.Time

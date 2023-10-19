@@ -80,6 +80,10 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio) error {
 	//Cambio el estado de los pedidos del envio
 	err = service.enviarPedidosDeEnvio(envio)
 
+	if err != nil {
+		return err
+	}
+
 	return service.envioRepository.CrearEnvio(envio.GetModel())
 }
 
@@ -95,7 +99,7 @@ func (service *EnvioService) envioCabeEnCamion(envio *dto.Envio) (bool, error) {
 	//Obtenemos el peso total de los pedidos
 	var pesoTotal float32 = 0
 	for _, idPedido := range envio.Pedidos {
-		pedido, err := service.pedidoRepository.ObtenerPedidoPorId(idPedido)
+		pedido, err := service.pedidoRepository.ObtenerPedidoPorId(model.Pedido{Id: idPedido})
 
 		if err != nil {
 			return false, err
@@ -128,9 +132,9 @@ func (service *EnvioService) enviarPedidosDeEnvio(envio *dto.Envio) error {
 	return nil
 }
 
-func (service *EnvioService) enviarPedido(pedidoABuscar *dto.Pedido) error {
+func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido) error {
 	//Primero buscamos el pedido a enviar
-	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoABuscar.Id)
+	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoPorEnviar.GetModel())
 
 	if err != nil {
 		return err
@@ -199,9 +203,9 @@ func (service *EnvioService) entregarPedidosDeEnvio(envio *dto.Envio) error {
 	return nil
 }
 
-func (service *EnvioService) entregarPedido(pedidoDTO *dto.Pedido) error {
+func (service *EnvioService) entregarPedido(pedidoPorEntregar *dto.Pedido) error {
 	//Primero buscamos el pedido a entregar
-	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoDTO.Id)
+	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoPorEntregar.GetModel())
 
 	if err != nil {
 		return err
@@ -223,7 +227,7 @@ func (service *EnvioService) entregarPedido(pedidoDTO *dto.Pedido) error {
 
 func (service *EnvioService) descontarStockProductosDeEnvio(envio *dto.Envio) error {
 	for _, idPedido := range envio.Pedidos {
-		pedido, err := service.pedidoRepository.ObtenerPedidoPorId(idPedido)
+		pedido, err := service.pedidoRepository.ObtenerPedidoPorId(model.Pedido{Id: idPedido})
 		if err != nil {
 			return err
 		}

@@ -42,7 +42,10 @@ func (handler *CamionHandler) ObtenerCamionPorPatente(c *gin.Context) {
 
 	patente := c.Param("patente")
 
-	camion, err := handler.camionService.ObtenerCamionPorPatente(patente)
+	//Generamos el objeto camion
+	camionConPatente := dto.Camion{Patente: patente}
+
+	camion, err := handler.camionService.ObtenerCamionPorPatente(&camionConPatente)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
@@ -109,8 +112,11 @@ func (handler *CamionHandler) EliminarCamion(c *gin.Context) {
 
 	patente := c.Param("patente")
 
+	//Generamos el objeto camion
+	camionConPatente := dto.Camion{Patente: patente}
+
 	//Si hay un error, lo devolvemos
-	if err := handler.camionService.EliminarCamion(patente); err != nil {
+	if err := handler.camionService.EliminarCamion(&camionConPatente); err != nil {
 		log.Printf("[handler:CamionHandler][method:EliminarCamion][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

@@ -98,8 +98,7 @@ func dependencies() {
 	camionService := services.NewCamionService(camionRepository)
 	pedidoService := services.NewPedidoService(pedidoRepository, envioRepository)
 	productoService := services.NewProductoService(productoRepository)
-	conexionService := services.NewConexionService(camionService, pedidoService, productoService)
-	envioService := services.NewEnvioService(envioRepository, conexionService)
+	envioService := services.NewEnvioService(envioRepository, camionRepository, pedidoRepository, productoRepository)
 
 	//Iniciar handlers
 	camionHandler = handlers.NewCamionHandler(camionService)
