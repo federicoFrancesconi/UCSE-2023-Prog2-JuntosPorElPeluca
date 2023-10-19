@@ -4,6 +4,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/dto"
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
+	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"time"
 )
 
@@ -13,11 +14,11 @@ type PedidoService struct {
 }
 
 type PedidoServiceInterface interface {
-	CrearPedido(pedido *dto.Pedido) error
-	ObtenerPedidoPorId(id int) (*dto.Pedido, error)
-	ObtenerPedidosFiltrados(idEnvio int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]dto.Pedido, error)
-	AceptarPedido(id int) error
-	CancelarPedido(id int) error
+	CrearPedido(*dto.Pedido) error
+	ObtenerPedidoPorId(*dto.Pedido) (*dto.Pedido, error)
+	ObtenerPedidosFiltrados(utils.FiltroPedido) ([]dto.Pedido, error)
+	AceptarPedido(*dto.Pedido) error
+	CancelarPedido(*dto.Pedido) error
 }
 
 func NewPedidoService(pedidoRepository repositories.PedidoRepositoryInterface, envioRepository repositories.EnvioRepositoryInterface) *PedidoService {
@@ -36,7 +37,7 @@ func (service *PedidoService) CrearPedido(pedido *dto.Pedido) error {
 	return service.pedidoRepository.CrearPedido(pedido.GetModel())
 }
 
-func (service *PedidoService) ObtenerPedidosFiltrados(idEnvio int, estado model.EstadoPedido, fechaCreacionComienzo time.Time, fechaCreacionFin time.Time) ([]dto.Pedido, error) {
+func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroPedido) ([]dto.Pedido, error) {
 	var idPedidos []int
 	
 	//Lo primero es ver si hace falta filtrar por envio
