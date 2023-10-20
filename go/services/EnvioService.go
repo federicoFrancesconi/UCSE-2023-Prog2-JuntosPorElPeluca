@@ -242,11 +242,24 @@ func (service *EnvioService) getCostoEnvio(envio *dto.Envio) (float32, error) {
 }
 
 func (service *EnvioService) AgregarParada(envio *dto.Envio) (bool, error) {
-	if envio.Estado != model.EnRuta {
-		return false, errors.New("el envio no esta en ruta")
+	//En teoria, recibimos un envio que tiene solamente id y la nueva parada
+	//Primero buscamos el envio por id
+	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envio.GetModel())
+
+	if err != nil {
+		return false, err
 	}
 
-	return true, service.envioRepository.ActualizarEnvio(envio.GetModel())
+	//Validamos que el envio esté en estado EnRuta
+	if envioDB.Estado != model.EnRuta {
+		return false, errors.New("el envio no esta en ruta")
+	}	
+
+	//Agregamos la nueva parada al envio
+	envioDB.Paradas = append(envioDB.Paradas, envio.Paradas[0].GetModel())
+
+	//Actualizamos el envio en la base de datos, que ahora tiene la nueva parada
+	return true, service.envioRepository.ActualizarEnvio(envioDB)
 }
 
 func (service *EnvioService) IniciarViaje(envio *dto.Envio) (bool, error) {

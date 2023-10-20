@@ -173,13 +173,36 @@ func (handler *EnvioHandler) CrearEnvio(c *gin.Context) {
 	c.JSON(http.StatusOK, envio)
 }
 
+//
 func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	var envio dto.Envio
-	if err := c.ShouldBindJSON(&envio); err != nil {
+	//Recibimos el id como parametro
+	id := c.Param("id")
+
+	//convertir id a int
+	idInt, err := strconv.Atoi(id)
+
+	if err != nil {
+		log.Printf("[handler:EnvioHandler][method:AgregarParada][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	//Obtenemos la nueva parada
+	var parada dto.Parada
+	if err := c.ShouldBindJSON(&parada); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	//Creamos el envio para pasarle al service
+	envio := dto.Envio{
+		Id: idInt,
+		Paradas: []dto.Parada{
+			parada,
+		},
 	}
 
 	operacion, err := handler.envioService.AgregarParada(&envio)
