@@ -39,27 +39,27 @@ func (handler *EnvioHandler) ObtenerEnvios(c *gin.Context) {
 	}
 
 	// Convierte las fechas string a time.Time
-	fechaCreacionComienzoStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01T00:00:00Z")
-	fechaCreacionComienzo, err := time.Parse(time.RFC3339, fechaCreacionComienzoStr)
+	fechaCreacionDesdeStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01T00:00:00Z")
+	fechaCreacionDesde, err := time.Parse(time.RFC3339, fechaCreacionDesdeStr)
 	if err != nil {
 		// Si hay un error en el parseo, devuelve una fecha default
-		fechaCreacionComienzo = time.Time{}
+		fechaCreacionDesde = time.Time{}
 	}
 
-	fechaCreacionFinStr := c.DefaultQuery("fechaCreacionFin", "0001-01-01T00:00:00Z")
-	fechaCreacionFin, err := time.Parse(time.RFC3339, fechaCreacionFinStr)
+	fechaCreacionHastaStr := c.DefaultQuery("fechaCreacionFin", "0001-01-01T00:00:00Z")
+	fechaCreacionHasta, err := time.Parse(time.RFC3339, fechaCreacionHastaStr)
 	if err != nil {
 		// Si hay un error en el parseo, devuelve una fecha default
-		fechaCreacionFin = time.Time{}
+		fechaCreacionHasta = time.Time{}
 	}
 
 	//Creamos el filtro
 	filtro := utils.FiltroEnvio{
-		PatenteCamion:         patente,
-		Estado:                model.EstadoEnvio(estado),
-		UltimaParada:          ultimaParada,
-		FechaCreacionComienzo: fechaCreacionComienzo,
-		FechaCreacionFin:      fechaCreacionFin,
+		PatenteCamion:      patente,
+		Estado:             model.EstadoEnvio(estado),
+		UltimaParada:       ultimaParada,
+		FechaCreacionDesde: fechaCreacionDesde,
+		FechaCreacionHasta: fechaCreacionHasta,
 	}
 
 	//Llama al service
@@ -112,27 +112,25 @@ func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
 
 func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 	// Convierte las fechas string a time.Time
-	fechaDesdeStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01T00:00:00Z")
+	fechaDesdeStr := c.DefaultQuery("fechaDesde", "0001-01-01T00:00:00Z")
 	fechaDesde, err := time.Parse(time.RFC3339, fechaDesdeStr)
 	if err != nil {
 		// Si hay un error en el parseo, devuelve una fecha default
 		fechaDesde = time.Time{}
 	}
 
-	fechaHastaStr := c.DefaultQuery("fechaCreacionFin", "0001-01-01T00:00:00Z")
+	fechaHastaStr := c.DefaultQuery("fechaHasta", "0001-01-01T00:00:00Z")
 	fechaHasta, err := time.Parse(time.RFC3339, fechaHastaStr)
 	if err != nil {
 		// Si hay un error en el parseo, devuelve una fecha default
 		fechaHasta = time.Time{}
 	}
 
-	//Creamos el filtro
+	//TODO: probar si anda el filtro solamente pasandole un par de parametros
+	//Creamos el filtro, que tiene en cuenta solamente las fechas
 	filtro := utils.FiltroEnvio{
-		PatenteCamion:         "",
-		Estado:                -1,
-		UltimaParada:          "",
-		FechaCreacionComienzo: fechaDesde,
-		FechaCreacionFin:      fechaHasta,
+		FechaUltimaActualizacionDesde: fechaDesde,
+		FechaUltimaActualizacionHasta: fechaHasta,
 	}
 
 	//Llama al service

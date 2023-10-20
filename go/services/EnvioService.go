@@ -6,6 +6,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
 	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"errors"
+	"time"
 )
 
 type EnvioServiceInterface interface {
@@ -156,16 +157,17 @@ func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido) error {
 }
 
 func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvio) (float32, error) {
-	//Busca los envios entre el rango de fechas pasado como parametro
-	filtroEnvio := utils.FiltroEnvio{
-		PatenteCamion:         "",
-		Estado:                -1,
-		UltimaParada:          "",
-		FechaCreacionComienzo: filtro.FechaCreacionComienzo,
-		FechaCreacionFin:      filtro.FechaCreacionFin,
-	}
+	//Pone por default las variables del filtro que no interesen
+	filtro.PatenteCamion = ""
+	filtro.UltimaParada = ""
+	filtro.FechaCreacionDesde = time.Time{}
+	filtro.FechaCreacionHasta = time.Time{}
 
-	envios, err := service.ObtenerEnviosFiltrados(filtroEnvio)
+	//Le agrega el estado despachado al filtro
+	filtro.Estado = model.Despachado
+
+	//Obtengo los envios despachados entre las dos fechas pasadas como parametro
+	envios, err := service.ObtenerEnviosFiltrados(filtro)
 
 	if err != nil {
 		return 0, err

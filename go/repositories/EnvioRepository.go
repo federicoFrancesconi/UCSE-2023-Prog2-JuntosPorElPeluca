@@ -71,8 +71,10 @@ func (repository EnvioRepository) ObtenerEnviosFiltrados(filtroEnvio utils.Filtr
 	patente := filtroEnvio.PatenteCamion
 	estado := filtroEnvio.Estado
 	ultimaParada := filtroEnvio.UltimaParada
-	fechaCreacionComienzo := filtroEnvio.FechaCreacionComienzo
-	fechaCreacionFin := filtroEnvio.FechaCreacionFin
+	fechaCreacionDesde := filtroEnvio.FechaCreacionDesde
+	fechaCreacionHasta := filtroEnvio.FechaCreacionHasta
+	fechaUltimaActualizacionDesde := filtroEnvio.FechaUltimaActualizacionDesde
+	fechaUltimaActualizacionHasta := filtroEnvio.FechaUltimaActualizacionHasta
 
 	//Creamos el filtro para la base de datos
 	filtro := bson.M{}
@@ -88,13 +90,13 @@ func (repository EnvioRepository) ObtenerEnviosFiltrados(filtroEnvio utils.Filtr
 	}
 
 	//Tomo la fecha de creacion en 0001-01-01 como la ausencia de filtro
-	if !fechaCreacionComienzo.IsZero() || !fechaCreacionFin.IsZero() {
+	if !fechaCreacionDesde.IsZero() || !fechaCreacionHasta.IsZero() {
 		filtroFecha := bson.M{}
-		if !fechaCreacionComienzo.IsZero() {
-			filtroFecha["$gte"] = fechaCreacionComienzo
+		if !fechaCreacionDesde.IsZero() {
+			filtroFecha["$gte"] = fechaCreacionDesde
 		}
-		if !fechaCreacionFin.IsZero() {
-			filtroFecha["$lte"] = fechaCreacionFin
+		if !fechaCreacionHasta.IsZero() {
+			filtroFecha["$lte"] = fechaCreacionHasta
 		}
 		filtro["fecha_creacion"] = filtroFecha
 	}
@@ -109,6 +111,18 @@ func (repository EnvioRepository) ObtenerEnviosFiltrados(filtroEnvio utils.Filtr
 			}
 			filtro["paradas.$slice"] = -1
 		}
+	}
+
+	//Tomo la fecha de ultima actualizacion en 0001-01-01 como la ausencia de filtro
+	if !fechaUltimaActualizacionDesde.IsZero() || !fechaUltimaActualizacionHasta.IsZero() {
+		filtroFecha := bson.M{}
+		if !fechaUltimaActualizacionDesde.IsZero() {
+			filtroFecha["$gte"] = fechaUltimaActualizacionDesde
+		}
+		if !fechaUltimaActualizacionHasta.IsZero() {
+			filtroFecha["$lte"] = fechaUltimaActualizacionHasta
+		}
+		filtro["fecha_ultima_actualizacion"] = filtroFecha
 	}
 
 	return repository.obtenerEnvios(filtro)
