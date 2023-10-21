@@ -7,12 +7,12 @@ import (
 )
 
 type Pedido struct {
-	ObjectId                 primitive.ObjectID         `bson:"_id,omitempty"`
-	Id                       int                        `bson:"id,omitempty"`
-	FechaCreacion            time.Time                  `bson:"fecha_creacion"`
-	FechaUltimaActualizacion time.Time                  `bson:"fecha_ultima_actualizacion"`
-	IdCreador                int                        `bson:"id_creador"`
-	ProductosElegidos        []ProductoPedido `bson:"productos_elegidos"`
-	CiudadDestino            string                     `bson:"ciudad_destino"`
-	Estado                   EstadoPedido               `bson:"estado"`
+	ObjectId                 primitive.ObjectID `bson:"_id,omitempty"`
+	Id                       int                `bson:"id,omitempty"`
+	ProductosElegidos        []ProductoPedido   `bson:"productos_elegidos"`
+	CiudadDestino            string             `bson:"ciudad_destino"`
+	Estado                   EstadoPedido       `bson:"estado"`
+	FechaCreacion            time.Time          `bson:"fecha_creacion"`
+	FechaUltimaActualizacion time.Time          `bson:"fecha_ultima_actualizacion"`
+	IdCreador                int                `bson:"id_creador"`
 }

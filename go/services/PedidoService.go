@@ -5,11 +5,13 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
 	"UCSE-2023-Prog2-TPIntegrador/utils"
+	"errors"
 )
 
 type PedidoService struct {
 	pedidoRepository repositories.PedidoRepositoryInterface
 	envioRepository repositories.EnvioRepositoryInterface
+	productoRepository repositories.ProductoRepositoryInterface
 }
 
 type PedidoServiceInterface interface {
@@ -20,10 +22,11 @@ type PedidoServiceInterface interface {
 	CancelarPedido(*dto.Pedido) error
 }
 
-func NewPedidoService(pedidoRepository repositories.PedidoRepositoryInterface, envioRepository repositories.EnvioRepositoryInterface) *PedidoService {
+func NewPedidoService(pedidoRepository repositories.PedidoRepositoryInterface, envioRepository repositories.EnvioRepositoryInterface, productoRepository repositories.ProductoRepositoryInterface) *PedidoService {
 	return &PedidoService{
 		pedidoRepository: pedidoRepository,
 		envioRepository: envioRepository,
+		productoRepository: productoRepository,
 	}
 }
 
@@ -85,7 +88,6 @@ func (service *PedidoService) ObtenerPedidoPorId(pedidoConId *dto.Pedido) (*dto.
 	return pedidoDTO, nil
 }
 
-//TODO: falta verificar que se tenga el stock disponible antes de aceptarlo
 func (service *PedidoService) AceptarPedido(pedidoPorAceptar *dto.Pedido) error {
 	//Primero buscamos el pedido a aceptar
 	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoPorAceptar.GetModel())
@@ -96,11 +98,13 @@ func (service *PedidoService) AceptarPedido(pedidoPorAceptar *dto.Pedido) error 
 
 	//Valida que el pedido esté en estado Pendiente
 	if pedido.Estado != model.Pendiente {
-		return nil
+		return errors.New("el pedido no se encuentra en estado Pendiente")
 	}
 
 	//Verifica que haya stock disponible para aceptar el pedido
-	
+	if !service.hayStockDisponiblePedido(pedido) {
+		return errors.New("no hay stock disponible para aceptar el pedido")
+	}
 
 	//Cambia el estado del pedido a Aceptado, si es que no estaba ya en ese estado
 	if pedido.Estado != model.Aceptado {
@@ -109,6 +113,32 @@ func (service *PedidoService) AceptarPedido(pedidoPorAceptar *dto.Pedido) error 
 
 	//Actualiza el pedido en la base de datos
 	return service.pedidoRepository.ActualizarPedido(*pedido)
+}
+
+func (service *PedidoService) hayStockDisponiblePedido(pedido *model.Pedido) bool {
+	//Busco los productos del pedido
+	productosPedido := pedido.ProductosElegidos
+
+	//Recorro los productos del pedido
+	for _, productoPedido := range productosPedido {
+		//Armo un objeto producto con el ID para buscar en la base de datos
+		productoParaBuscar := model.Producto{CodigoProducto: productoPedido.CodigoProducto}
+
+		//Busco el producto en la base de datos
+		producto, err := service.productoRepository.ObtenerProductoPorCodigo(productoParaBuscar)
+
+		if err != nil {
+			return false
+		}
+
+		//Verifico que haya stock disponible para el producto
+		if productoPedido.Cantidad > producto.StockActual {
+			return false
+		}
+	}
+
+	//Si finalice el bucle, es porque hay stock de todos los productos
+	return true
 }
 
 func (service *PedidoService) CancelarPedido(pedidoPorCancelar *dto.Pedido) error {
