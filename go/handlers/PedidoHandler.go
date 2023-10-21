@@ -24,6 +24,7 @@ func NewPedidoHandler(pedidoService services.PedidoServiceInterface) *PedidoHand
 func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
+	//Obtenemos el id del envio, si es que se filtró por el mismo
 	idEnvioStr := c.DefaultQuery("idEnvio", "0")
 	idEnvio, err := strconv.Atoi(idEnvioStr)
 
@@ -60,7 +61,7 @@ func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 		fechaCreacionFin = time.Time{}
 	}
 
-	//Creamos el filtro
+	//Creamos el filtro con los datos obtenidos
 	filtro := utils.FiltroPedido{
 		IdEnvio:               idEnvio,
 		Estado:                model.EstadoPedido(estado),
@@ -68,6 +69,7 @@ func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 		FechaCreacionFin:      fechaCreacionFin,
 	}
 
+	//Obtenemos los pedidos
 	pedidos, err := handler.pedidoService.ObtenerPedidosFiltrados(filtro)
 
 	//Si hay un error, lo devolvemos

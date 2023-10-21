@@ -87,15 +87,23 @@ func (repository CamionRepository) ActualizarCamion(camion model.Camion) error {
 	camion.FechaUltimaActualizacion = time.Now()
 
 	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
+	
 	filtro := bson.M{"patente": camion.Patente}
+	
 	actualizacion := bson.M{"$set": camion}
+	
 	_, err := collection.UpdateOne(context.TODO(), filtro, actualizacion)
+	
 	return err
 }
 
 func (repository CamionRepository) EliminarCamion(camion model.Camion) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
+
+	//Generamos el filtro para eliminar el camion
 	filtro := bson.M{"patente": camion.Patente}
+	
 	_, err := collection.DeleteOne(context.Background(), filtro)
+	
 	return err
 }

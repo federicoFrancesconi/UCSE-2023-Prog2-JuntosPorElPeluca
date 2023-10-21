@@ -66,7 +66,7 @@ func mappingRoutes() {
 	//Rutas de envios
 	envios.GET("", envioHandler.ObtenerEnvios)
 	envios.GET("/:id", envioHandler.ObtenerEnvioPorId)
-	envios.GET("/beneficio", envioHandler.ObtenerBeneficioEntreFechas)
+	envios.GET("/beneficioEntreFechas", envioHandler.ObtenerBeneficioEntreFechas)
 	envios.POST("", envioHandler.CrearEnvio)
 	envios.PUT("/:id/nuevaParada", envioHandler.AgregarParada)
 	envios.PUT("/:id/finalizar", envioHandler.FinalizarViaje)
@@ -77,12 +77,12 @@ func mappingRoutes() {
 	camiones.GET("/:patente", camionHandler.ObtenerCamionPorPatente)
 	camiones.POST("", camionHandler.CrearCamion)
 	camiones.PUT("", camionHandler.ActualizarCamion)
-	camiones.DELETE("", camionHandler.EliminarCamion)
+	camiones.DELETE("/:patente", camionHandler.EliminarCamion)
 
 	//Rutas de productos
 	productos.GET("", productoHandler.ObtenerProductos)
 	productos.POST("", productoHandler.CrearProducto)
-	productos.DELETE("", productoHandler.EliminarProducto)
+	productos.DELETE("/:codigo", productoHandler.EliminarProducto)
 }
 
 func dependencies() {

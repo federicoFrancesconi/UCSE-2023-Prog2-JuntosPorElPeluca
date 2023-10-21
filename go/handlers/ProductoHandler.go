@@ -20,7 +20,7 @@ func NewProductoHandler(productoService services.ProductoServiceInterface) *Prod
 	return &ProductoHandler{productoService: productoService}
 }
 
-//Obtiene los productos con stock menor al minimo
+// Obtiene los productos, pudiendo filtrarlos por stock minimo y tipo de producto
 func (handler *ProductoHandler) ObtenerProductos(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
@@ -92,23 +92,28 @@ func (handler *ProductoHandler) CrearProducto(c *gin.Context) {
 	//Agregamos un log para indicar información relevante del resultado
 	log.Printf("[handler:ProductoHandler][method:CrearProducto][user:%s]", user.Codigo)
 
-	//TODO: esta mostrando el mismo producto que mandamos, no el de la base de datos
-	c.JSON(http.StatusCreated, producto)
+	c.JSON(http.StatusCreated, true)
 }
 
 // Handler para eliminar un producto
 func (handler *ProductoHandler) EliminarProducto(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	var producto dto.Producto
+	//Recibimos el codigo del producto a eliminar
+	codigo := c.Param("codigo")
 
-	//Parseamos el body del request y lo guardamos en el objeto producto
-	if err := c.ShouldBindJSON(&producto); err != nil {
+	//Convertimos el codigo a int
+	codigoInt, err := strconv.Atoi(codigo)
+
+	if err != nil {
 		log.Printf("[handler:ProductoHandler][method:EliminarProducto][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	//Creamos el objeto producto
+	producto := dto.Producto{CodigoProducto: codigoInt}
 
 	//Eliminamos el producto de la base de datos
 	if err := handler.productoService.EliminarProducto(&producto); err != nil {
@@ -121,6 +126,5 @@ func (handler *ProductoHandler) EliminarProducto(c *gin.Context) {
 	//Agregamos un log para indicar información relevante del resultado
 	log.Printf("[handler:ProductoHandler][method:EliminarProducto][user:%s]", user.Codigo)
 
-	//TODO: esta mostrando el mismo producto que mandamos, no el de la base de datos
-	c.JSON(http.StatusOK, producto)
+	c.JSON(http.StatusOK, true)
 }

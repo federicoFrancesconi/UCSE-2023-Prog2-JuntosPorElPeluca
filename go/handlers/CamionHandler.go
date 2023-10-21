@@ -42,7 +42,7 @@ func (handler *CamionHandler) ObtenerCamionPorPatente(c *gin.Context) {
 
 	patente := c.Param("patente")
 
-	//Generamos el objeto camion
+	//Generamos el objeto camion para pasarselo al service
 	camionConPatente := dto.Camion{Patente: patente}
 
 	camion, err := handler.camionService.ObtenerCamionPorPatente(&camionConPatente)
