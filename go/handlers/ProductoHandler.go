@@ -92,6 +92,7 @@ func (handler *ProductoHandler) CrearProducto(c *gin.Context) {
 	//Agregamos un log para indicar información relevante del resultado
 	log.Printf("[handler:ProductoHandler][method:CrearProducto][user:%s]", user.Codigo)
 
+	//TODO: esta mostrando el mismo producto que mandamos, no el de la base de datos
 	c.JSON(http.StatusCreated, producto)
 }
 
@@ -120,5 +121,6 @@ func (handler *ProductoHandler) EliminarProducto(c *gin.Context) {
 	//Agregamos un log para indicar información relevante del resultado
 	log.Printf("[handler:ProductoHandler][method:EliminarProducto][user:%s]", user.Codigo)
 
+	//TODO: esta mostrando el mismo producto que mandamos, no el de la base de datos
 	c.JSON(http.StatusOK, producto)
 }

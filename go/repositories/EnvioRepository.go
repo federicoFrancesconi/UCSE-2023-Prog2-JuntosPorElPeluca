@@ -101,7 +101,7 @@ func (repository EnvioRepository) ObtenerEnviosFiltrados(filtroEnvio utils.Filtr
 		filtro["fecha_creacion"] = filtroFecha
 	}
 
-	//TODO: hay que probar esta parte
+	//TODO: hay que probar que este filtro ande bien
 	if ultimaParada != "" {
 		if ultimaParada != "" {
 			filtro["paradas"] = bson.M{

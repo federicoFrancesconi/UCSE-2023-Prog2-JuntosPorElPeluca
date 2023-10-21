@@ -105,7 +105,7 @@ func (handler *PedidoHandler) CrearPedido(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, pedido)
+	c.JSON(http.StatusOK, true)
 }
 
 func (handler *PedidoHandler) AceptarPedido(c *gin.Context) {
@@ -133,8 +133,8 @@ func (handler *PedidoHandler) AceptarPedido(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	//TODO: capaz este mal que devuelva nil
-	c.JSON(http.StatusOK, nil)
+
+	c.JSON(http.StatusOK, true)
 }
 
 func (handler *PedidoHandler) CancelarPedido(c *gin.Context) {
@@ -163,6 +163,5 @@ func (handler *PedidoHandler) CancelarPedido(c *gin.Context) {
 		return
 	}
 
-	//TODO: capaz este mal que devuelva nil
-	c.JSON(http.StatusOK, nil)
+	c.JSON(http.StatusOK, true)
 }

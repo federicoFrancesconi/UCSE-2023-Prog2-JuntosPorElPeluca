@@ -81,7 +81,7 @@ func (handler *CamionHandler) CrearCamion(c *gin.Context) {
 	//Agregamos un log para indicar información relevante del resultado
 	log.Printf("[handler:CamionHandler][method:CrearCamion][camion:%+v][user:%s]", camion, user.Codigo)
 
-	c.JSON(http.StatusOK, camion)
+	c.JSON(http.StatusOK, true)
 }
 
 func (handler *CamionHandler) ActualizarCamion(c *gin.Context) {
@@ -104,7 +104,7 @@ func (handler *CamionHandler) ActualizarCamion(c *gin.Context) {
 	//Agregamos un log para indicar información relevante del resultado
 	log.Printf("[handler:CamionHandler][method:ActualizarCamion][camion:%+v][user:%s]", camion, user.Codigo)
 
-	c.JSON(http.StatusOK, camion)
+	c.JSON(http.StatusOK, true)
 }
 
 func (handler *CamionHandler) EliminarCamion(c *gin.Context) {

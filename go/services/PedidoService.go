@@ -85,6 +85,7 @@ func (service *PedidoService) ObtenerPedidoPorId(pedidoConId *dto.Pedido) (*dto.
 	return pedidoDTO, nil
 }
 
+//TODO: falta verificar que se tenga el stock disponible antes de aceptarlo
 func (service *PedidoService) AceptarPedido(pedidoPorAceptar *dto.Pedido) error {
 	//Primero buscamos el pedido a aceptar
 	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoPorAceptar.GetModel())
@@ -97,6 +98,9 @@ func (service *PedidoService) AceptarPedido(pedidoPorAceptar *dto.Pedido) error 
 	if pedido.Estado != model.Pendiente {
 		return nil
 	}
+
+	//Verifica que haya stock disponible para aceptar el pedido
+	
 
 	//Cambia el estado del pedido a Aceptado, si es que no estaba ya en ese estado
 	if pedido.Estado != model.Aceptado {

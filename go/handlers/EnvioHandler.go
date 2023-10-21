@@ -170,10 +170,9 @@ func (handler *EnvioHandler) CrearEnvio(c *gin.Context) {
 	//Agregamos un log para indicar información relevante del resultado
 	log.Printf("[handler:EnvioHandler][method:CrearEnvio][envio:%+v][user:%s]", envio, user.Codigo)
 
-	c.JSON(http.StatusOK, envio)
+	c.JSON(http.StatusOK, true)
 }
 
-//
 func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
@@ -223,7 +222,7 @@ func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 	//Agregamos un log para indicar información relevante del resultado
 	log.Printf("[handler:EnvioHandler][method:AgregarParada][envio:%+v][user:%s]", envio, user.Codigo)
 
-	c.JSON(http.StatusOK, envio)
+	c.JSON(http.StatusOK, true)
 }
 
 func (handler *EnvioHandler) IniciarViaje(c *gin.Context) {
@@ -253,7 +252,7 @@ func (handler *EnvioHandler) IniciarViaje(c *gin.Context) {
 	//Agregamos un log para indicar información relevante del resultado
 	log.Printf("[handler:EnvioHandler][method:IniciarViaje][envio:%+v][user:%s]", envio, user.Codigo)
 
-	c.JSON(http.StatusOK, envio)
+	c.JSON(http.StatusOK, true)
 }
 
 func (handler *EnvioHandler) FinalizarViaje(c *gin.Context) {
@@ -283,5 +282,5 @@ func (handler *EnvioHandler) FinalizarViaje(c *gin.Context) {
 	//Agregamos un log para indicar información relevante del resultado
 	log.Printf("[handler:EnvioHandler][method:FinalizarViaje][envio:%+v][user:%s]", envio, user.Codigo)
 
-	c.JSON(http.StatusOK, envio)
+	c.JSON(http.StatusOK, true)
 }
