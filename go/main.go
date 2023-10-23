@@ -5,6 +5,7 @@ import (
 
 	"UCSE-2023-Prog2-TPIntegrador/database"
 	"UCSE-2023-Prog2-TPIntegrador/handlers"
+	"UCSE-2023-Prog2-TPIntegrador/middlewares"
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
 	"UCSE-2023-Prog2-TPIntegrador/services"
 
@@ -56,6 +57,11 @@ func mappingRoutes() {
 	envios := router.Group("/envios")
 	camiones := router.Group("/camiones")
 	productos := router.Group("/productos")
+
+	pedidos.Use(middlewares.CORSMiddleware())
+	envios.Use(middlewares.CORSMiddleware())
+	camiones.Use(middlewares.CORSMiddleware())
+	productos.Use(middlewares.CORSMiddleware())
 
 	//Rutas de pedidos
 	pedidos.GET("", pedidoHandler.ObtenerPedidos)

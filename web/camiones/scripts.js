@@ -40,7 +40,7 @@ function obtenerCamiones() {
                   <td>${elemento.FechaCreacion}</td>
                   <td>${elemento.FechaUltimaActualizacion}</td>
                   <td>${elemento.IdCreador}</td>
-                  <td class="acciones"><a href="formCamion.html?patente=${elemento.Patente}&tipo=EDITAR">Editar</a> | <a href="formCamion.html?patente=${elemento.Patente}&tipo=ELIMINAR">Eliminar</a></td>
+                  <td class="acciones"><a href="form.html?patente=${elemento.Patente}&tipo=EDITAR">Editar</a> | <a href="form.html?patente=${elemento.Patente}&tipo=ELIMINAR">Eliminar</a></td>
               `;
 
         elementosTable.appendChild(row);
@@ -87,7 +87,7 @@ function obtenerCamionPorPatente() {
                   <td>${data.FechaCreacion}</td>
                   <td>${data.FechaUltimaActualizacion}</td>
                   <td>${data.IdCreador}</td>
-                  <td class="acciones"><a href="formCamion.html?patente=${data.Patente}&tipo=EDITAR">Editar</a> | <a href="#" onclick="eliminarCamion('${data.Patente}')">Eliminar</a></td>
+                  <td class="acciones"><a href="form.html?patente=${data.Patente}&tipo=EDITAR">Editar</a> | <a href="#" onclick="eliminarCamion('${data.Patente}')">Eliminar</a></td>
               `; //crear una celda por cada campo que quiera mostrar
 
       elementosTable.appendChild(row);
