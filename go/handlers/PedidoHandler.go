@@ -107,6 +107,9 @@ func (handler *PedidoHandler) CrearPedido(c *gin.Context) {
 		return
 	}
 
+	//Agregamos un log para indicar información relevante del resultado
+	log.Printf("[handler:PedidoHandler][method:CrearPedido][id:%d][user:%s]", pedido.Id, user.Codigo)
+
 	c.JSON(http.StatusOK, true)
 }
 

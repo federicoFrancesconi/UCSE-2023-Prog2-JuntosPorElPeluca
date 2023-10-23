@@ -33,6 +33,7 @@ func (repository *PedidoRepository) CrearPedido(pedido model.Pedido) error {
 	pedido.FechaUltimaActualizacion = time.Now()
 
 	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")
+	
 	_, err := collection.InsertOne(context.Background(), pedido)
 	return err
 }

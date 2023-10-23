@@ -21,25 +21,31 @@ type Producto struct {
 // Crea el dto a partir del modelo
 func NewProducto(producto *model.Producto) *Producto {
 	return &Producto{
-		CodigoProducto: producto.CodigoProducto,
-		TipoDeProducto: producto.TipoDeProducto,
-		Nombre:         producto.Nombre,
-		PrecioUnitario: producto.PrecioUnitario,
-		PesoUnitario:   producto.PesoUnitario,
-		StockMinimo:    producto.StockMinimo,
-		StockActual:    producto.StockActual,
+		CodigoProducto:           producto.CodigoProducto,
+		TipoDeProducto:           producto.TipoDeProducto,
+		Nombre:                   producto.Nombre,
+		PrecioUnitario:           producto.PrecioUnitario,
+		PesoUnitario:             producto.PesoUnitario,
+		StockMinimo:              producto.StockMinimo,
+		StockActual:              producto.StockActual,
+		FechaCreacion:            producto.FechaCreacion,
+		FechaUltimaActualizacion: producto.FechaUltimaActualizacion,
+		IdCreador:                producto.IdCreador,
 	}
 }
 
 // Crea el modelo a partir del dto
 func (producto Producto) GetModel() model.Producto {
 	return model.Producto{
-		CodigoProducto: producto.CodigoProducto,
-		TipoDeProducto: producto.TipoDeProducto,
-		Nombre:         producto.Nombre,
-		PrecioUnitario: producto.PrecioUnitario,
-		PesoUnitario:   producto.PesoUnitario,
-		StockMinimo:    producto.StockMinimo,
-		StockActual:    producto.StockActual,
+		CodigoProducto:           producto.CodigoProducto,
+		TipoDeProducto:           producto.TipoDeProducto,
+		Nombre:                   producto.Nombre,
+		PrecioUnitario:           producto.PrecioUnitario,
+		PesoUnitario:             producto.PesoUnitario,
+		StockMinimo:              producto.StockMinimo,
+		StockActual:              producto.StockActual,
+		FechaCreacion:            producto.FechaCreacion,
+		FechaUltimaActualizacion: producto.FechaUltimaActualizacion,
+		IdCreador:                producto.IdCreador,
 	}
 }
