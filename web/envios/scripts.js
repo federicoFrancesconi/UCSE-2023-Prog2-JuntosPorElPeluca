@@ -29,10 +29,95 @@ function obtenerEnvios() {
     })
     .then((data) => {
       // Llenar la tabla con los datos obtenidos
-      data.forEach((elemento) => {
-        const row = document.createElement("tr"); //crear una fila
+      if (data != null) {
+        data.forEach((elemento) => {
+          const row = document.createElement("tr"); //crear una fila
 
-        row.innerHTML = ` 
+          row.innerHTML = ` 
+                    <td>${elemento.Id}</td>
+                    <td>${elemento.FechaCreacion}</td>
+                    <td>${elemento.FechaUltimaActualizacion}</td>
+                    <td>${elemento.PatenteCamion}</td>
+                    <td>
+                        <table>
+                            <tr>
+                                <th>Ciudad</th>
+                                <th>Km Recorridos</th>
+                            </tr>
+                            ${
+                              elemento.Paradas
+                                ? elemento.Paradas.map(
+                                    (parada) => `
+                                <tr>
+                                    <td>${parada.Ciudad}</td>
+                                    <td>${parada.KmRecorridos}</td>
+                                </tr>
+                            `
+                                  ).join("")
+                                : `<tr><td>No hay paradas disponibles</td></tr>`
+                            }
+                        </table>
+                    </td>
+                    <td>${
+                      elemento.Pedidos
+                        ? elemento.Pedidos.map(
+                            (pedido) => `
+                        ${pedido}
+                    `
+                          ).join(" ")
+                        : `<tr><td>No hay pedidos disponibles</td></tr>`
+                    }</td>
+                    <td>${elemento.IdCreador}</td>
+                    <td>${elemento.Estado}</td>
+                    <td class="acciones"><a href="/web/envios/nuevaParada.html?id=${
+                      elemento.Id
+                    }">Nueva Parada</a> | <a href="form.html?id=${
+            elemento.Id
+          }&tipo=INICIAR">Iniciar Viaje</a> | <a href="form.html?id=${
+            elemento.Id
+          }&tipo=FINALIZAR">Finalizar Viaje</a></td>
+                    `;
+
+          elementosTable.appendChild(row);
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert(error);
+    });
+}
+
+function obtenerEnvioPorId() {
+  console.log("obtenerEnvioPorId");
+
+  const id = document.getElementById("FiltroId").value;
+
+  const elementosTable = document //tabla en la que se colocan los camiones que se obtienen
+    .getElementById("elementosTable")
+    .querySelector("tbody");
+
+  urlConFiltro = `http://localhost:8080/envios/${id}`; //ver que url colocariamos
+
+  fetch(urlConFiltro, {
+    method: "GET",
+    headers: customHeaders,
+  }) // Realizar la solicitud de búsqueda (fetch) al servidor
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error en la solicitud al servidor.");
+        throw new Error("Error en la solicitud al servidor.");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // Llenar la tabla con los datos obtenidos
+      console.log(data);
+      elementosTable.innerHTML = "";
+
+      const row = document.createElement("tr"); //crear una fila
+
+      row.innerHTML = ` 
                     <td>${elemento.Id}</td>
                     <td>${elemento.FechaCreacion}</td>
                     <td>${elemento.FechaUltimaActualizacion}</td>
@@ -53,11 +138,23 @@ function obtenerEnvios() {
                             ).join("")}
                         </table>
                     </td>
-                    <td class="acciones"></td>
-                `;
+                    <td>${elemento.Pedidos.map(
+                      (pedido) => `
+                        ${pedido}
+                    `
+                    ).join(" ")}</td>
+                    <td>${elemento.IdCreador}</td>
+                    <td>${elemento.Estado}</td>
+                    <td class="acciones"><a href="form.html?id=${
+                      elemento.Id
+                    }&tipo=PARADA">Nueva Parada</a> | <a href="form.html?id=${
+        elemento.Id
+      }&tipo=INICIAR">Iniciar Viaje</a> | <a href="form.html?id=${
+        elemento.Id
+      }&tipo=FINALIZAR">Finalizar Viaje</a></td>
+                    `;
 
-        elementosTable.appendChild(row);
-      });
+      elementosTable.appendChild(row);
     })
     .catch((error) => {
       console.error("Error:", error);

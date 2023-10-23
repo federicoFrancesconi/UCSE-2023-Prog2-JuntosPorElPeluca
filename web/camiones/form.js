@@ -115,7 +115,7 @@ function actualizarCamion(event) {
         throw new Error("Error en la solicitud al servidor.");
       }
 
-      window.location = "index.html";
+      window.location = "/web/camiones/index.html";
     })
     .catch((error) => {
       console.error("Error:", error);
