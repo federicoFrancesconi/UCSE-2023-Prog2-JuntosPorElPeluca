@@ -34,10 +34,10 @@ function obtenerEnvios() {
           const row = document.createElement("tr"); //crear una fila
 
           row.innerHTML = ` 
-                    <td>${elemento.Id}</td>
-                    <td>${elemento.FechaCreacion}</td>
-                    <td>${elemento.FechaUltimaActualizacion}</td>
-                    <td>${elemento.PatenteCamion}</td>
+                    <td>${elemento.id}</td>
+                    <td>${elemento.fecha_creacion}</td>
+                    <td>${elemento.fecha_ultima_actualizacion}</td>
+                    <td>${elemento.patente_camion}</td>
                     <td>
                         <table>
                             <tr>
@@ -45,36 +45,40 @@ function obtenerEnvios() {
                                 <th>Km Recorridos</th>
                             </tr>
                             ${
-                              elemento.Paradas
-                                ? elemento.Paradas.map(
-                                    (parada) => `
+                              elemento.paradas
+                                ? elemento.paradas
+                                    .map(
+                                      (parada) => `
                                 <tr>
-                                    <td>${parada.Ciudad}</td>
-                                    <td>${parada.KmRecorridos}</td>
+                                    <td>${parada.ciudad}</td>
+                                    <td>${parada.km_recorridos}</td>
                                 </tr>
                             `
-                                  ).join("")
+                                    )
+                                    .join("")
                                 : `<tr><td>No hay paradas disponibles</td></tr>`
                             }
                         </table>
                     </td>
                     <td>${
-                      elemento.Pedidos
-                        ? elemento.Pedidos.map(
-                            (pedido) => `
+                      elemento.pedidos
+                        ? elemento.pedidos
+                            .map(
+                              (pedido) => `
                         ${pedido}
                     `
-                          ).join(" ")
-                        : `<tr><td>No hay pedidos disponibles</td></tr>`
+                            )
+                            .join(" ")
+                        : `No hay pedidos disponibles`
                     }</td>
-                    <td>${elemento.IdCreador}</td>
-                    <td>${elemento.Estado}</td>
+                    <td>${elemento.id_creador}</td>
+                    <td>${elemento.estado}</td>
                     <td class="acciones"><a href="/web/envios/nuevaParada.html?id=${
-                      elemento.Id
+                      elemento.id
                     }">Nueva Parada</a> | <a href="form.html?id=${
-            elemento.Id
+            elemento.id
           }&tipo=INICIAR">Iniciar Viaje</a> | <a href="form.html?id=${
-            elemento.Id
+            elemento.id
           }&tipo=FINALIZAR">Finalizar Viaje</a></td>
                     `;
 
@@ -118,39 +122,43 @@ function obtenerEnvioPorId() {
       const row = document.createElement("tr"); //crear una fila
 
       row.innerHTML = ` 
-                    <td>${elemento.Id}</td>
-                    <td>${elemento.FechaCreacion}</td>
-                    <td>${elemento.FechaUltimaActualizacion}</td>
-                    <td>${elemento.PatenteCamion}</td>
+                    <td>${elemento.id}</td>
+                    <td>${elemento.fecha_creacion}</td>
+                    <td>${elemento.fecha_ultima_actualizacion}</td>
+                    <td>${elemento.patente_camion}</td>
                     <td>
                         <table>
                             <tr>
                                 <th>Ciudad</th>
                                 <th>Km Recorridos</th>
                             </tr>
-                            ${elemento.Paradas.map(
-                              (parada) => `
+                            ${elemento.paradas
+                              .map(
+                                (parada) => `
                                 <tr>
-                                    <td>${parada.Ciudad}</td>
-                                    <td>${parada.KmRecorridos}</td>
+                                    <td>${parada.ciudad}</td>
+                                    <td>${parada.km_recorridos}</td>
                                 </tr>
                             `
-                            ).join("")}
+                              )
+                              .join("")}
                         </table>
                     </td>
-                    <td>${elemento.Pedidos.map(
-                      (pedido) => `
+                    <td>${elemento.pedidos
+                      .map(
+                        (pedido) => `
                         ${pedido}
                     `
-                    ).join(" ")}</td>
-                    <td>${elemento.IdCreador}</td>
-                    <td>${elemento.Estado}</td>
+                      )
+                      .join(" ")}</td>
+                    <td>${elemento.id_creador}</td>
+                    <td>${elemento.estado}</td>
                     <td class="acciones"><a href="form.html?id=${
-                      elemento.Id
+                      elemento.id
                     }&tipo=PARADA">Nueva Parada</a> | <a href="form.html?id=${
-        elemento.Id
+        elemento.id
       }&tipo=INICIAR">Iniciar Viaje</a> | <a href="form.html?id=${
-        elemento.Id
+        elemento.id
       }&tipo=FINALIZAR">Finalizar Viaje</a></td>
                     `;
 

@@ -6,12 +6,12 @@ import (
 )
 
 type Camion struct {
-	Patente                  string
-	PesoMaximo               int
-	CostoPorKilometro        float32
-	FechaCreacion            time.Time
-	FechaUltimaActualizacion time.Time
-	IdCreador                int
+	Patente                  string    `json:"patente"`
+	PesoMaximo               int       `json:"pesoMaximo"`
+	CostoPorKilometro        float32   `json:"costoPorKilometro"`
+	FechaCreacion            time.Time `json:"fechaCreacion"`
+	FechaUltimaActualizacion time.Time `json:"fechaUltimaActualizacion"`
+	IdCreador                int       `json:"idCreador"`
 }
 
 func NewCamion(camion model.Camion) *Camion {

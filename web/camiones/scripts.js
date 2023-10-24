@@ -35,12 +35,13 @@ function obtenerCamiones() {
         const row = document.createElement("tr"); //crear una fila
 
         row.innerHTML = ` 
-                  <td>${elemento.Patente}</td>
-                  <td>${elemento.PesoMaximo}</td>
-                  <td>${elemento.FechaCreacion}</td>
-                  <td>${elemento.FechaUltimaActualizacion}</td>
-                  <td>${elemento.IdCreador}</td>
-                  <td class="acciones"><a href="form.html?patente=${elemento.Patente}&tipo=EDITAR">Editar</a> | <a href="form.html?patente=${elemento.Patente}&tipo=ELIMINAR">Eliminar</a></td>
+                  <td>${elemento.patente}</td>
+                  <td>${elemento.pesoMaximo}</td>
+                  <td>${elemento.fechaCreacion}</td>
+                  <td>${elemento.fechaUltimaActualizacion}</td>
+                  <td>${elemento.costoPorKilometro}</td>
+                  <td>${elemento.idCreador}</td>
+                  <td class="acciones"><a href="form.html?patente=${elemento.patente}&tipo=EDITAR">Editar</a> | <a href="form.html?patente=${elemento.patente}&tipo=ELIMINAR">Eliminar</a></td>
               `;
 
         elementosTable.appendChild(row);

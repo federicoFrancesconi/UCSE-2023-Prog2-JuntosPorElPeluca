@@ -24,15 +24,23 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 function guardarEnvio() {
+  //obtengo los datos de los pedidos
+  const valorPedidos = document.getElementById("Pedidos").value;
+  const valoresSeparados = valorPedidos.split(",");
+  const pedidosArray = valoresSeparados.map(function (valor) {
+    return parseInt(valor);
+  });
+
+  //armo la data a enviar
   const data = {
-    Id: 0,
-    FechaCreacion: "2023-10-14T12:00:00Z",
-    FechaUltimaActualizacion: "2023-10-14T12:00:00Z",
-    PatenteCamion: document.getElementById("PatenteCamion").value,
-    Paradas: [],
-    Pedidos: [],
-    IdCreador: parseInt(document.getElementById("IdCreador").value),
-    Estado: 0,
+    id: 3,
+    fecha_creacion: "2023-10-14T12:00:00Z",
+    fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
+    patente_camion: document.getElementById("PatenteCamion").value,
+    paradas: [],
+    pedidos: pedidosArray,
+    id_creador: parseInt(document.getElementById("IdCreador").value),
+    estado: 0,
   };
 
   fetch(`http://localhost:8080/envios`, {
@@ -50,6 +58,7 @@ function guardarEnvio() {
     .catch((error) => {
       console.error("Error:", error);
       alert(error);
+      window.location = "/web/envios/form.html";
     });
 }
 

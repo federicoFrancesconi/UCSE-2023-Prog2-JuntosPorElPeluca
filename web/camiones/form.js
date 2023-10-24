@@ -35,19 +35,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 function guardarCamion(event) {
   event.preventDefault();
-  // Create an object with the data you want to send
-
-  const now = new Date();
-
-  const dia = String(now.getDate()).padStart(2, "0");
-  const mes = String(now.getMonth() + 1).padStart(2, "0"); // Los meses comienzan desde 0
-  const ano = now.getFullYear();
-
-  const hora = String(now.getHours()).padStart(2, "0");
-  const minutos = String(now.getMinutes()).padStart(2, "0");
-  const segundos = String(now.getSeconds()).padStart(2, "0");
-
-  const fechaFormateada = `${dia}/${mes}/${ano} ${hora}:${minutos}:${segundos}`;
 
   const data = {
     Patente: document.getElementById("Patente").value,
@@ -55,6 +42,7 @@ function guardarCamion(event) {
     FechaCreacion: "2023-10-14T12:00:00Z",
     FechaUltimaActualizacion: "2023-10-14T12:00:00Z",
     IdCreador: parseInt(document.getElementById("IdCreador").value),
+    CostoPorKilometro: parseInt(document.getElementById("CostoPorKm").value),
   };
 
   console.log(JSON.stringify(data));
@@ -81,26 +69,14 @@ function guardarCamion(event) {
 
 function actualizarCamion(event) {
   event.preventDefault();
-  // Create an object with the data you want to send
-
-  const now = new Date();
-
-  const dia = String(now.getDate()).padStart(2, "0");
-  const mes = String(now.getMonth() + 1).padStart(2, "0"); // Los meses comienzan desde 0
-  const ano = now.getFullYear();
-
-  const hora = String(now.getHours()).padStart(2, "0");
-  const minutos = String(now.getMinutes()).padStart(2, "0");
-  const segundos = String(now.getSeconds()).padStart(2, "0");
-
-  const fechaFormateada = `${dia}/${mes}/${ano} ${hora}:${minutos}:${segundos}`;
 
   const data = {
-    Patente: document.getElementById("Patente").value,
-    PesoMaximo: parseInt(document.getElementById("PesoMaximo").value),
-    FechaCreacion: "2023-10-14T12:00:00Z",
-    FechaUltimaActualizacion: "2023-10-14T12:00:00Z",
-    IdCreador: parseInt(document.getElementById("IdCreador").value),
+    patente: document.getElementById("Patente").value,
+    pesoMaximo: parseInt(document.getElementById("PesoMaximo").value),
+    fechaCreacion: "2023-10-14T12:00:00Z",
+    fechaUltimaActualizacion: "2023-10-14T12:00:00Z",
+    idCreador: parseInt(document.getElementById("IdCreador").value),
+    costoPorKilometro: parseInt(document.getElementById("CostoPorKm").value),
   };
 
   console.log(JSON.stringify(data));
@@ -115,7 +91,7 @@ function actualizarCamion(event) {
         throw new Error("Error en la solicitud al servidor.");
       }
 
-      window.location = "/web/camiones/index.html";
+      window.location = "index.html";
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -127,7 +103,7 @@ function actualizarCamion(event) {
 
 function eliminarCamion(patente) {
   if (confirm("¿Estás seguro de que deseas eliminar este camión?")) {
-    fetch(`http://localhost:8080/${patente}`, {
+    fetch(`http://localhost:8080/camiones/${patente}`, {
       method: "DELETE",
       headers: customHeaders,
     })

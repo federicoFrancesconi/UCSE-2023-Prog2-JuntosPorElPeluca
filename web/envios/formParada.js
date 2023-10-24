@@ -5,7 +5,6 @@ customHeaders.append("Accept-Encoding", "gzip, deflate, br");
 customHeaders.append("Connection", "keep-alive");
 
 document.addEventListener("DOMContentLoaded", function (event) {
-  debugger;
   document
     .getElementById("formParada")
     .addEventListener("submit", function (event) {
@@ -14,15 +13,16 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 function agregarParada() {
-  debugger;
   const data = {
-    Ciudad: document.getElementById("Ciudad").value,
-    KmRecorridos: parseInt(document.getElementById("KmRecorridos").value),
+    ciudad: document.getElementById("Ciudad").value,
+    km_recorridos: parseInt(document.getElementById("KmRecorridos").value),
   };
 
-  const idCamion = document.getElementById("IdCamion").value;
+  const urlParams = new URLSearchParams(window.location.search);
+  const idEnvio = urlParams.get("id");
 
-  fetch(`http://localhost:8080/${idCamion}/nuevaParada`, {
+  debugger;
+  fetch(`http://localhost:8080/${idEnvio}/nuevaParada`, {
     method: "PUT",
     body: JSON.stringify(data),
     headers: customHeaders,
