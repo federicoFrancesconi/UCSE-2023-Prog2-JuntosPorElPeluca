@@ -4,6 +4,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/database"
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"context"
+	"errors"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -65,11 +66,16 @@ func (repository CamionRepository) ObtenerCamionPorPatente(camion model.Camion) 
 
 	camiones, err := repository.obtenerCamiones(filtro)
 
-	// if err != nil {
-	// 	return model.Camion{}, err
-	// }
+	if err != nil {
+		return model.Camion{}, err
+	}
 
-	return camiones[0], err
+	//Contempla que no se haya encontrado el camion en la base de datos
+	if len(camiones) == 0 {
+		return model.Camion{}, errors.New("no se encontro el camion")
+	}
+
+	return camiones[0], nil
 }
 
 func (repository CamionRepository) CrearCamion(camion model.Camion) error {
@@ -87,13 +93,13 @@ func (repository CamionRepository) ActualizarCamion(camion model.Camion) error {
 	camion.FechaUltimaActualizacion = time.Now()
 
 	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
-	
+
 	filtro := bson.M{"patente": camion.Patente}
-	
+
 	actualizacion := bson.M{"$set": camion}
-	
+
 	_, err := collection.UpdateOne(context.TODO(), filtro, actualizacion)
-	
+
 	return err
 }
 
@@ -102,8 +108,8 @@ func (repository CamionRepository) EliminarCamion(camion model.Camion) error {
 
 	//Generamos el filtro para eliminar el camion
 	filtro := bson.M{"patente": camion.Patente}
-	
+
 	_, err := collection.DeleteOne(context.Background(), filtro)
-	
+
 	return err
 }

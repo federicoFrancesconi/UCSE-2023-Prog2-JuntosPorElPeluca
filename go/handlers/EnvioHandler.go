@@ -228,10 +228,22 @@ func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 func (handler *EnvioHandler) IniciarViaje(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	var envio dto.Envio
-	if err := c.ShouldBindJSON(&envio); err != nil {
+	//Recibimos el id del envio a iniciar
+	id := c.Param("id")
+
+	//convertir id a int
+	idInt, err := strconv.Atoi(id)
+
+	if err != nil {
+		log.Printf("[handler:EnvioHandler][method:IniciarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	//Creamos el envio para pasarle al service
+	envio := dto.Envio{
+		Id: idInt,
 	}
 
 	operacion, err := handler.envioService.IniciarViaje(&envio)
@@ -258,10 +270,22 @@ func (handler *EnvioHandler) IniciarViaje(c *gin.Context) {
 func (handler *EnvioHandler) FinalizarViaje(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	var envio dto.Envio
-	if err := c.ShouldBindJSON(&envio); err != nil {
+	//Recibimos el id del envio a finalizar
+	id := c.Param("id")
+
+	//convertir id a int
+	idInt, err := strconv.Atoi(id)
+
+	if err != nil {
+		log.Printf("[handler:EnvioHandler][method:FinalizarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
+		
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	//Creamos el envio para pasarle al service
+	envio := dto.Envio{
+		Id: idInt,
 	}
 
 	operacion, err := handler.envioService.FinalizarViaje(&envio)

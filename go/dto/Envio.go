@@ -6,14 +6,14 @@ import (
 )
 
 type Envio struct {
-	Id                       int
-	FechaCreacion            time.Time
-	FechaUltimaActualizacion time.Time
-	PatenteCamion            string
-	Paradas                  []Parada
-	Pedidos                  []int
-	IdCreador                int
-	Estado                   model.EstadoEnvio
+	Id                       int               `json:"id"`
+	FechaCreacion            time.Time         `json:"fecha_creacion"`
+	FechaUltimaActualizacion time.Time         `json:"fecha_ultima_actualizacion"`
+	PatenteCamion            string            `json:"patente_camion"`
+	Paradas                  []Parada          `json:"paradas"`
+	Pedidos                  []int             `json:"pedidos"`
+	IdCreador                int               `json:"id_creador"`
+	Estado                   model.EstadoEnvio `json:"estado"`
 }
 
 func NewEnvio(envio model.Envio) *Envio {
