@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin">
+    <title>Pedidos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Young+Serif&display=swap" rel="stylesheet">
+
+    <link href="./estilos.css" rel="stylesheet">
+
+</head>
+<body>
+    <h2>Envios</h2>
+    <div class="filtros">
+        <h3>Filtros</h3>
+        <div>
+            <label for="">Id</label>
+            <input type="text" name="FiltroId" id="FiltroId">
+        </div>
+        <div>
+            <input type="button" value="Filtrar" onclick="obtenerPedidoPorId()">
+        </div>
+    </div>
+    <a href="/web/pedidos/form.html">Crear Pedido</a>
+    <table id="elementosTable" cellspacing="0" cellpadding="0">
+        <thead> <!-- engloba todas las filas de encabezado -->
+            <tr>
+                <th>Id</th>
+                <th>Productos Elegidos</th>
+                <th>Ciudad Destino</th>
+                <th>Estado</th>
+                <th>Fecha Creacion</th>
+                <th>Fecha Ultima Actualizacion</th>
+                <th>Id Creador</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody> <!-- Todas las filas de datos -->
+            
+        </tbody>
+        <tfoot> <!-- Todas las filas de pie -->
+
+        </tfoot>
+    </table>
+    <script src="scripts.js"></script>
+</body>
+</html>

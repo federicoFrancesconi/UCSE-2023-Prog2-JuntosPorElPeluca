@@ -63,39 +63,47 @@ function guardarEnvio() {
 }
 
 function iniciarViaje(id) {
-  fetch(`http://localhost:8080/${id}/iniciar`, {
-    method: "PUT",
-    body: JSON.stringify(data),
-    headers: customHeaders,
-  }) // Realizar la solicitud de búsqueda (fetch) al servidor
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error en la solicitud al servidor.");
-      }
+  if (confirm("¿Estás seguro de que deseas iniciar el viaje?")) {
+    fetch(`http://localhost:8080/${id}/iniciar`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: customHeaders,
+    }) // Realizar la solicitud de búsqueda (fetch) al servidor
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error en la solicitud al servidor.");
+        }
 
-      window.location = "/web/envios/index.html";
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert(error);
-    });
+        window.location = "/web/envios/index.html";
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert(error);
+      });
+  } else {
+    window.location = "/web/envios/index.html";
+  }
 }
 
 function finalizarViaje(id) {
-  fetch(`http://localhost:8080/${id}/finalizar`, {
-    method: "PUT",
-    body: JSON.stringify(data),
-    headers: customHeaders,
-  }) // Realizar la solicitud de búsqueda (fetch) al servidor
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error en la solicitud al servidor.");
-      }
+  if (confirm("¿Estás seguro de que deseas finalizar el viaje?")) {
+    fetch(`http://localhost:8080/${id}/finalizar`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: customHeaders,
+    }) // Realizar la solicitud de búsqueda (fetch) al servidor
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error en la solicitud al servidor.");
+        }
 
-      window.location = "/web/envios/index.html";
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert(error);
-    });
+        window.location = "/web/envios/index.html";
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert(error);
+      });
+  } else {
+    window.location = "/web/envios/index.html";
+  }
 }
