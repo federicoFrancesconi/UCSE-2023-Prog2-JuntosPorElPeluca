@@ -2,11 +2,12 @@ package dto
 
 import (
 	"UCSE-2023-Prog2-TPIntegrador/model"
+	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"time"
 )
 
 type Producto struct {
-	CodigoProducto           int                `json:"codigo_producto"`
+	CodigoProducto           string             `json:"codigo_producto"`
 	TipoDeProducto           model.TipoProducto `json:"tipo_producto"`
 	Nombre                   string             `json:"nombre"`
 	PesoUnitario             float32            `json:"peso_unitario"`
@@ -21,7 +22,7 @@ type Producto struct {
 // Crea el dto a partir del modelo
 func NewProducto(producto *model.Producto) *Producto {
 	return &Producto{
-		CodigoProducto:           producto.CodigoProducto,
+		CodigoProducto:           utils.GetStringIDFromObjectID(producto.ObjectId),
 		TipoDeProducto:           producto.TipoDeProducto,
 		Nombre:                   producto.Nombre,
 		PrecioUnitario:           producto.PrecioUnitario,
@@ -37,7 +38,7 @@ func NewProducto(producto *model.Producto) *Producto {
 // Crea el modelo a partir del dto
 func (producto Producto) GetModel() model.Producto {
 	return model.Producto{
-		CodigoProducto:           producto.CodigoProducto,
+		ObjectId:                 utils.GetObjectIDFromStringID(producto.CodigoProducto),
 		TipoDeProducto:           producto.TipoDeProducto,
 		Nombre:                   producto.Nombre,
 		PrecioUnitario:           producto.PrecioUnitario,

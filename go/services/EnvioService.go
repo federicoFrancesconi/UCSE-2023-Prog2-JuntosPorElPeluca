@@ -378,10 +378,10 @@ func (service *EnvioService) descontarStockProductosDeEnvio(envio *dto.Envio) er
 
 func (service *EnvioService) descontarStockProducto(productoPedido dto.ProductoPedido) error {
 	//Generamos un producto con el codigo del producto del pedido
-	productoConId := model.Producto{CodigoProducto: productoPedido.CodigoProducto}
+	dtoProductoConId := dto.Producto{CodigoProducto: productoPedido.CodigoProducto}
 
 	//Buscamos el producto del que hay que descontar la cantidad
-	producto, err := service.productoRepository.ObtenerProductoPorCodigo(productoConId)
+	producto, err := service.productoRepository.ObtenerProductoPorCodigo(dtoProductoConId.GetModel())
 
 	if err != nil {
 		return err

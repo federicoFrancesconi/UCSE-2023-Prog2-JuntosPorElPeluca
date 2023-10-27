@@ -43,5 +43,5 @@ func (service *ProductoService) ObtenerProductosFiltrados(filtro utils.FiltroPro
 }
 
 func (service *ProductoService) EliminarProducto(producto *dto.Producto) error {
-	return service.repository.EliminarProducto(producto.GetModel().CodigoProducto)
+	return service.repository.EliminarProducto(producto.GetModel())
 }

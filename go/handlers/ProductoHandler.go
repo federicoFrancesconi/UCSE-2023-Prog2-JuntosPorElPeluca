@@ -102,18 +102,8 @@ func (handler *ProductoHandler) EliminarProducto(c *gin.Context) {
 	//Recibimos el codigo del producto a eliminar
 	codigo := c.Param("codigo")
 
-	//Convertimos el codigo a int
-	codigoInt, err := strconv.Atoi(codigo)
-
-	if err != nil {
-		log.Printf("[handler:ProductoHandler][method:EliminarProducto][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	//Creamos el objeto producto
-	producto := dto.Producto{CodigoProducto: codigoInt}
+	producto := dto.Producto{CodigoProducto: codigo}
 
 	//Eliminamos el producto de la base de datos
 	if err := handler.productoService.EliminarProducto(&producto); err != nil {

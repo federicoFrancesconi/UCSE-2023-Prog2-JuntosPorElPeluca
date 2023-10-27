@@ -9,8 +9,8 @@ import (
 )
 
 type PedidoService struct {
-	pedidoRepository repositories.PedidoRepositoryInterface
-	envioRepository repositories.EnvioRepositoryInterface
+	pedidoRepository   repositories.PedidoRepositoryInterface
+	envioRepository    repositories.EnvioRepositoryInterface
 	productoRepository repositories.ProductoRepositoryInterface
 }
 
@@ -24,8 +24,8 @@ type PedidoServiceInterface interface {
 
 func NewPedidoService(pedidoRepository repositories.PedidoRepositoryInterface, envioRepository repositories.EnvioRepositoryInterface, productoRepository repositories.ProductoRepositoryInterface) *PedidoService {
 	return &PedidoService{
-		pedidoRepository: pedidoRepository,
-		envioRepository: envioRepository,
+		pedidoRepository:   pedidoRepository,
+		envioRepository:    envioRepository,
 		productoRepository: productoRepository,
 	}
 }
@@ -44,7 +44,7 @@ func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroP
 	idEnvio := filtroPedido.IdEnvio
 
 	var idPedidos []int
-	
+
 	//Lo primero es ver si hace falta filtrar por envio
 	if idEnvio != 0 {
 		//Buscamos el envio
@@ -60,7 +60,7 @@ func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroP
 
 	//Asignamos la lista de pedidos al filtro
 	filtroPedido.IdPedidos = idPedidos
-	
+
 	pedidos, err := service.pedidoRepository.ObtenerPedidosFiltrados(filtroPedido)
 	if err != nil {
 		return nil, err
@@ -121,11 +121,12 @@ func (service *PedidoService) hayStockDisponiblePedido(pedido *model.Pedido) boo
 
 	//Recorro los productos del pedido
 	for _, productoPedido := range productosPedido {
+
 		//Armo un objeto producto con el ID para buscar en la base de datos
-		productoParaBuscar := model.Producto{CodigoProducto: productoPedido.CodigoProducto}
+		dtoProductoParaBuscar := dto.Producto{CodigoProducto: productoPedido.CodigoProducto}
 
 		//Busco el producto en la base de datos
-		producto, err := service.productoRepository.ObtenerProductoPorCodigo(productoParaBuscar)
+		producto, err := service.productoRepository.ObtenerProductoPorCodigo(dtoProductoParaBuscar.GetModel())
 
 		if err != nil {
 			return false

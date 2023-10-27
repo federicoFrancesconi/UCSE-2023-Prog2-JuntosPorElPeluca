@@ -15,7 +15,7 @@ type ProductoRepositoryInterface interface {
 	ObtenerProductoPorCodigo(model.Producto) (*model.Producto, error)
 	ObtenerProductosFiltrados(utils.FiltroProducto) ([]*model.Producto, error)
 	ActualizarProducto(model.Producto) error
-	EliminarProducto(id int) error
+	EliminarProducto(model.Producto) error
 }
 
 type ProductoRepository struct {
@@ -41,7 +41,7 @@ func (repository *ProductoRepository) CrearProducto(producto model.Producto) err
 func (repository *ProductoRepository) ObtenerProductoPorCodigo(productoConCodigo model.Producto) (*model.Producto, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 
-	filtro := bson.M{"codigo_producto": productoConCodigo.CodigoProducto}
+	filtro := bson.M{"_id": productoConCodigo.ObjectId}
 
 	var producto model.Producto
 
@@ -109,7 +109,7 @@ func (repository *ProductoRepository) ActualizarProducto(producto model.Producto
 
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 
-	filtro := bson.M{"codigo_producto": producto.CodigoProducto}
+	filtro := bson.M{"_id": producto.ObjectId}
 
 	//TODO: ver si anda este tipo de set
 	_, err := collection.UpdateOne(context.Background(), filtro, bson.M{"$set": producto})
@@ -117,10 +117,10 @@ func (repository *ProductoRepository) ActualizarProducto(producto model.Producto
 	return err
 }
 
-func (repository *ProductoRepository) EliminarProducto(id int) error {
+func (repository *ProductoRepository) EliminarProducto(producto model.Producto) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 
-	filtro := bson.M{"codigo_producto": id}
+	filtro := bson.M{"_id": producto.ObjectId}
 
 	_, err := collection.DeleteOne(context.Background(), filtro)
 

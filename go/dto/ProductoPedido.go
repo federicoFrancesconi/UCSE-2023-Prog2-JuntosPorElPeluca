@@ -2,10 +2,11 @@ package dto
 
 import (
 	"UCSE-2023-Prog2-TPIntegrador/model"
+	"UCSE-2023-Prog2-TPIntegrador/utils"
 )
 
 type ProductoPedido struct {
-	CodigoProducto int     `json:"codigo_producto"`
+	CodigoProducto string  `json:"codigo_producto"`
 	Nombre         string  `json:"nombre_producto"`
 	Cantidad       int     `json:"cantidad"`
 	PrecioUnitario float32 `json:"precio_unitario"`
@@ -15,7 +16,7 @@ type ProductoPedido struct {
 // Metodo que sirve para crear un ProductoPedido para un pedido
 func NewProductoPedidoFromProducto(producto *model.Producto, cantidad int) *ProductoPedido {
 	return &ProductoPedido{
-		CodigoProducto: producto.CodigoProducto,
+		CodigoProducto: utils.GetStringIDFromObjectID(producto.ObjectId),
 		Nombre:         producto.Nombre,
 		Cantidad:       cantidad,
 		PrecioUnitario: producto.PrecioUnitario,
