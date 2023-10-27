@@ -2,11 +2,12 @@ package dto
 
 import (
 	"UCSE-2023-Prog2-TPIntegrador/model"
+	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"time"
 )
 
 type Pedido struct {
-	Id                       int                `json:"id"`
+	Id                       string             `json:"id"`
 	ProductosElegidos        []ProductoPedido   `json:"productos_elegidos"`
 	CiudadDestino            string             `json:"ciudad_destino"`
 	Estado                   model.EstadoPedido `json:"estado"`
@@ -18,7 +19,7 @@ type Pedido struct {
 // Metodo para obtener el modelo a partir del dto
 func (pedido Pedido) GetModel() model.Pedido {
 	return model.Pedido{
-		Id:                       pedido.Id,
+		ObjectId:                 utils.GetObjectIDFromStringID(pedido.Id),
 		ProductosElegidos:        pedido.getProductosElegidos(),
 		CiudadDestino:            pedido.CiudadDestino,
 		Estado:                   pedido.Estado,
@@ -31,7 +32,7 @@ func (pedido Pedido) GetModel() model.Pedido {
 // Metodo para crear un dto a partir del modelo
 func NewPedido(pedido *model.Pedido) *Pedido {
 	return &Pedido{
-		Id:                       pedido.Id,
+		Id:                       utils.GetStringIDFromObjectID(pedido.ObjectId),
 		ProductosElegidos:        NewProductosPedido(pedido.ProductosElegidos),
 		CiudadDestino:            pedido.CiudadDestino,
 		Estado:                   pedido.Estado,

@@ -8,7 +8,6 @@ import (
 
 type Pedido struct {
 	ObjectId                 primitive.ObjectID `bson:"_id,omitempty"`
-	Id                       int                `bson:"id"`
 	ProductosElegidos        []ProductoPedido   `bson:"productos_elegidos"`
 	CiudadDestino            string             `bson:"ciudad_destino"`
 	Estado                   EstadoPedido       `bson:"estado"`

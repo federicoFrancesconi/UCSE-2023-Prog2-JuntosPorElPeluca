@@ -118,18 +118,8 @@ func (handler *PedidoHandler) AceptarPedido(c *gin.Context) {
 
 	id := c.Param("id")
 
-	//convertir id a int
-	idInt, err := strconv.Atoi(id)
-
-	if err != nil {
-		log.Printf("[handler:PedidoHandler][method:EnviarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	//Generamos el objeto pedido
-	pedido := dto.Pedido{Id: idInt}
+	pedido := dto.Pedido{Id: id}
 
 	//Aceptamos el pedido
 	if err := handler.pedidoService.AceptarPedido(&pedido); err != nil {
@@ -147,18 +137,8 @@ func (handler *PedidoHandler) CancelarPedido(c *gin.Context) {
 
 	id := c.Param("id")
 
-	//convertir id a int
-	idInt, err := strconv.Atoi(id)
-
-	if err != nil {
-		log.Printf("[handler:PedidoHandler][method:EnviarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	//Generamos el objeto pedido
-	pedido := dto.Pedido{Id: idInt}
+	pedido := dto.Pedido{Id: id}
 
 	//Cancelamos el pedido
 	if err := handler.pedidoService.CancelarPedido(&pedido); err != nil {

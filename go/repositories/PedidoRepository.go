@@ -70,7 +70,7 @@ func (repository *PedidoRepository) obtenerPedidos(filtro bson.M) ([]*model.Pedi
 func (repository *PedidoRepository) ObtenerPedidoPorId(pedidoConId model.Pedido) (*model.Pedido, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")
 
-	filtro := bson.M{"id": pedidoConId.Id}
+	filtro := bson.M{"_id": pedidoConId.ObjectId}
 
 	var pedido model.Pedido
 
@@ -138,7 +138,7 @@ func (repository *PedidoRepository) ActualizarPedido(pedido model.Pedido) error 
 
 	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")
 
-	filtro := bson.M{"id": pedido.Id}
+	filtro := bson.M{"_id": pedido.ObjectId}
 
 	actualizacion := bson.M{"$set": pedido}
 
