@@ -2,23 +2,24 @@ package dto
 
 import (
 	"UCSE-2023-Prog2-TPIntegrador/model"
+	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"time"
 )
 
 type Envio struct {
-	Id                       int               `json:"id"`
+	Id                       string            `json:"id"`
 	FechaCreacion            time.Time         `json:"fecha_creacion"`
 	FechaUltimaActualizacion time.Time         `json:"fecha_ultima_actualizacion"`
 	PatenteCamion            string            `json:"patente_camion"`
 	Paradas                  []Parada          `json:"paradas"`
-	Pedidos                  []int             `json:"pedidos"`
+	Pedidos                  []string          `json:"pedidos"`
 	IdCreador                int               `json:"id_creador"`
 	Estado                   model.EstadoEnvio `json:"estado"`
 }
 
 func NewEnvio(envio model.Envio) *Envio {
 	return &Envio{
-		Id:                       envio.Id,
+		Id:                       utils.GetStringIDFromObjectID(envio.ObjectId),
 		FechaCreacion:            envio.FechaCreacion,
 		FechaUltimaActualizacion: envio.FechaUltimaActualizacion,
 		PatenteCamion:            envio.PatenteCamion,
@@ -31,7 +32,7 @@ func NewEnvio(envio model.Envio) *Envio {
 
 func (envio Envio) GetModel() model.Envio {
 	return model.Envio{
-		Id:                       envio.Id,
+		ObjectId:                 utils.GetObjectIDFromStringID(envio.Id),
 		FechaCreacion:            envio.FechaCreacion,
 		FechaUltimaActualizacion: envio.FechaUltimaActualizacion,
 		PatenteCamion:            envio.PatenteCamion,

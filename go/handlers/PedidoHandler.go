@@ -25,15 +25,7 @@ func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
 	//Obtenemos el id del envio, si es que se filtró por el mismo
-	idEnvioStr := c.DefaultQuery("idEnvio", "0")
-	idEnvio, err := strconv.Atoi(idEnvioStr)
-
-	if err != nil {
-		log.Printf("[handler:PedidoHandler][method:ObtenerPedidos][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	idEnvio := c.DefaultQuery("idEnvio", "")
 
 	//Convierto el estado a integer para buscar el Estado en el "enum" de EstadoPedido
 	estadoStr := c.DefaultQuery("estado", "-1")

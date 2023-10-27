@@ -101,7 +101,10 @@ func (service *EnvioService) envioCabeEnCamion(envio *dto.Envio) (bool, error) {
 	//Obtenemos el peso total de los pedidos
 	var pesoTotal float32 = 0
 	for _, idPedido := range envio.Pedidos {
-		pedido, err := service.pedidoRepository.ObtenerPedidoPorId(model.Pedido{Id: idPedido})
+		//Generamos el pedido para buscar
+		pedidoParaBuscar := dto.Pedido{Id: idPedido}
+
+		pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoParaBuscar.GetModel())
 
 		if err != nil {
 			return false, err
@@ -206,7 +209,10 @@ func (service *EnvioService) getPrecioTotalProductosDeEnvio(envio *dto.Envio) (f
 	var precioTotal float32 = 0
 
 	for _, idPedido := range envio.Pedidos {
-		pedido, err := service.pedidoRepository.ObtenerPedidoPorId(model.Pedido{Id: idPedido})
+		//Generamos el pedido para buscar
+		pedidoParaBuscar := dto.Pedido{Id: idPedido}
+
+		pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoParaBuscar.GetModel())
 
 		if err != nil {
 			return 0, err
@@ -361,7 +367,10 @@ func (service *EnvioService) entregarPedido(pedidoPorEntregar *dto.Pedido) error
 
 func (service *EnvioService) descontarStockProductosDeEnvio(envio *dto.Envio) error {
 	for _, idPedido := range envio.Pedidos {
-		pedido, err := service.pedidoRepository.ObtenerPedidoPorId(model.Pedido{Id: idPedido})
+		//Generamos el pedido para buscar
+		pedidoParaBuscar := dto.Pedido{Id: idPedido}
+
+		pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoParaBuscar.GetModel())
 		if err != nil {
 			return err
 		}

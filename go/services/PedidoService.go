@@ -43,12 +43,15 @@ func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroP
 	//Obtenemos el id del envio, si es que se filtró por el mismo
 	idEnvio := filtroPedido.IdEnvio
 
-	var idPedidos []int
+	var idPedidos []string
 
 	//Lo primero es ver si hace falta filtrar por envio
-	if idEnvio != 0 {
+	if idEnvio != "" {
+		//Generamos el envio para buscar
+		envioParaBuscar := dto.Envio{Id: idEnvio}
+
 		//Buscamos el envio
-		envio, err := service.envioRepository.ObtenerEnvioPorId(model.Envio{Id: idEnvio})
+		envio, err := service.envioRepository.ObtenerEnvioPorId(envioParaBuscar.GetModel())
 
 		if err != nil {
 			return nil, err

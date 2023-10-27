@@ -129,7 +129,7 @@ func (repository EnvioRepository) ObtenerEnviosFiltrados(filtroEnvio utils.Filtr
 }
 
 func (repository EnvioRepository) ObtenerEnvioPorId(envio model.Envio) (model.Envio, error) {
-	filtro := bson.M{"id": envio.Id}
+	filtro := bson.M{"_id": envio.ObjectId}
 
 	envios, err := repository.obtenerEnvios(filtro)
 
@@ -152,7 +152,7 @@ func (repository EnvioRepository) ObtenerCantidadEnviosPorEstado(estado model.Es
 
 func (repository EnvioRepository) ActualizarEnvio(envio model.Envio) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
-	filtro := bson.M{"id": envio.Id}
+	filtro := bson.M{"_id": envio.ObjectId}
 
 	//seteo la fecha de actualizacion
 	envio.FechaUltimaActualizacion = time.Now()

@@ -84,17 +84,7 @@ func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
 
 	id := c.Param("id")
 
-	//convertir id a int
-	idInt, err := strconv.Atoi(id)
-
-	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:ObtenerEnvioPorId][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	envio, err := handler.envioService.ObtenerEnvioPorId(&dto.Envio{Id: idInt})
+	envio, err := handler.envioService.ObtenerEnvioPorId(&dto.Envio{Id: id})
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
@@ -179,16 +169,6 @@ func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 	//Recibimos el id como parametro
 	id := c.Param("id")
 
-	//convertir id a int
-	idInt, err := strconv.Atoi(id)
-
-	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:AgregarParada][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	//Obtenemos la nueva parada
 	var parada dto.Parada
 	if err := c.ShouldBindJSON(&parada); err != nil {
@@ -198,7 +178,7 @@ func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 
 	//Creamos el envio para pasarle al service
 	envio := dto.Envio{
-		Id: idInt,
+		Id: id,
 		Paradas: []dto.Parada{
 			parada,
 		},
@@ -231,19 +211,9 @@ func (handler *EnvioHandler) IniciarViaje(c *gin.Context) {
 	//Recibimos el id del envio a iniciar
 	id := c.Param("id")
 
-	//convertir id a int
-	idInt, err := strconv.Atoi(id)
-
-	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:IniciarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	//Creamos el envio para pasarle al service
 	envio := dto.Envio{
-		Id: idInt,
+		Id: id,
 	}
 
 	operacion, err := handler.envioService.IniciarViaje(&envio)
@@ -273,19 +243,9 @@ func (handler *EnvioHandler) FinalizarViaje(c *gin.Context) {
 	//Recibimos el id del envio a finalizar
 	id := c.Param("id")
 
-	//convertir id a int
-	idInt, err := strconv.Atoi(id)
-
-	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:FinalizarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
-		
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	//Creamos el envio para pasarle al service
 	envio := dto.Envio{
-		Id: idInt,
+		Id: id,
 	}
 
 	operacion, err := handler.envioService.FinalizarViaje(&envio)
