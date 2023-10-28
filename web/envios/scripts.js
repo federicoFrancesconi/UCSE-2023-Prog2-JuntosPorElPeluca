@@ -6,6 +6,9 @@ customHeaders.append("Connection", "keep-alive");
 
 document.addEventListener("DOMContentLoaded", function (event) {
   obtenerEnvios();
+  document.getElementById("form").addEventListener("submit", function (event) {
+    obtenerBeneficioEntreFechas(event);
+  });
 });
 
 function obtenerEnvios() {
@@ -167,5 +170,31 @@ function obtenerEnvioPorId() {
     .catch((error) => {
       console.error("Error:", error);
       alert(error);
+    });
+}
+
+function obtenerBeneficioEntreFechas() {
+  var fechaDesde = document.getElementById("FechaDesde").value;
+  var fechaHasta = document.getElementById("FechaHasta").value;
+
+  fetch(
+    `http://localhost:8080/envios/beneficioEntreFechas?fechaDesde=${fechaDesde}Z&fechaHasta=${fechaHasta}Z`,
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: customHeaders,
+    }
+  ) // Realizar la solicitud de búsqueda (fetch) al servidor
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error en la solicitud al servidor.");
+      }
+
+      document.getElementById("beneficio").innerHTML = response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert(error);
+      window.location = "/web/envios/form.html";
     });
 }

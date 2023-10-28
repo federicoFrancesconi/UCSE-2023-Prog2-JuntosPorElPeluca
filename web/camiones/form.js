@@ -116,5 +116,7 @@ function eliminarCamion(patente) {
         console.error("Error:", error);
         alert(error);
       });
+  } else {
+    window.location = "web/camiones/index.html";
   }
 }
