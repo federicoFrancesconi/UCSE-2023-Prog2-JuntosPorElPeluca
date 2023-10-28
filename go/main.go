@@ -10,8 +10,6 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/services"
 
 	"github.com/gin-gonic/gin"
-	//"UCSE-2023-Prog2-TPIntegrador/middlewares"
-	//"UCSE-2023-Prog2-TPIntegrador/clients"
 )
 
 var (
@@ -25,6 +23,7 @@ var (
 
 func main() {
 	router = gin.Default()
+
 	//Iniciar objetos de handler
 	dependencies()
 	//Iniciar rutas
@@ -35,60 +34,34 @@ func main() {
 }
 
 func mappingRoutes() {
-	//-------------------- Middleware --------------------
-	//middleware para permitir peticiones del mismo server localhost
-
-	//cliente para api externa
-	// var authClient clients.AuthClientInterface
-	// authClient = clients.NewAuthClient()
-
-	//creacion de middleware de autenticacion
-	//authMiddleware := middlewares.NewAuthMiddleware(authClient)
-
-	//Uso del middleware para todas las rutas del grupo
-	//group.Use(authMiddleware.ValidateToken)
-
-	//group.Use(middlewares.CORSMiddleware())
-
-	//------------------------------------------------------
-
-	//Listado de rutas
-	pedidos := router.Group("/pedidos")
-	envios := router.Group("/envios")
-	camiones := router.Group("/camiones")
-	productos := router.Group("/productos")
-
-	pedidos.Use(middlewares.CORSMiddleware())
-	envios.Use(middlewares.CORSMiddleware())
-	camiones.Use(middlewares.CORSMiddleware())
-	productos.Use(middlewares.CORSMiddleware())
+	router.Use(middlewares.CORSMiddleware())
 
 	//Rutas de pedidos
-	pedidos.GET("", pedidoHandler.ObtenerPedidos)
-	pedidos.POST("", pedidoHandler.CrearPedido)
-	pedidos.PUT("/:id/aceptar", pedidoHandler.AceptarPedido)
-	pedidos.PUT("/:id/cancelar", pedidoHandler.CancelarPedido)
+	router.GET("/pedidos", pedidoHandler.ObtenerPedidos)
+	router.POST("/pedidos", pedidoHandler.CrearPedido)
+	router.PUT("/pedidos/:id/aceptar", pedidoHandler.AceptarPedido)
+	router.PUT("/pedidos/:id/cancelar", pedidoHandler.CancelarPedido)
 
 	//Rutas de envios
-	envios.GET("", envioHandler.ObtenerEnvios)
-	envios.GET("/:id", envioHandler.ObtenerEnvioPorId)
-	envios.GET("/beneficioEntreFechas", envioHandler.ObtenerBeneficioEntreFechas)
-	envios.POST("", envioHandler.CrearEnvio)
-	envios.PUT("/:id/nuevaParada", envioHandler.AgregarParada)
-	envios.PUT("/:id/finalizar", envioHandler.FinalizarViaje)
-	envios.PUT("/:id/iniciar", envioHandler.IniciarViaje)
+	router.GET("/envios", envioHandler.ObtenerEnvios)
+	router.GET("/envios/:id", envioHandler.ObtenerEnvioPorId)
+	router.GET("/envios/beneficioEntreFechas", envioHandler.ObtenerBeneficioEntreFechas)
+	router.POST("/envios", envioHandler.CrearEnvio)
+	router.PUT("/envios/:id/nuevaParada", envioHandler.AgregarParada)
+	router.PUT("/envios/:id/finalizar", envioHandler.FinalizarViaje)
+	router.PUT("/envios/:id/iniciar", envioHandler.IniciarViaje)
 
 	//Rutas de camiones
-	camiones.GET("", camionHandler.ObtenerCamiones)
-	camiones.GET("/:patente", camionHandler.ObtenerCamionPorPatente)
-	camiones.POST("", camionHandler.CrearCamion)
-	camiones.PUT("", camionHandler.ActualizarCamion)
-	camiones.DELETE("/:patente", camionHandler.EliminarCamion)
+	router.GET("/camiones", camionHandler.ObtenerCamiones)
+	router.GET("/camiones/:patente", camionHandler.ObtenerCamionPorPatente)
+	router.POST("/camiones", camionHandler.CrearCamion)
+	router.PUT("/camiones", camionHandler.ActualizarCamion)
+	router.DELETE("/camiones/:patente", camionHandler.EliminarCamion)
 
 	//Rutas de productos
-	productos.GET("", productoHandler.ObtenerProductos)
-	productos.POST("", productoHandler.CrearProducto)
-	productos.DELETE("/:codigo", productoHandler.EliminarProducto)
+	router.GET("/productos", productoHandler.ObtenerProductos)
+	router.POST("/productos", productoHandler.CrearProducto)
+	router.DELETE("/productos/:codigo", productoHandler.EliminarProducto)
 }
 
 func dependencies() {
