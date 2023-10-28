@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type ProductoRepositoryInterface interface {
@@ -29,6 +30,9 @@ func NewProductoRepository(db database.DB) *ProductoRepository {
 }
 
 func (repository *ProductoRepository) CrearProducto(producto model.Producto) error {
+	//Nos aseguramos de que el Id sea creado por mongo
+	producto.ObjectId = primitive.NewObjectID()
+
 	//Seteamos las fechas del producto
 	producto.FechaCreacion = time.Now()
 	producto.FechaUltimaActualizacion = time.Now()

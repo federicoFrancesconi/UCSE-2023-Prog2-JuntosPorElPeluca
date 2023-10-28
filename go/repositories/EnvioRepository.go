@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type EnvioRepositoryInterface interface {
@@ -30,6 +31,9 @@ func NewEnvioRepository(db database.DB) *EnvioRepository {
 
 func (repository EnvioRepository) CrearEnvio(envio model.Envio) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
+
+	//Aseguramos que el id sea creado por mongo
+	envio.ObjectId = primitive.NewObjectID()
 
 	//Coloco las fechas
 	envio.FechaCreacion = time.Now()

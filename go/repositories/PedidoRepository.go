@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type PedidoRepositoryInterface interface {
@@ -29,6 +30,10 @@ func NewPedidoRepository(db database.DB) *PedidoRepository {
 }
 
 func (repository *PedidoRepository) CrearPedido(pedido model.Pedido) error {
+	//Nos aseguramos de que el Id sea creado por mongo
+	pedido.ObjectId = primitive.NewObjectID()
+
+	//Seteamos las fechas para el objeto pedido
 	pedido.FechaCreacion = time.Now()
 	pedido.FechaUltimaActualizacion = time.Now()
 

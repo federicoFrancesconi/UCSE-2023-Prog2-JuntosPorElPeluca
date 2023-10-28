@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type CamionRepositoryInterface interface {
@@ -26,6 +27,19 @@ func NewCamionRepository(db database.DB) *CamionRepository {
 	return &CamionRepository{
 		db: db,
 	}
+}
+
+func (repository CamionRepository) CrearCamion(camion model.Camion) error {
+	//Nos aseguramos de que el Id sea creado por mongo
+	camion.ObjectId = primitive.NewObjectID()
+
+	//Seteamos las fechas para el objeto camion
+	camion.FechaCreacion = time.Now()
+	camion.FechaUltimaActualizacion = time.Now()
+
+	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
+	_, err := collection.InsertOne(context.Background(), camion)
+	return err
 }
 
 func (repository CamionRepository) obtenerCamiones(filtro bson.M) ([]model.Camion, error) {
@@ -76,16 +90,6 @@ func (repository CamionRepository) ObtenerCamionPorPatente(camion model.Camion) 
 	}
 
 	return camiones[0], nil
-}
-
-func (repository CamionRepository) CrearCamion(camion model.Camion) error {
-	//Seteamos las fechas para el objeto camion
-	camion.FechaCreacion = time.Now()
-	camion.FechaUltimaActualizacion = time.Now()
-
-	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
-	_, err := collection.InsertOne(context.Background(), camion)
-	return err
 }
 
 func (repository CamionRepository) ActualizarCamion(camion model.Camion) error {
