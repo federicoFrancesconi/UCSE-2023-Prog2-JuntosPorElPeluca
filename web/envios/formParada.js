@@ -21,23 +21,25 @@ function agregarParada() {
   const urlParams = new URLSearchParams(window.location.search);
   const idEnvio = urlParams.get("id");
 
-  debugger;
-  fetch(`http://localhost:8080/${idEnvio}/nuevaParada`, {
-    method: "PUT",
-    body: JSON.stringify(data),
-    headers: customHeaders,
-  }) // Realizar la solicitud de búsqueda (fetch) al servidor
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error en la solicitud al servidor.");
-      }
+  const urlConFiltro = `http://localhost:8080/${idEnvio}/nuevaParada`;
 
-      window.location = "/web/envios/index.html";
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert(error);
-    });
+  makeRequest(
+    `${urlConFiltro}`,
+    Method.PUT,
+    data,
+    ContentType.JSON,
+    CallType.PRIVATE,
+    exitoAgregarParada,
+    errorAgregarParada
+  );
+}
 
-  return false;
+function exitoAgregarParada(data) {
+  window.location = document.location.origin + "/web/envios/index.html";
+}
+
+function errorAgregarParada(response) {
+  alert("Error en la solicitud al servidor.");
+  console.log(response.json());
+  throw new Error("Error en la solicitud al servidor.");
 }

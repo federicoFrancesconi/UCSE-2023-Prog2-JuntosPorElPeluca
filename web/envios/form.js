@@ -17,6 +17,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 
+const urlConFiltro = `http://localhost:8080/envios`;
+
 function guardarEnvio() {
   //obtengo los datos de los pedidos
   const valorPedidos = document.getElementById("Pedidos").value;
@@ -37,64 +39,55 @@ function guardarEnvio() {
     estado: 0,
   };
 
-  fetch(`http://localhost:8080/envios`, {
-    method: "POST",
-    body: JSON.stringify(data),
-  }) // Realizar la solicitud de búsqueda (fetch) al servidor
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error en la solicitud al servidor.");
-      }
+  makeRequest(
+    `${urlConFiltro}`,
+    Method.POST,
+    data,
+    ContentType.JSON,
+    CallType.PRIVATE,
+    exitoEnvio,
+    errorEnvio
+  );
+}
 
-      window.location = "/web/envios/index.html";
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert(error);
-      window.location = "/web/envios/form.html";
-    });
+function exitoEnvio(data) {
+  window.location = window.location.origin + "/web/envios/index.html";
+}
+
+function errorEnvio(response) {
+  alert("Error en la solicitud al servidor.");
+  console.log(response.json());
+  throw new Error("Error en la solicitud al servidor.");
 }
 
 function iniciarViaje(id) {
-  debugger;
   if (confirm("¿Estás seguro de que deseas iniciar el viaje?")) {
-    fetch(`http://localhost:8080/${id}/iniciar`, {
-      method: "PUT",
-    }) // Realizar la solicitud de búsqueda (fetch) al servidor
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error en la solicitud al servidor.");
-        }
-
-        window.location = "/web/envios/index.html";
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert(error);
-      });
+    makeRequest(
+      `${urlConFiltro}/${id}/iniciar`,
+      Method.PUT,
+      data,
+      ContentType.JSON,
+      CallType.PRIVATE,
+      exitoEnvio,
+      errorEnvio
+    );
   } else {
-    window.location = "/web/envios/index.html";
+    window.location = document.location.origin + "/web/envios/index.html";
   }
 }
 
 function finalizarViaje(id) {
   if (confirm("¿Estás seguro de que deseas finalizar el viaje?")) {
-    fetch(`http://localhost:8080/${id}/finalizar`, {
-      method: "PUT",
-      body: JSON.stringify(data),
-    }) // Realizar la solicitud de búsqueda (fetch) al servidor
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error en la solicitud al servidor.");
-        }
-
-        window.location = "/web/envios/index.html";
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert(error);
-      });
+    makeRequest(
+      `${urlConFiltro}/${id}/finalizar`,
+      Method.PUT,
+      data,
+      ContentType.JSON,
+      CallType.PRIVATE,
+      exitoEnvio,
+      errorEnvio
+    );
   } else {
-    window.location = "/web/envios/index.html";
+    window.location = document.location.origin + "/web/envios/index.html";
   }
 }
