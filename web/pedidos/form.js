@@ -35,67 +35,61 @@ function guardarPedido() {
     estado: 0,
   };
 
-  fetch(`http://localhost:8080/pedidos`, {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: customHeaders,
-  }) // Realizar la solicitud de búsqueda (fetch) al servidor
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error en la solicitud al servidor.");
-      }
+  const urlConFiltro = `http://localhost:8080/pedidos`;
 
-      window.location = "/web/pedidos/index.html";
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert(error);
-      window.location = "/web/pedidos/form.html";
-    });
+  makeRequest(
+    `${urlConFiltro}`,
+    Method.POST,
+    data,
+    ContentType.JSON,
+    CallType.PRIVATE,
+    exitoPedido,
+    errorPedido
+  );
+}
+
+function exitoPedido(data) {
+  window.location = window.location.origin + "/web/pedidos/index.html";
+}
+
+function errorPedido(response) {
+  alert("Error en la solicitud al servidor.");
+  console.log(response.json());
+  throw new Error("Error en la solicitud al servidor.");
 }
 
 function aceptarPedido(id) {
   if (confirm("¿Estás seguro de que deseas aceptar este pedido?")) {
-    fetch(`http://localhost:8080/${id}/aceptar`, {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: customHeaders,
-    }) // Realizar la solicitud de búsqueda (fetch) al servidor
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error en la solicitud al servidor.");
-        }
+    const urlConFiltro = `http://localhost:8080/${id}/aceptar`;
 
-        window.location = "/web/pedidos/index.html";
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert(error);
-      });
+    makeRequest(
+      `${urlConFiltro}`,
+      Method.PUT,
+      data,
+      ContentType.JSON,
+      CallType.PRIVATE,
+      exitoPedido,
+      errorPedido
+    );
   } else {
-    window.location = "/web/pedidos/index.html";
+    window.location = document.location.origin + "/web/pedidos/index.html";
   }
 }
 
-function cancelarPedido(id) {
-  if (confirm("¿Estás seguro de que deseas cancelar el pedido?")) {
-    fetch(`http://localhost:8080/${id}/cancelar`, {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: customHeaders,
-    }) // Realizar la solicitud de búsqueda (fetch) al servidor
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error en la solicitud al servidor.");
-        }
+function aceptarPedido(id) {
+  if (confirm("¿Estás seguro de que deseas cancelar este pedido?")) {
+    const urlConFiltro = `http://localhost:8080/${id}/cancelar`;
 
-        window.location = "/web/pedidos/index.html";
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert(error);
-      });
+    makeRequest(
+      `${urlConFiltro}`,
+      Method.PUT,
+      null,
+      ContentType.JSON,
+      CallType.PRIVATE,
+      exitoPedido,
+      errorPedido
+    );
   } else {
-    window.location = "/web/pedidos/index.html";
+    window.location = document.location.origin + "/web/pedidos/index.html";
   }
 }
