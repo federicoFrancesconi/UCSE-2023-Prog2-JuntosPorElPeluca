@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registrar Usuario</title>
+    <link rel="stylesheet" href="estilos.css">  
+</head>
+<body>
+    <h2>Registrarse</h2>
+    <form>
+        <div>
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="contrasena">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+          <label for="ConfirmPassword">Confirmar Contraseña:</label>
+          <input type="password" id="ConfirmPassword" name="ConfirmPassword" required>
+        </div>
+        <div>
+          <label for="Role">Rol:</label>
+          <select id="Role" name="Role" required>
+            <option value="OPERADOR" selected>OPERADOR</option>
+            <option value="ADMIN">ADMIN</option>
+            <option value="CONDUCTOR">CONDUCTOR</option>
+          </select>
+        </div>
+        <div>
+            <input type="button" value="Registrarme" id="btnRegistrarse">
+        </div>
+    </form>
+
+    <script src="../request.js"></script>
+    <script src="register.js"></script>
+</body>
+</html>

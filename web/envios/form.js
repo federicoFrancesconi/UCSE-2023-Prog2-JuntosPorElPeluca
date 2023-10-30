@@ -1,9 +1,3 @@
-const customHeaders = new Headers();
-customHeaders.append("User-Agent", "PostmanRuntime/7.33.0");
-customHeaders.append("Accept", "*/*");
-customHeaders.append("Accept-Encoding", "gzip, deflate, br");
-customHeaders.append("Connection", "keep-alive");
-
 document.addEventListener("DOMContentLoaded", function (event) {
   //verifico si tiene el parametro id
   const urlParams = new URLSearchParams(window.location.search);
@@ -46,7 +40,6 @@ function guardarEnvio() {
   fetch(`http://localhost:8080/envios`, {
     method: "POST",
     body: JSON.stringify(data),
-    headers: customHeaders,
   }) // Realizar la solicitud de búsqueda (fetch) al servidor
     .then((response) => {
       if (!response.ok) {
@@ -63,11 +56,10 @@ function guardarEnvio() {
 }
 
 function iniciarViaje(id) {
+  debugger;
   if (confirm("¿Estás seguro de que deseas iniciar el viaje?")) {
     fetch(`http://localhost:8080/${id}/iniciar`, {
       method: "PUT",
-      body: JSON.stringify(data),
-      headers: customHeaders,
     }) // Realizar la solicitud de búsqueda (fetch) al servidor
       .then((response) => {
         if (!response.ok) {
@@ -90,7 +82,6 @@ function finalizarViaje(id) {
     fetch(`http://localhost:8080/${id}/finalizar`, {
       method: "PUT",
       body: JSON.stringify(data),
-      headers: customHeaders,
     }) // Realizar la solicitud de búsqueda (fetch) al servidor
       .then((response) => {
         if (!response.ok) {
