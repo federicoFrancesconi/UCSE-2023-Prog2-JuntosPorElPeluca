@@ -9,10 +9,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 function obtenerPedidos() {
-  const elementosTable = document //tabla en la que se colocan los envios que se obtienen
-    .getElementById("elementosTable")
-    .querySelector("tbody");
-
   urlConFiltro = `http://localhost:8080/pedidos`;
 
   makeRequest(
@@ -27,6 +23,10 @@ function obtenerPedidos() {
 }
 
 function exitoObtenerPedidos(data) {
+  const elementosTable = document //tabla en la que se colocan los envios que se obtienen
+    .getElementById("elementosTable")
+    .querySelector("tbody");
+
   // Llenar la tabla con los datos obtenidos
   if (data != null) {
     data.forEach((elemento) => {

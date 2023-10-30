@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 
+const urlConFiltro = `http://localhost:8080/productos`;
+
 function guardarProducto() {
   //armo la data a enviar
   const data = {
@@ -38,41 +40,39 @@ function guardarProducto() {
     id_creador: parseInt(document.getElementById("IdCreador").value),
   };
 
-  fetch(`http://localhost:8080/productos`, {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: customHeaders,
-  }) // Realizar la solicitud de búsqueda (fetch) al servidor
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error en la solicitud al servidor.");
-      }
+  makeRequest(
+    `${urlConFiltro}`,
+    Method.POST,
+    data,
+    ContentType.JSON,
+    CallType.PRIVATE,
+    exitoProducto,
+    errorProducto
+  );
+}
 
-      window.location = "/web/productos/index.html";
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert(error);
-      window.location = "/web/productos/form.html";
-    });
+function exitoProducto(data) {
+  window.location = window.location.origin + "/web/productos/index.html";
+}
+
+function errorProducto(response) {
+  alert("Error en la solicitud al servidor.");
+  console.log(response.json());
+  throw new Error("Error en la solicitud al servidor.");
 }
 
 function eliminarProducto(codProducto) {
   if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
-    fetch(`http://localhost:8080/productos/${codProducto}`, {
-      method: "DELETE",
-      headers: customHeaders,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error en la solicitud al servidor.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert(error);
-      });
+    makeRequest(
+      `${urlConFiltro}/${codProducto}`,
+      Method.DELETE,
+      data,
+      ContentType.JSON,
+      CallType.PRIVATE,
+      exitoProducto,
+      errorProducto
+    );
   } else {
-    window.location = "web/productos/index.html";
+    window.location = document.location.origin + "/web/productos/index.html";
   }
 }
