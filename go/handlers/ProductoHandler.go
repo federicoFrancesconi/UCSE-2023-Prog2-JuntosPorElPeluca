@@ -95,6 +95,34 @@ func (handler *ProductoHandler) CrearProducto(c *gin.Context) {
 	c.JSON(http.StatusCreated, true)
 }
 
+// Handler para actualizar un producto
+func (handler *ProductoHandler) ActualizarProducto(c *gin.Context) {
+	user := dto.NewUser(utils.GetUserInfoFromContext(c))
+
+	var producto dto.Producto
+
+	//Parseamos el body del request y lo guardamos en el objeto producto
+	if err := c.ShouldBindJSON(&producto); err != nil {
+		log.Printf("[handler:ProductoHandler][method:ActualizarProducto][error:%s][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	//Actualizamos el producto en la base de datos
+	if err := handler.productoService.ActualizarProducto(&producto); err != nil {
+		log.Printf("[handler:ProductoHandler][method:ActualizarProducto][error:%s][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	//Agregamos un log para indicar información relevante del resultado
+	log.Printf("[handler:ProductoHandler][method:ActualizarProducto][user:%s]", user.Codigo)
+
+	c.JSON(http.StatusOK, true)
+}
+
 // Handler para eliminar un producto
 func (handler *ProductoHandler) EliminarProducto(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))

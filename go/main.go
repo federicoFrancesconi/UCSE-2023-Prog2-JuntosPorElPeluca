@@ -61,6 +61,7 @@ func mappingRoutes() {
 	//Rutas de productos
 	router.GET("/productos", productoHandler.ObtenerProductos)
 	router.POST("/productos", productoHandler.CrearProducto)
+	router.PUT("/productos", productoHandler.ActualizarProducto)
 	router.DELETE("/productos/:codigo", productoHandler.EliminarProducto)
 }
 

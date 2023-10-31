@@ -13,6 +13,7 @@ type ProductoService struct {
 type ProductoServiceInterface interface {
 	CrearProducto(*dto.Producto) error
 	ObtenerProductosFiltrados(utils.FiltroProducto) ([]dto.Producto, error)
+	ActualizarProducto(*dto.Producto) error
 	EliminarProducto(*dto.Producto) error
 }
 
@@ -40,6 +41,10 @@ func (service *ProductoService) ObtenerProductosFiltrados(filtro utils.FiltroPro
 	}
 
 	return productosDTO, nil
+}
+
+func (service *ProductoService) ActualizarProducto(producto *dto.Producto) error {
+	return service.repository.ActualizarProducto(producto.GetModel())
 }
 
 func (service *ProductoService) EliminarProducto(producto *dto.Producto) error {
