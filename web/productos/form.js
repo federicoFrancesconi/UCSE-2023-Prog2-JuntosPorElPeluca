@@ -12,6 +12,16 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   if (codProducto != "" && codProducto != null && operacion == "ELIMINAR") {
     eliminarProducto(codProducto);
+  } else if (
+    codProducto != "" &&
+    codProducto != null &&
+    operacion == "EDITAR"
+  ) {
+    document
+      .getElementById("form")
+      .addEventListener("submit", function (event) {
+        actualizarProducto(event);
+      });
   } else {
     document
       .getElementById("form")
@@ -43,6 +53,33 @@ function guardarProducto() {
   makeRequest(
     `${urlConFiltro}`,
     Method.POST,
+    data,
+    ContentType.JSON,
+    CallType.PRIVATE,
+    exitoProducto,
+    errorProducto
+  );
+}
+
+function actualizarProducto() {
+  const data = {
+    codigo_producto: document.getElementById("CodigoProducto").value,
+    fecha_creacion: "2023-10-14T12:00:00Z",
+    fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
+    tipo_producto: document.getElementById("TipoProducto").value,
+    nombre: document.getElementById("Nombre").value,
+    peso_unitario: parseFloat(document.getElementById("PesoUnitario").value),
+    precio_unitario: parseFloat(
+      document.getElementById("PrecioUnitario").value
+    ),
+    stock_minimo: parseInt(document.getElementById("StockMinimo").value),
+    stock_actual: parseInt(document.getElementById("StockActual").value),
+    id_creador: parseInt(document.getElementById("IdCreador").value),
+  };
+
+  makeRequest(
+    `${urlConFiltro}`,
+    Method.PUT,
     data,
     ContentType.JSON,
     CallType.PRIVATE,
