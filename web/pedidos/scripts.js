@@ -8,11 +8,53 @@ document.addEventListener("DOMContentLoaded", function (event) {
   obtenerPedidos();
 });
 
-function obtenerPedidos() {
-  urlConFiltro = `http://localhost:8080/pedidos`;
+var urlConFiltro = `http://localhost:8080/pedidos`;
 
+function obtenerPedidos() {
   makeRequest(
     `${urlConFiltro}`,
+    Method.GET,
+    null,
+    ContentType.JSON,
+    CallType.PRIVATE,
+    exitoObtenerPedidos,
+    errorObtenerPedidos
+  );
+}
+
+function obtenerEnvioFiltrado(tipo) {
+  var url = new URL(urlConFiltro);
+
+  switch (tipo) {
+    case "id":
+      url.searchParams.set(
+        "idEnvio",
+        document.getElementById("FiltroId").value
+      );
+      break;
+    case "estado":
+      url.searchParams.set(
+        "estado",
+        document.getElementById("FiltroEstado").value
+      );
+      break;
+    case "fecha":
+      url.searchParams.set(
+        "fechaCreacionComienzo",
+        document.getElementById("FechaDesde").value
+      );
+      url.searchParams.set(
+        "fechaCreacionFin",
+        document.getElementById("FechaHasta").value
+      );
+      break;
+    default:
+      url = `http://localhost:8080/pedidos`;
+      break;
+  }
+
+  makeRequest(
+    `${url}`,
     Method.GET,
     null,
     ContentType.JSON,
