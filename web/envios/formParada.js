@@ -25,7 +25,7 @@ function agregarParada() {
 
   makeRequest(
     `${urlConFiltro}`,
-    Method.PUT,
+    Method.POST,
     data,
     ContentType.JSON,
     CallType.PRIVATE,
