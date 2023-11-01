@@ -36,15 +36,7 @@ func (handler *ProductoHandler) ObtenerProductos(c *gin.Context) {
 	}
 
 	//Obtiene el tipo de producto por el que se desea filtrar
-	tipoProductoStr := c.DefaultQuery("tipoProducto", "-1")
-	tipoProducto, err := strconv.Atoi(tipoProductoStr)
-
-	if err != nil {
-		log.Printf("[handler:ProductoHandler][method:ObtenerProductos][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	tipoProducto := c.DefaultQuery("tipoProducto", "")
 
 	//Armamos el filtro
 	filtroProducto := utils.FiltroProducto{

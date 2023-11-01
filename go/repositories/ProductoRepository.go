@@ -68,7 +68,7 @@ func (repository *ProductoRepository) ObtenerProductosFiltrados(filtroProducto u
 	}
 
 	//Si quiere filtrar por tipo de producto, lo agregamos al filtro
-	if filtroProducto.TipoProducto != (-1) {
+	if filtroProducto.TipoProducto != "" {
 		filtroDB["tipo_producto"] = filtroProducto.TipoProducto
 	}
 

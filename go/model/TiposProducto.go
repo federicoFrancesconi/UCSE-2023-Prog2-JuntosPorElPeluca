@@ -1,11 +1,11 @@
 package model
 
-type TipoProducto int
+type TipoProducto string
 
 const (
-	Golosinas TipoProducto = iota
-	Bebidas
-	Cigarrillos
-	Comestibles
-	HigieneSalud
+	Golosinas TipoProducto = "Golosinas"
+	Bebidas  TipoProducto = "Bebidas"
+	Cigarrillos TipoProducto = "Cigarrillos"
+	Comestibles TipoProducto = "Comestibles"
+	HigieneSalud TipoProducto = "Higiene y Salud"
 )
