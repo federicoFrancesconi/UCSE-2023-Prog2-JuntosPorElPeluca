@@ -15,6 +15,7 @@ type EnvioServiceInterface interface {
 	ObtenerEnviosFiltrados(utils.FiltroEnvio) ([]*dto.Envio, error)
 	ObtenerEnvioPorId(*dto.Envio) (*dto.Envio, error)
 	ObtenerBeneficioEntreFechas(utils.FiltroEnvio) (float32, error)
+	ObtenerCantidadEnviosPorEstado() ([]utils.CantidadEstado, error)
 	AgregarParada(*dto.Envio) (bool, error)
 	CambiarEstadoEnvio(*dto.Envio) (bool, error)
 }
@@ -179,7 +180,7 @@ func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvi
 	//Suma el precio de los pedidos de cada envio
 	var beneficioBruto float32 = 0
 	for _, envio := range envios {
-		precioTotal, err := service.getPrecioTotalProductosDeEnvio(envio)
+		precioTotal, err := service.obtenerPrecioTotalProductosDeEnvio(envio)
 
 		if err != nil {
 			return 0, err
@@ -191,7 +192,7 @@ func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvi
 	//Suma el costo de los envios
 	var costoEnvios float32 = 0
 	for _, envio := range envios {
-		costoEnvio, err := service.getCostoEnvio(envio)
+		costoEnvio, err := service.obtenerCostoEnvio(envio)
 
 		if err != nil {
 			return 0, err
@@ -205,7 +206,7 @@ func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvi
 	return beneficioNeto, nil
 }
 
-func (service *EnvioService) getPrecioTotalProductosDeEnvio(envio *dto.Envio) (float32, error) {
+func (service *EnvioService) obtenerPrecioTotalProductosDeEnvio(envio *dto.Envio) (float32, error) {
 	var precioTotal float32 = 0
 
 	for _, idPedido := range envio.Pedidos {
@@ -227,7 +228,7 @@ func (service *EnvioService) getPrecioTotalProductosDeEnvio(envio *dto.Envio) (f
 	return precioTotal, nil
 }
 
-func (service *EnvioService) getCostoEnvio(envio *dto.Envio) (float32, error) {
+func (service *EnvioService) obtenerCostoEnvio(envio *dto.Envio) (float32, error) {
 	//Obtiene el camion del envio para conocer el costoPorKilometro
 	camion, err := service.camionRepository.ObtenerCamionPorPatente(model.Camion{Patente: envio.PatenteCamion})
 
@@ -245,6 +246,36 @@ func (service *EnvioService) getCostoEnvio(envio *dto.Envio) (float32, error) {
 	costoEnvio := camion.CostoPorKilometro * float32(kilometrosRecorridos)
 
 	return costoEnvio, nil
+}
+
+func (service *EnvioService) ObtenerCantidadEnviosPorEstado() ([]utils.CantidadEstado, error) {
+	//Por cada estado posible de envio, obtengo la cantidad de envios en ese estado
+	cantidadEnviosADespachar, err := service.envioRepository.ObtenerCantidadEnviosPorEstado(model.ADespachar)
+
+	if err != nil {
+		return nil, err
+	}
+
+	cantidadEnviosEnRuta, err := service.envioRepository.ObtenerCantidadEnviosPorEstado(model.EnRuta)
+
+	if err != nil {
+		return nil, err
+	}
+
+	cantidadEnviosDespachados, err := service.envioRepository.ObtenerCantidadEnviosPorEstado(model.Despachado)
+
+	if err != nil {
+		return nil, err
+	}
+
+	//Agrego los resultados a un array de CantidadEstado
+	cantidadEnviosPorEstados := []utils.CantidadEstado{
+		{Estado: "ADespachar", Cantidad: cantidadEnviosADespachar},
+		{Estado: "EnRuta", Cantidad: cantidadEnviosEnRuta},
+		{Estado: "Despachado", Cantidad: cantidadEnviosDespachados},
+	}
+
+	return cantidadEnviosPorEstados, nil
 }
 
 func (service *EnvioService) AgregarParada(envio *dto.Envio) (bool, error) {

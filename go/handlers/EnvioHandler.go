@@ -140,6 +140,26 @@ func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 	c.JSON(http.StatusOK, beneficio)
 }
 
+func (handler *EnvioHandler) ObtenerCantidadEnviosPorEstado(c *gin.Context) {
+	user := dto.NewUser(utils.GetUserInfoFromContext(c))
+
+	//Obtenemos el array de cantidades del service
+	cantidades, err := handler.envioService.ObtenerCantidadEnviosPorEstado()
+
+	//Si hay un error, lo devolvemos
+	if err != nil {
+		log.Printf("[handler:EnvioHandler][method:ObtenerCantidadEnviosPorEstado][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	//Agregamos un log para indicar información relevante del resultado
+	log.Printf("[handler:EnvioHandler][method:ObtenerCantidadEnviosPorEstado][cantidad:%d][user:%s]", len(cantidades), user.Codigo)
+
+	c.JSON(http.StatusOK, cantidades)
+}
+
 func (handler *EnvioHandler) CrearEnvio(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
