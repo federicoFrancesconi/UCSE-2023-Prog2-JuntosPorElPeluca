@@ -18,18 +18,39 @@
     <div class="filtros">
         <h3>Filtros</h3>
         <div>
-            <label for="">Id</label>
-            <input type="text" name="FiltroId" id="FiltroId">
-        </div>
-        <div>
-            <input type="button" value="Filtrar" onclick="obtenerEnvioPorId()">
-        </div>
-        <div>
-            <label for="">Patente</label>
+            <label for="">Patente Camion</label>
             <input type="text" name="FiltroPatente" id="FiltroPatente">
         </div>
         <div>
-            <input type="button" value="Filtrar" onclick="obtenerEnvioPorPatentCamion()">
+            <input type="button" value="Filtrar" onclick="obtenerEnvioFiltrado('patente')">
+        </div>
+        <div>
+            <label for="">Estado</label>
+            <input type="text" name="FiltroEstado" id="FiltroEstado">
+        </div>
+        <div>
+            <input type="button" value="Filtrar" onclick="obtenerEnvioFiltrado('estado')">
+        </div>
+        <div>
+            <label for="">Ciudad Ultima Parada</label>
+            <input type="text" name="FiltroCiudad" id="FiltroCiudad">
+        </div>
+        <div>
+            <input type="button" value="Filtrar" onclick="obtenerEnvioFiltrado('ciudad')">
+        </div>
+        <div>
+            <label for="">Rango de fecha de creacion</label>
+            <div>
+                <label for="">Desde</label>
+                <input type="date" name="FechaDesde" id="FechaDesde">
+            </div>
+            <div>
+                <label for="">Hasta</label>
+                <input type="date" name="FechaHasta" id="FechaHasta">
+            </div>
+        </div>
+        <div>
+            <input type="button" value="Filtrar" onclick="obtenerEnvioFiltrado('fecha')">
         </div>
     </div>
     

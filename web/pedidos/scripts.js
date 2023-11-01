@@ -22,7 +22,7 @@ function obtenerPedidos() {
   );
 }
 
-function obtenerEnvioFiltrado(tipo) {
+function obtenerPedidoFiltrado(tipo) {
   var url = new URL(urlConFiltro);
 
   switch (tipo) {
