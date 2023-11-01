@@ -38,6 +38,7 @@ func mappingRoutes() {
 
 	//Rutas de pedidos
 	router.GET("/pedidos", pedidoHandler.ObtenerPedidos)
+	router.GET("/pedidos/cantidadPorEstado", pedidoHandler.ObtenerCantidadPedidosPorEstado)
 	router.POST("/pedidos", pedidoHandler.CrearPedido)
 	router.PUT("/pedidos/:id/aceptar", pedidoHandler.AceptarPedido)
 	router.PUT("/pedidos/:id/cancelar", pedidoHandler.CancelarPedido)

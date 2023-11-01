@@ -78,6 +78,26 @@ func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 	c.JSON(http.StatusOK, pedidos)
 }
 
+func (handler *PedidoHandler) ObtenerCantidadPedidosPorEstado(c *gin.Context) {
+	user := dto.NewUser(utils.GetUserInfoFromContext(c))
+
+	//Obtenemos el array de cantidades del service
+	cantidades, err := handler.pedidoService.ObtenerCantidadPedidosPorEstado()
+
+	//Si hay un error, lo devolvemos
+	if err != nil {
+		log.Printf("[handler:PedidoHandler][method:ObtenerCantidadesPedidosPorEstado][error:%s][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	//Agregamos un log para indicar información relevante del resultado
+	log.Printf("[handler:PedidoHandler][method:ObtenerCantidadesPedidosPorEstado][cantidad:%d][user:%s]", len(cantidades), user.Codigo)
+
+	c.JSON(http.StatusOK, cantidades)
+}
+
 func (handler *PedidoHandler) CrearPedido(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 

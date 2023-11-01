@@ -18,6 +18,7 @@ type PedidoServiceInterface interface {
 	CrearPedido(*dto.Pedido) error
 	ObtenerPedidoPorId(*dto.Pedido) (*dto.Pedido, error)
 	ObtenerPedidosFiltrados(utils.FiltroPedido) ([]dto.Pedido, error)
+	ObtenerCantidadPedidosPorEstado() ([]utils.CantidadEstado, error)
 	AceptarPedido(*dto.Pedido) error
 	CancelarPedido(*dto.Pedido) error
 }
@@ -143,6 +144,50 @@ func (service *PedidoService) hayStockDisponiblePedido(pedido *model.Pedido) boo
 
 	//Si finalice el bucle, es porque hay stock de todos los productos
 	return true
+}
+
+func (service *PedidoService) ObtenerCantidadPedidosPorEstado() ([]utils.CantidadEstado, error) {
+	//Por cada estado posible de pedidos, obtengo la cantidad de pedidos en ese estado
+	cantidadPedidosPendientes, err := service.pedidoRepository.ObtenerCantidadPedidosPorEstado(model.Pendiente)
+
+	if err != nil {
+		return nil, err
+	}
+
+	cantidadPedidosAceptados, err := service.pedidoRepository.ObtenerCantidadPedidosPorEstado(model.Aceptado)
+
+	if err != nil {
+		return nil, err
+	}
+
+	cantidadPedidosCancelados, err := service.pedidoRepository.ObtenerCantidadPedidosPorEstado(model.Cancelado)
+
+	if err != nil {
+		return nil, err
+	}
+
+	cantidadPedidosParaEnviar, err := service.pedidoRepository.ObtenerCantidadPedidosPorEstado(model.ParaEnviar)
+
+	if err != nil {
+		return nil, err
+	}
+
+	cantidadPedidosEnviados, err := service.pedidoRepository.ObtenerCantidadPedidosPorEstado(model.Enviado)
+
+	if err != nil {
+		return nil, err
+	}
+
+	//Armo el array de CantidadEstado
+	cantidadPedidosPorEstados := []utils.CantidadEstado{
+		{ Estado: "Pendiente", Cantidad: cantidadPedidosPendientes },
+		{ Estado: "Aceptado", Cantidad: cantidadPedidosAceptados },
+		{ Estado: "Cancelado", Cantidad: cantidadPedidosCancelados },
+		{ Estado: "ParaEnviar", Cantidad: cantidadPedidosParaEnviar },
+		{ Estado: "Enviado", Cantidad: cantidadPedidosEnviados },
+	}
+
+	return cantidadPedidosPorEstados, nil
 }
 
 func (service *PedidoService) CancelarPedido(pedidoPorCancelar *dto.Pedido) error {
