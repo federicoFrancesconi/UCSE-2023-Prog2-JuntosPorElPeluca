@@ -98,7 +98,7 @@ function guardarPedido() {
     ciudad_destino: document.getElementById("CiudadDestino").value,
     productos_elegidos: obtenerProductosElegidos(),
     id_creador: parseInt(document.getElementById("IdCreador").value),
-    estado: 0,
+    estado: "Pendiente",
   };
 
   const urlConFiltro = `http://localhost:8080/pedidos`;
@@ -142,7 +142,7 @@ function aceptarPedido(id) {
   }
 }
 
-function aceptarPedido(id) {
+function cancelarPedido(id) {
   if (confirm("¿Estás seguro de que deseas cancelar este pedido?")) {
     const urlConFiltro = `http://localhost:8080/${id}/cancelar`;
 

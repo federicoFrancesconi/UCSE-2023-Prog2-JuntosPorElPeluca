@@ -36,7 +36,7 @@ function guardarEnvio() {
     paradas: [],
     pedidos: pedidosArray,
     id_creador: parseInt(document.getElementById("IdCreador").value),
-    estado: 0,
+    estado: "ADespachar",
   };
 
   makeRequest(
