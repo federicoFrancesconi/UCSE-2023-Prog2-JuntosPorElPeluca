@@ -43,7 +43,7 @@ function exitoObtenerProductos(data) {
                     <td>${elemento.fecha_creacion}</td>
                     <td>${elemento.fecha_utlima_actualizacion}</td>
                     <td>${elemento.id_creador}</td>
-                    <td class="acciones"> <a href="form.html?id=${elemento.id}&tipo=ELIMINAR">Eliminar</a></td>
+                    <td class="acciones"> <a href="form.html?id=${elemento.id}&tipo=ELIMINAR">Eliminar</a> | <a href="form.html?id=${elemento.id}&tipo=EDITAR">Editar</a></td>
                     `;
 
       elementosTable.appendChild(row);
@@ -55,4 +55,33 @@ function errorObtenerProductos(response) {
   alert("Error en la solicitud al servidor.");
   console.log(response.json());
   throw new Error("Error en la solicitud al servidor.");
+}
+
+function obtenerProductoFiltrado(tipo) {
+  var url = new URL(urlConFiltro);
+
+  switch (tipo) {
+    case "stock":
+      url.searchParams.set("filtrarPorStockMinimo", true);
+      break;
+    case "estado":
+      url.searchParams.set(
+        "tipoProducto",
+        document.getElementById("tipo").value
+      );
+      break;
+    default:
+      url = `http://localhost:8080/productos`;
+      break;
+  }
+
+  makeRequest(
+    `${url}`,
+    Method.GET,
+    null,
+    ContentType.JSON,
+    CallType.PRIVATE,
+    exitoObtenerEnvio,
+    errorEnvio
+  );
 }

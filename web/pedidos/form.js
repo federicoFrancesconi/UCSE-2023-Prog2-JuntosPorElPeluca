@@ -20,8 +20,74 @@ document.addEventListener("DOMContentLoaded", function (event) {
       .addEventListener("submit", function (event) {
         guardarPedido(event);
       });
+
+    obtenerProductos();
   }
 });
+
+//obtiene los productos para mostrar en el form de crear
+function obtenerProductos() {
+  const urlConFiltro = `http://localhost:8080/productos`;
+
+  makeRequest(
+    `${urlConFiltro}`,
+    Method.GET,
+    null,
+    ContentType.JSON,
+    CallType.PRIVATE,
+    exitoObtenerProductos,
+    errorPedido
+  );
+}
+
+function exitoObtenerProductos(data) {
+  const elementosTable = document //tabla en la que se colocan los envios que se obtienen
+    .getElementById("tableProductos")
+    .querySelector("tbody");
+
+  data.forEach((elemento) => {
+    const row = document.createElement("tr"); //crear una fila
+
+    row.innerHTML = ` 
+                  <td><input type="checkbox" class="producto-checkbox"></td>
+                  <td>${elemento.codigo_producto}</td>
+                  <td>${elemento.nombre}</td>
+                  <td><input type="text" placeholder="Ingrese la cantidad"></td>
+                  <td>${elemento.precio_unitario}</td>
+                  <td>${elemento.peso_unitario}</td>
+                 `;
+
+    elementosTable.appendChild(row);
+  });
+}
+
+function obtenerProductosElegidos() {
+  var ProductosSeleccionados = [];
+  let checkboxes = document.querySelectorAll(".producto-checkbox");
+  checkboxes.forEach(function (checkbox) {
+    if (checkbox.checked) {
+      // Agregar el producto seleccionado al objeto ProductosSeleccionados
+      var tr = checkbox.closest("tr");
+      var codigoProducto = tr.cells[1].textContent;
+      var nombreProducto = tr.cells[2].textContent;
+      var cantidad = parseInt(tr.cells[3].textContent);
+      var precioUnitario = parseFloat(tr.cells[4].textContent);
+      var pesoUnitario = parseFloat(tr.cells[5].textContent);
+
+      var productoSeleccionado = {
+        CodigoProducto: codigoProducto,
+        Nombre: nombreProducto,
+        Cantidad: cantidad,
+        PrecioUnitario: precioUnitario,
+        PesoUnitario: pesoUnitario,
+      };
+
+      ProductosSeleccionados.push(productoSeleccionado);
+    }
+  });
+
+  return productosElegidos;
+}
 
 function guardarPedido() {
   //armo la data a enviar
@@ -30,7 +96,7 @@ function guardarPedido() {
     fecha_creacion: "2023-10-14T12:00:00Z",
     fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
     ciudad_destino: document.getElementById("CiudadDestino").value,
-    productos_elegidos: [],
+    productos_elegidos: obtenerProductosElegidos(),
     id_creador: parseInt(document.getElementById("IdCreador").value),
     estado: 0,
   };
