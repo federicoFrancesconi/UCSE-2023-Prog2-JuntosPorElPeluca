@@ -104,8 +104,8 @@ func (repository *PedidoRepository) ObtenerPedidosFiltrados(filtroEnvio utils.Fi
 		filter["id"] = bson.M{"$in": idPedidos}
 	}
 
-	//Tomo el estado en -1 como la ausencia de filtro
-	if estado != (-1) {
+	//Tomo el estado vacio como la ausencia de filtro
+	if estado != "" {
 		filter["estado"] = estado
 	}
 

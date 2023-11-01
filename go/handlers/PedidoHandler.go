@@ -7,7 +7,6 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -28,15 +27,7 @@ func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 	idEnvio := c.DefaultQuery("idEnvio", "")
 
 	//Convierto el estado a integer para buscar el Estado en el "enum" de EstadoPedido
-	estadoStr := c.DefaultQuery("estado", "-1")
-	estado, err := strconv.Atoi(estadoStr)
-
-	if err != nil {
-		log.Printf("[handler:PedidoHandler][method:ObtenerPedidos][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	estado := c.DefaultQuery("estado", "")
 
 	// Convierte las fechas string a time.Time
 	fechaCreacionComienzoStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01T00:00:00Z")

@@ -180,11 +180,11 @@ func (service *PedidoService) ObtenerCantidadPedidosPorEstado() ([]utils.Cantida
 
 	//Armo el array de CantidadEstado
 	cantidadPedidosPorEstados := []utils.CantidadEstado{
-		{ Estado: "Pendiente", Cantidad: cantidadPedidosPendientes },
-		{ Estado: "Aceptado", Cantidad: cantidadPedidosAceptados },
-		{ Estado: "Cancelado", Cantidad: cantidadPedidosCancelados },
-		{ Estado: "ParaEnviar", Cantidad: cantidadPedidosParaEnviar },
-		{ Estado: "Enviado", Cantidad: cantidadPedidosEnviados },
+		{ Estado: string(model.Pendiente), Cantidad: cantidadPedidosPendientes },
+		{ Estado: string(model.Aceptado), Cantidad: cantidadPedidosAceptados },
+		{ Estado: string(model.Cancelado), Cantidad: cantidadPedidosCancelados },
+		{ Estado: string(model.ParaEnviar), Cantidad: cantidadPedidosParaEnviar },
+		{ Estado: string(model.Enviado), Cantidad: cantidadPedidosEnviados },
 	}
 
 	return cantidadPedidosPorEstados, nil

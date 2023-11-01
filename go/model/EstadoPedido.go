@@ -1,11 +1,11 @@
 package model
 
-type EstadoPedido int
+type EstadoPedido string
 
 const (
-	Pendiente EstadoPedido = iota
-	Aceptado
-	Cancelado
-	ParaEnviar
-	Enviado
+	Pendiente EstadoPedido = "Pendiente"
+	Aceptado EstadoPedido = "Aceptado"
+	Cancelado EstadoPedido = "Cancelado"
+	ParaEnviar EstadoPedido = "Para Enviar"
+	Enviado EstadoPedido = "Enviado"
 )
