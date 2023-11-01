@@ -205,66 +205,48 @@ func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 	c.JSON(http.StatusOK, true)
 }
 
-func (handler *EnvioHandler) IniciarViaje(c *gin.Context) {
-	user := dto.NewUser(utils.GetUserInfoFromContext(c))
-
-	//Recibimos el id del envio a iniciar
-	id := c.Param("id")
-
-	//Creamos el envio para pasarle al service
-	envio := dto.Envio{
-		Id: id,
-	}
-
-	operacion, err := handler.envioService.IniciarViaje(&envio)
-	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:IniciarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if !operacion {
-		log.Printf("[handler:EnvioHandler][method:IniciarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:EnvioHandler][method:IniciarViaje][envio:%+v][user:%s]", envio, user.Codigo)
-
-	c.JSON(http.StatusOK, true)
-}
-
-func (handler *EnvioHandler) FinalizarViaje(c *gin.Context) {
+func (handler *EnvioHandler) CambiarEstadoEnvio(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
 	//Recibimos el id del envio a finalizar
 	id := c.Param("id")
 
-	//Creamos el envio para pasarle al service
-	envio := dto.Envio{
-		Id: id,
+	//Recibimos el estado deseado para el envio
+	estadoStr := c.DefaultQuery("estado", "-1")
+
+	//Convierto el estado a integer para buscar el Estado en el "enum" de EstadoEnvio
+	estado, err := strconv.Atoi(estadoStr)
+
+	if err != nil {
+		log.Printf("[handler:EnvioHandler][method:CambiarEstadoEnvio][envio:%+v][user:%s]", err.Error(), user.Codigo)
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
-	operacion, err := handler.envioService.FinalizarViaje(&envio)
+	//Creamos el envio para pasarle al service
+	envio := dto.Envio{
+		Id:     id,
+		Estado: model.EstadoEnvio(estado),
+	}
+
+	operacion, err := handler.envioService.CambiarEstadoEnvio(&envio)
 	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:FinalizarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
+		log.Printf("[handler:EnvioHandler][method:CambiarEstadoEnvio][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	if !operacion {
-		log.Printf("[handler:EnvioHandler][method:FinalizarViaje][envio:%+v][user:%s]", err.Error(), user.Codigo)
+		log.Printf("[handler:EnvioHandler][method:CambiarEstadoEnvio][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:EnvioHandler][method:FinalizarViaje][envio:%+v][user:%s]", envio, user.Codigo)
+	log.Printf("[handler:EnvioHandler][method:CambiarEstadoEnvio][envio:%+v][user:%s]", envio, user.Codigo)
 
 	c.JSON(http.StatusOK, true)
 }

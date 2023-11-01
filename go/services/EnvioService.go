@@ -6,6 +6,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
 	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -15,8 +16,7 @@ type EnvioServiceInterface interface {
 	ObtenerEnvioPorId(*dto.Envio) (*dto.Envio, error)
 	ObtenerBeneficioEntreFechas(utils.FiltroEnvio) (float32, error)
 	AgregarParada(*dto.Envio) (bool, error)
-	IniciarViaje(*dto.Envio) (bool, error)
-	FinalizarViaje(*dto.Envio) (bool, error)
+	CambiarEstadoEnvio(*dto.Envio) (bool, error)
 }
 
 type EnvioService struct {
@@ -268,60 +268,49 @@ func (service *EnvioService) AgregarParada(envio *dto.Envio) (bool, error) {
 	return true, service.envioRepository.ActualizarEnvio(envioDB)
 }
 
-func (service *EnvioService) IniciarViaje(envio *dto.Envio) (bool, error) {
-	//Buscamos el envio en la base de datos
+func (service *EnvioService) CambiarEstadoEnvio(envio *dto.Envio) (bool, error) {
+	//El estado deseado es el que se pasa con el objeto envio como parametro
+	estadoDeseado := envio.Estado
+
+	//Buscamos el envio en la base de datos para conocer el estado real
 	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envio.GetModel())
 
 	if err != nil {
 		return false, err
 	}
 
-	if envioDB.Estado != model.ADespachar {
-		return false, errors.New("el envio no puede ser iniciado porque no esta en estado 'A Despachar'")
+	//Si el estado del envio no es compatible con el deseado, devolvemos un error
+	if (estadoDeseado == model.EnRuta && envioDB.Estado != model.ADespachar) || (estadoDeseado == model.Despachado && envioDB.Estado != model.EnRuta) {
+		return false, errors.New("el envio no puede pasar al estado " + fmt.Sprint(estadoDeseado) + " si esta en estado " + fmt.Sprint(envioDB.Estado))
 	}
 
-	envioDB.Estado = model.EnRuta
+	envioDB.Estado = estadoDeseado
 
+	//Actualizamos el envio en la base de datos
 	err = service.envioRepository.ActualizarEnvio(envioDB)
 
 	if err != nil {
 		return false, err
+	}
+
+	//Si el envio pasa a estado Despachado, finaliza el viaje, por lo que hay que hacer otras operaciones
+	if estadoDeseado == model.Despachado {
+		service.finalizarViaje(dto.NewEnvio(envioDB))
 	}
 
 	return true, nil
 }
 
-func (service *EnvioService) FinalizarViaje(envio *dto.Envio) (bool, error) {
-	//Buscamos el envio en la base de datos
-	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envio.GetModel())
-
-	if err != nil {
-		return false, err
-	}
-
-	//Controlamos que el envio esté en estado EnRuta
-	if envioDB.Estado != model.EnRuta {
-		return false, errors.New("el envio no puede ser finalizado porque no esta en estado 'En Ruta'")
-	}
-
-	//Cambiamos el estado y lo modificamos en la base de datos
-	envioDB.Estado = model.Despachado
-
-	err = service.envioRepository.ActualizarEnvio(envioDB)
-
-	if err != nil {
-		return false, err
-	}
-
+func (service *EnvioService) finalizarViaje(envio *dto.Envio) (bool, error) {
 	//pasar pedidos a estado enviado
-	err = service.entregarPedidosDeEnvio(dto.NewEnvio(envioDB))
+	err := service.entregarPedidosDeEnvio(envio)
 
 	if err != nil {
 		return false, err
 	}
 
 	//descontar stock de productos
-	err = service.descontarStockProductosDeEnvio(dto.NewEnvio(envioDB))
+	err = service.descontarStockProductosDeEnvio(envio)
 
 	if err != nil {
 		return false, err

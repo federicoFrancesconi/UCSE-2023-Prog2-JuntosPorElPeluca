@@ -47,9 +47,8 @@ func mappingRoutes() {
 	router.GET("/envios/:id", envioHandler.ObtenerEnvioPorId)
 	router.GET("/envios/beneficioEntreFechas", envioHandler.ObtenerBeneficioEntreFechas)
 	router.POST("/envios", envioHandler.CrearEnvio)
-	router.PUT("/envios/:id/nuevaParada", envioHandler.AgregarParada)
-	router.PUT("/envios/:id/finalizar", envioHandler.FinalizarViaje)
-	router.PUT("/envios/:id/iniciar", envioHandler.IniciarViaje)
+	router.POST("/envios/:id/nuevaParada", envioHandler.AgregarParada)
+	router.PUT("/envios/:id/cambiarEstado", envioHandler.CambiarEstadoEnvio)
 
 	//Rutas de camiones
 	router.GET("/camiones", camionHandler.ObtenerCamiones)
