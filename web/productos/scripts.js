@@ -56,3 +56,32 @@ function errorObtenerProductos(response) {
   console.log(response.json());
   throw new Error("Error en la solicitud al servidor.");
 }
+
+function obtenerProductoFiltrado(tipo) {
+  var url = new URL(urlConFiltro);
+
+  switch (tipo) {
+    case "stock":
+      url.searchParams.set("filtrarPorStockMinimo", true);
+      break;
+    case "estado":
+      url.searchParams.set(
+        "tipoProducto",
+        document.getElementById("tipo").value
+      );
+      break;
+    default:
+      url = `http://localhost:8080/productos`;
+      break;
+  }
+
+  makeRequest(
+    `${url}`,
+    Method.GET,
+    null,
+    ContentType.JSON,
+    CallType.PRIVATE,
+    exitoObtenerEnvio,
+    errorEnvio
+  );
+}
