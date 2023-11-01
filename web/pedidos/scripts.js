@@ -6,6 +6,24 @@ customHeaders.append("Connection", "keep-alive");
 
 document.addEventListener("DOMContentLoaded", function (event) {
   obtenerPedidos();
+
+  document
+    .getElementById("FiltroId")
+    .addEventListener("click", function (event) {
+      obtenerPedidoFiltrado("id");
+    });
+
+  document
+    .getElementById("FiltroEstado")
+    .addEventListener("click", function (event) {
+      obtenerPedidoFiltrado("estado");
+    });
+
+  document
+    .getElementById("FiltrarFecha")
+    .addEventListener("click", function (event) {
+      obtenerPedidoFiltrado("fecha");
+    });
 });
 
 var urlConFiltro = `http://localhost:8080/pedidos`;
