@@ -88,8 +88,8 @@ func (repository EnvioRepository) ObtenerEnviosFiltrados(filtroEnvio utils.Filtr
 		filtro["patente_camion"] = patente
 	}
 
-	//Solo filtra por estado si le pasamos un estado positivo
-	if estado != (-1) {
+	//Solo filtra por estado si le pasamos un estado no nulo
+	if estado != "" {
 		filtro["estado"] = estado
 	}
 

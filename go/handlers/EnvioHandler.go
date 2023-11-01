@@ -7,7 +7,6 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -27,16 +26,7 @@ func (handler *EnvioHandler) ObtenerEnvios(c *gin.Context) {
 	patente := c.DefaultQuery("patente", "")
 	ultimaParada := c.DefaultQuery("ultimaParada", "")
 
-	//Convierto el estado a integer para buscar el Estado en el "enum" de EstadoEnvio
-	estadoStr := c.DefaultQuery("estado", "-1")
-	estado, err := strconv.Atoi(estadoStr)
-
-	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:ObtenerEnvios][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	estado := c.DefaultQuery("estado", "")
 
 	// Convierte las fechas string a time.Time
 	fechaCreacionDesdeStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01T00:00:00Z")
@@ -232,17 +222,7 @@ func (handler *EnvioHandler) CambiarEstadoEnvio(c *gin.Context) {
 	id := c.Param("id")
 
 	//Recibimos el estado deseado para el envio
-	estadoStr := c.DefaultQuery("estado", "-1")
-
-	//Convierto el estado a integer para buscar el Estado en el "enum" de EstadoEnvio
-	estado, err := strconv.Atoi(estadoStr)
-
-	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:CambiarEstadoEnvio][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	estado := c.DefaultQuery("estado", "")
 
 	//Creamos el envio para pasarle al service
 	envio := dto.Envio{

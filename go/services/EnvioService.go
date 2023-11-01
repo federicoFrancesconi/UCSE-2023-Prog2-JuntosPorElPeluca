@@ -49,7 +49,7 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio) error {
 	}
 
 	//al crearlo coloco el envio en estado despachar
-	envio.Estado = model.EstadoEnvio(model.ADespachar)
+	envio.Estado = model.ADespachar
 
 	//Cambio el estado de los pedidos del envio
 	err = service.enviarPedidosDeEnvio(envio)
@@ -270,9 +270,9 @@ func (service *EnvioService) ObtenerCantidadEnviosPorEstado() ([]utils.CantidadE
 
 	//Agrego los resultados a un array de CantidadEstado
 	cantidadEnviosPorEstados := []utils.CantidadEstado{
-		{Estado: "ADespachar", Cantidad: cantidadEnviosADespachar},
-		{Estado: "EnRuta", Cantidad: cantidadEnviosEnRuta},
-		{Estado: "Despachado", Cantidad: cantidadEnviosDespachados},
+		{Estado: string(model.ADespachar), Cantidad: cantidadEnviosADespachar},
+		{Estado: string(model.EnRuta), Cantidad: cantidadEnviosEnRuta},
+		{Estado: string(model.Despachado), Cantidad: cantidadEnviosDespachados},
 	}
 
 	return cantidadEnviosPorEstados, nil
