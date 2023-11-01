@@ -2,6 +2,7 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header>
@@ -39,15 +40,15 @@
     
     <div>
         <h3>Cantidad de pedidos por estado</h3>
-        <canvas id="graficoPedidos" width="400" height="400"></canvas>
+        <canvas id="graficoPedidos" class="grafico"></canvas>
     </div>
 
     <div>
         <h3>Cantidad de envios por estado</h3>
-        <canvas id="graficoEnvios" width="400" height="400"></canvas>
+        <canvas id="graficoEnvios" class="grafico"></canvas>
     </div>
 
     <script src="scripts.js"></script>
-    <script src="../request.js"></script>
+    <script src="request.js"></script>
 </body>
 </html>
