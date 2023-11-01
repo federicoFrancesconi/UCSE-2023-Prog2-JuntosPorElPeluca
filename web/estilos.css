@@ -81,6 +81,11 @@ section {
   margin: 20px;
 }
 
+.grafico{
+  width: 400px!important;
+  height: 400px!important;
+}
+
 /* Estilos del botón de inicio de sesión */
 .login-button {
   display: inline-block;

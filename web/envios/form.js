@@ -36,7 +36,7 @@ function guardarEnvio() {
     paradas: [],
     pedidos: pedidosArray,
     id_creador: parseInt(document.getElementById("IdCreador").value),
-    estado: 0,
+    estado: "ADespachar",
   };
 
   makeRequest(
@@ -63,7 +63,7 @@ function errorEnvio(response) {
 function iniciarViaje(id) {
   if (confirm("¿Estás seguro de que deseas iniciar el viaje?")) {
     makeRequest(
-      `${urlConFiltro}/${id}/iniciar`,
+      `${urlConFiltro}/${id}/cambiarEstado?estado=EnRuta`,
       Method.PUT,
       data,
       ContentType.JSON,
@@ -79,7 +79,7 @@ function iniciarViaje(id) {
 function finalizarViaje(id) {
   if (confirm("¿Estás seguro de que deseas finalizar el viaje?")) {
     makeRequest(
-      `${urlConFiltro}/${id}/finalizar`,
+      `${urlConFiltro}/${id}/cambiarEstado?estado=Despachado`,
       Method.PUT,
       data,
       ContentType.JSON,

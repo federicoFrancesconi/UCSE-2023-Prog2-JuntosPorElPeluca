@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 function obtenerBeneficioEntreFechas() {
+  debugger;
   var fechaDesde = document.getElementById("FechaDesde").value;
   var fechaHasta = document.getElementById("FechaHasta").value;
 
@@ -31,7 +32,6 @@ function exitoObtenerBeneficioEntreFechas(data) {
 function errorGraficos(response) {
   alert("Error en la solicitud al servidor.");
   console.log(response.json());
-  throw new Error("Error en la solicitud al servidor.");
 }
 
 function dibujarGraficoPedidos() {
