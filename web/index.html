@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="estilos.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="/web/pedidos/index.html">Pedidos</a></li>
+                <li><a href="/web/envios/index.html">Envíos</a></li>
+                <li><a href="/web/productos/index.html">Productos</a></li>
+                <li><a href="/web/login/login.html">Iniciar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h1>Juntos por el Peluca - Technological Solutions</h1>
+
+    <div>
+        <h3>Beneficio entre fechas</h3>
+        <form action="/" method="post" id="form">   
+            <div>
+                <label for="">Desde</label>
+                <input type="date" name="FechaDesde" id="FechaDesde">
+            </div>
+            <div>
+                <label for="">Hasta</label>
+                <input type="date" name="FechaHasta" id="FechaHasta">
+            </div>
+            <div>
+                <input type="submit" value="Enviar">
+            </div>
+        </form>
+        <h4>Beneficio: </h4>
+        <h4 id="beneficio"></h4>
+    </div>
+    
+    <div>
+        <h3>Cantidad de pedidos por estado</h3>
+        <canvas id="graficoPedidos" width="400" height="400"></canvas>
+    </div>
+
+    <div>
+        <h3>Cantidad de envios por estado</h3>
+        <canvas id="graficoEnvios" width="400" height="400"></canvas>
+    </div>
+
+    <script src="scripts.js"></script>
+    <script src="../request.js"></script>
+</body>
+</html>
