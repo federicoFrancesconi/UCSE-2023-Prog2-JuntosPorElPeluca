@@ -75,7 +75,8 @@ func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroP
 		return nil, err
 	}
 
-	var pedidosDTO []dto.Pedido
+	//Inicializamos el array de pedidosDTO por si esta vacio
+	var pedidosDTO []dto.Pedido = []dto.Pedido{}
 
 	for _, pedido := range pedidos {
 		pedidoDTO := *dto.NewPedido(pedido)
@@ -92,9 +93,12 @@ func (service *PedidoService) ObtenerPedidoPorId(pedidoConId *dto.Pedido) (*dto.
 		return nil, err
 	}
 
-	pedidoDTO := dto.NewPedido(pedido)
-
-	return pedidoDTO, nil
+	if pedido == nil {
+		return &dto.Pedido{}, nil
+	} else {
+		pedidoDTO := dto.NewPedido(pedido)
+		return pedidoDTO, nil
+	}
 }
 
 func (service *PedidoService) AceptarPedido(pedidoPorAceptar *dto.Pedido) error {
@@ -185,11 +189,11 @@ func (service *PedidoService) ObtenerCantidadPedidosPorEstado() ([]utils.Cantida
 
 	//Armo el array de CantidadEstado
 	cantidadPedidosPorEstados := []utils.CantidadEstado{
-		{ Estado: string(model.Pendiente), Cantidad: cantidadPedidosPendientes },
-		{ Estado: string(model.Aceptado), Cantidad: cantidadPedidosAceptados },
-		{ Estado: string(model.Cancelado), Cantidad: cantidadPedidosCancelados },
-		{ Estado: string(model.ParaEnviar), Cantidad: cantidadPedidosParaEnviar },
-		{ Estado: string(model.Enviado), Cantidad: cantidadPedidosEnviados },
+		{Estado: string(model.Pendiente), Cantidad: cantidadPedidosPendientes},
+		{Estado: string(model.Aceptado), Cantidad: cantidadPedidosAceptados},
+		{Estado: string(model.Cancelado), Cantidad: cantidadPedidosCancelados},
+		{Estado: string(model.ParaEnviar), Cantidad: cantidadPedidosParaEnviar},
+		{Estado: string(model.Enviado), Cantidad: cantidadPedidosEnviados},
 	}
 
 	return cantidadPedidosPorEstados, nil
