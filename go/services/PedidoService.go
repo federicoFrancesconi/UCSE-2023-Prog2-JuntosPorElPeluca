@@ -60,6 +60,11 @@ func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroP
 
 		//Si el envio existe, obtenemos la lista de pedidos del mismo
 		idPedidos = envio.Pedidos
+
+		if idPedidos == nil {
+			//Si no hay pedidos, devolvemos un array vacio
+			return []dto.Pedido{}, nil
+		}
 	}
 
 	//Asignamos la lista de pedidos al filtro
