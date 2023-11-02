@@ -62,6 +62,13 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio) error {
 }
 
 func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvio) ([]*dto.Envio, error) {
+	//Validamos el estado que se paso para filtrar
+	if filtroEnvio.Estado != "" {
+		if !model.EsUnEstadoEnvioValido(filtroEnvio.Estado) {
+			return nil, errors.New("el estado ingresado para filtrar no es válido")
+		}
+	}
+
 	enviosDB, err := service.envioRepository.ObtenerEnviosFiltrados(filtroEnvio)
 
 	if err != nil {
@@ -167,7 +174,7 @@ func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvi
 	filtro.FechaCreacionDesde = time.Time{}
 	filtro.FechaCreacionHasta = time.Time{}
 
-	//Le agrega el estado despachado al filtro
+	//Le agrega el estado despachado al filtro, ya que el beneficio lo tienen los despachados
 	filtro.Estado = model.Despachado
 
 	//Obtengo los envios despachados entre las dos fechas pasadas como parametro
@@ -302,6 +309,11 @@ func (service *EnvioService) AgregarParada(envio *dto.Envio) (bool, error) {
 func (service *EnvioService) CambiarEstadoEnvio(envio *dto.Envio) (bool, error) {
 	//El estado deseado es el que se pasa con el objeto envio como parametro
 	estadoDeseado := envio.Estado
+
+	//Validamos el estado deseado
+	if !model.EsUnEstadoEnvioValido(estadoDeseado) {
+		return false, errors.New("el estado ingresado no es válido")
+	}
 
 	//Buscamos el envio en la base de datos para conocer el estado real
 	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envio.GetModel())

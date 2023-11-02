@@ -65,6 +65,11 @@ func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroP
 	//Asignamos la lista de pedidos al filtro
 	filtroPedido.IdPedidos = idPedidos
 
+	//Validamos el estado del pedido
+	if !model.EsUnEstadoPedidoValido(filtroPedido.Estado) && filtroPedido.Estado != "" {
+		return nil, errors.New("el estado ingresado para filtrar no es válido")
+	}
+
 	pedidos, err := service.pedidoRepository.ObtenerPedidosFiltrados(filtroPedido)
 	if err != nil {
 		return nil, err

@@ -10,6 +10,6 @@ const (
 	Enviado    EstadoPedido = "Enviado"
 )
 
-func EsUnEstadoPedidoValido(estado string) bool {
-	return estado == string(Pendiente) || estado == string(Aceptado) || estado == string(Cancelado) || estado == string(ParaEnviar) || estado == string(Enviado)
+func EsUnEstadoPedidoValido(estado EstadoPedido) bool {
+	return estado == Pendiente || estado == Aceptado || estado == Cancelado || estado == ParaEnviar || estado == Enviado
 }
