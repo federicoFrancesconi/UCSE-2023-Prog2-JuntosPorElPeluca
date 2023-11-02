@@ -2,8 +2,10 @@ package services
 
 import (
 	"UCSE-2023-Prog2-TPIntegrador/dto"
+	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
 	"UCSE-2023-Prog2-TPIntegrador/utils"
+	"errors"
 )
 
 type ProductoService struct {
@@ -24,10 +26,20 @@ func NewProductoService(repository repositories.ProductoRepositoryInterface) *Pr
 }
 
 func (service *ProductoService) CrearProducto(producto *dto.Producto) error {
+	//Valido el tipo de producto
+	if !model.EsUnTipoProductoValido(producto.TipoDeProducto) {
+		return errors.New("el tipo de producto ingresado no es válido")
+	}
+
 	return service.repository.CrearProducto(producto.GetModel())
 }
 
 func (service *ProductoService) ObtenerProductosFiltrados(filtro utils.FiltroProducto) ([]dto.Producto, error) {
+	//Valido el tipo de producto que usa para filtrar
+	if !model.EsUnTipoProductoValido(filtro.TipoProducto) && filtro.TipoProducto != "" {
+		return nil, errors.New("el tipo de producto ingresado no es válido")
+	}
+
 	productos, err := service.repository.ObtenerProductosFiltrados(filtro)
 
 	if err != nil {
@@ -44,6 +56,11 @@ func (service *ProductoService) ObtenerProductosFiltrados(filtro utils.FiltroPro
 }
 
 func (service *ProductoService) ActualizarProducto(producto *dto.Producto) error {
+	//Valido el tipo de producto
+	if !model.EsUnTipoProductoValido(producto.TipoDeProducto) {
+		return errors.New("el tipo de producto ingresado no es válido")
+	}
+
 	return service.repository.ActualizarProducto(producto.GetModel())
 }
 
