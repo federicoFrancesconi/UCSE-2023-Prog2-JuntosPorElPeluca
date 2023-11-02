@@ -75,7 +75,9 @@ func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvi
 		return nil, err
 	}
 
-	var envios []*dto.Envio
+	//Inicializamos el array de envios por si no hay ninguno
+	envios := []*dto.Envio{}
+
 	for _, envioDB := range enviosDB {
 		envio := dto.NewEnvio(envioDB)
 		envios = append(envios, envio)
@@ -86,7 +88,8 @@ func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvi
 func (service *EnvioService) ObtenerEnvioPorId(envioConID *dto.Envio) (*dto.Envio, error) {
 	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envioConID.GetModel())
 
-	var envio *dto.Envio
+	//Inicializamos el envio por si no hay ninguno
+	var envio *dto.Envio = &dto.Envio{}
 
 	if err != nil {
 		return nil, err
