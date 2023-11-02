@@ -34,15 +34,18 @@ function obtenerPedidos() {
   );
 }
 
+var productosPedidos = [];
+
 function exitoObtenerPedidosEnvio(data) {
   const elementosTable = document //tabla en la que se colocan los envios que se obtienen
     .getElementById("tablePedidos")
     .querySelector("tbody");
 
   data.forEach((elemento) => {
-    const row = document.createElement("tr"); //crear una fila
+    if (elemento.estado == "Aceptado") {
+      const row = document.createElement("tr"); //crear una fila
 
-    row.innerHTML = ` 
+      row.innerHTML = ` 
                   <td><input type="checkbox" class="pedido-checkbox"></td>
                   <td>${elemento.id}</td>
                   <td>${elemento.ciudad_destino}</td>
@@ -51,12 +54,15 @@ function exitoObtenerPedidosEnvio(data) {
                   <td>${elemento.fecha_ultima_actualizacion}</td>
                   <td>${elemento.id_creador}</td>
                  `;
-
-    elementosTable.appendChild(row);
+      const nuevoObjetoPedido = {
+        id: elemento.id,
+        productos: elemento.productos_elegidos,
+      };
+      productosPedidos.push(nuevoObjetoPedido);
+      elementosTable.appendChild(row);
+    }
   });
 }
-
-var productos = [];
 
 function obtenerPedidosArray() {
   var PedidosSeleccionados = [];
@@ -67,59 +73,17 @@ function obtenerPedidosArray() {
       var tr = checkbox.closest("tr");
 
       var idPedido = tr.cells[1].textContent;
-      var ciudadDestino = tr.cells[2].textContent;
-      var estado = tr.cells[3].textContent;
-      var fechaCreacion = tr.cells[4].textContent;
-      var fechaUltimaActualizacion = tr.cells[5].textContent;
-      var idCreador = tr.cells[6].textContent;
-      var idPedido = tr.cells[7].textContent;
 
-      var pedidoSeleccionado = {
-        id: idPedido,
-        fecha_creacion: fechaCreacion,
-        fecha_ultima_actualizacion: fechaUltimaActualizacion,
-        ciudad_destino: ciudadDestino,
-        productos_elegidos: productos,
-        id_creador: idCreador,
-        estado: estado,
-      };
-
-      PedidosSeleccionados.push(pedidoSeleccionado);
+      PedidosSeleccionados.push(idPedido);
     }
   });
 
   return PedidosSeleccionados;
 }
 
-function obtenerProductosDelPedido(idPedido) {
-  const urlConFiltro = `http://localhost:8080/pedidos`;
-
-  makeRequest(
-    `${urlConFiltro}`,
-    Method.GET,
-    null,
-    ContentType.JSON,
-    CallType.PRIVATE,
-    exitoObtenerPedidos(data, idPedido),
-    errorEnvio(response)
-  );
-}
-
-function exitoObtenerPedidos(data, idPedido) {
-  data.forEach((elemento) => {
-    if (elemento.idPedido == idPedido) {
-      if (productos.length > 0) {
-        productos = [];
-      }
-      productos.push(elemento.productos_elegidos);
-    }
-  });
-}
-
 const urlConFiltro = `http://localhost:8080/envios`;
 
 function guardarEnvio() {
-  debugger;
   const pedidosArray = obtenerPedidosArray();
 
   //armo la data a enviar
@@ -133,6 +97,11 @@ function guardarEnvio() {
     id_creador: parseInt(document.getElementById("IdCreador").value),
     estado: "ADespachar",
   };
+
+  //convierte a json la data
+  debugger;
+  const json = JSON.stringify(data);
+  console.log(json);
 
   makeRequest(
     `${urlConFiltro}`,
@@ -158,7 +127,7 @@ function errorEnvio(response) {
 function iniciarViaje(id) {
   if (confirm("¿Estás seguro de que deseas iniciar el viaje?")) {
     makeRequest(
-      `${urlConFiltro}/${id}/cambiarEstado?estado=EnRuta`,
+      `${urlConFiltro}/${id}/cambiarEstado?estado=En+Ruta`,
       Method.PUT,
       data,
       ContentType.JSON,
@@ -172,17 +141,7 @@ function iniciarViaje(id) {
 }
 
 function finalizarViaje(id) {
-  if (confirm("¿Estás seguro de que deseas finalizar el viaje?")) {
-    makeRequest(
-      `${urlConFiltro}/${id}/cambiarEstado?estado=Despachado`,
-      Method.PUT,
-      data,
-      ContentType.JSON,
-      CallType.PRIVATE,
-      exitoEnvio,
-      errorEnvio
-    );
-  } else {
-    window.location = document.location.origin + "/web/envios/index.html";
-  }
+  window.location =
+    document.location.origin +
+    `/web/envios/nuevaParada.html?id=${id}&tipo=FINALIZAR`;
 }

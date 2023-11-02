@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
       .addEventListener("submit", function (event) {
         actualizarProducto(event);
       });
+    document.getElementById("CodigoProducto").value = codProducto;
   } else {
     document
       .getElementById("form")
@@ -78,6 +79,8 @@ function actualizarProducto() {
     id_creador: parseInt(document.getElementById("IdCreador").value),
   };
 
+  debugger;
+
   makeRequest(
     `${urlConFiltro}`,
     Method.PUT,
@@ -90,6 +93,7 @@ function actualizarProducto() {
 }
 
 function exitoProducto(data) {
+  debugger;
   window.location = window.location.origin + "/web/productos/index.html";
 }
 

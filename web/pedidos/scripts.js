@@ -59,11 +59,11 @@ function obtenerPedidoFiltrado(tipo) {
     case "fecha":
       url.searchParams.set(
         "fechaCreacionComienzo",
-        document.getElementById("FechaDesde").value
+        document.getElementById("FechaDesde").value + "T00:00:00.00Z"
       );
       url.searchParams.set(
         "fechaCreacionFin",
-        document.getElementById("FechaHasta").value
+        document.getElementById("FechaHasta").value + "T00:00:00.00Z"
       );
       break;
     default:

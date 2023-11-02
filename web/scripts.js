@@ -9,10 +9,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 function obtenerBeneficioEntreFechas() {
   debugger;
-  var fechaDesde = document.getElementById("FechaDesde").value;
-  var fechaHasta = document.getElementById("FechaHasta").value;
+  var fechaDesde =
+    document.getElementById("FechaDesde").value + "T00:00:00.00Z";
+  var fechaHasta =
+    document.getElementById("FechaHasta").value + "T00:00:00.00Z";
 
-  var urlConFiltro = `http://localhost:8080/envios/beneficioEntreFechas?fechaDesde=${fechaDesde}Z&fechaHasta=${fechaHasta}Z`;
+  var urlConFiltro = `http://localhost:8080/envios/beneficioEntreFechas?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`;
 
   makeRequest(
     `${urlConFiltro}`,
@@ -26,7 +28,7 @@ function obtenerBeneficioEntreFechas() {
 }
 
 function exitoObtenerBeneficioEntreFechas(data) {
-  document.getElementById("beneficio").innerHTML = data;
+  document.getElementById("beneficio").innerHTML = data.beneficio;
 }
 
 function errorGraficos(response) {
