@@ -23,9 +23,13 @@
         </div>
         <div>
             <label for="">Tipo</label>
-            <input type="text" name="FiltroTipo" id="FiltroTipo">
-        </div>
-        <div>
+            <select id="TipoProducto" name="producto">
+                <option value="Golosinas">Golosinas</option>
+                <option value="Bebidas">Bebidas</option>
+                <option value="Cigarrillos">Cigarrillos</option>
+                <option value="Comestibles">Comestibles</option>
+                <option value="Higiene y Salud">Higiene y Salud</option>
+            </select>
             <input type="button" value="Filtrar" onclick="obtenerProductoFiltrado('tipo')">
         </div>
     </div>

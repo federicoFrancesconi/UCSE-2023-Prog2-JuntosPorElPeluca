@@ -27,6 +27,8 @@ function exitoObtenerProductos(data) {
     .getElementById("elementosTable")
     .querySelector("tbody");
 
+  elementosTable.innerHTML = "";
+
   // Llenar la tabla con los datos obtenidos
   if (data != null) {
     data.forEach((elemento) => {
@@ -41,7 +43,7 @@ function exitoObtenerProductos(data) {
                     <td>${elemento.stock_minimo}</td>
                     <td>${elemento.stock_actual}</td>
                     <td>${elemento.fecha_creacion}</td>
-                    <td>${elemento.fecha_utlima_actualizacion}</td>
+                    <td>${elemento.fecha_ultima_actualizacion}</td>
                     <td>${elemento.id_creador}</td>
                     <td class="acciones"> <a href="form.html?id=${elemento.codigo_producto}&tipo=ELIMINAR">Eliminar</a> | <a href="form.html?id=${elemento.codigo_producto}&tipo=EDITAR">Editar</a></td>
                     `;
@@ -64,24 +66,26 @@ function obtenerProductoFiltrado(tipo) {
     case "stock":
       url.searchParams.set("filtrarPorStockMinimo", true);
       break;
-    case "estado":
+    case "tipo":
       url.searchParams.set(
         "tipoProducto",
-        document.getElementById("tipo").value
+        document.getElementById("TipoProducto").value
       );
       break;
     default:
-      url = `http://localhost:8080/productos`;
+      url.href = `http://localhost:8080/productos`;
       break;
   }
 
+  console.log(url.href);
+
   makeRequest(
-    `${url}`,
+    `${url.href}`,
     Method.GET,
     null,
     ContentType.JSON,
     CallType.PRIVATE,
-    exitoObtenerEnvio,
-    errorEnvio
+    exitoObtenerProductos,
+    errorObtenerProductos
   );
 }
