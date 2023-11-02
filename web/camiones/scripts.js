@@ -30,11 +30,11 @@ function exitoObtenerCamiones(data) {
 
     row.innerHTML = ` 
               <td>${elemento.patente}</td>
-              <td>${elemento.pesoMaximo}</td>
-              <td>${elemento.fechaCreacion}</td>
-              <td>${elemento.fechaUltimaActualizacion}</td>
-              <td>${elemento.costoPorKilometro}</td>
-              <td>${elemento.idCreador}</td>
+              <td>${elemento.peso_maximo}</td>
+              <td>${elemento.fecha_creacion}</td>
+              <td>${elemento.fecha_ultima_actualizacion}</td>
+              <td>${elemento.costo_por_kilometro}</td>
+              <td>${elemento.id_creador}</td>
               <td class="acciones"><a href="form.html?patente=${elemento.patente}&tipo=EDITAR">Editar</a> | <a href="form.html?patente=${elemento.patente}&tipo=ELIMINAR">Eliminar</a></td>
           `;
 

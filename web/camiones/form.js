@@ -39,12 +39,12 @@ function guardarCamion(event) {
   event.preventDefault();
 
   const data = {
-    Patente: document.getElementById("Patente").value,
-    PesoMaximo: parseInt(document.getElementById("PesoMaximo").value),
-    FechaCreacion: "2023-10-14T12:00:00Z",
-    FechaUltimaActualizacion: "2023-10-14T12:00:00Z",
-    IdCreador: parseInt(document.getElementById("IdCreador").value),
-    CostoPorKilometro: parseInt(document.getElementById("CostoPorKm").value),
+    patente: document.getElementById("Patente").value,
+    peso_maximo: parseInt(document.getElementById("PesoMaximo").value),
+    fecha_creacion: "2023-10-14T12:00:00Z",
+    fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
+    id_creador: parseInt(document.getElementById("IdCreador").value),
+    costo_por_kilometro: parseInt(document.getElementById("CostoPorKm").value),
   };
 
   console.log(JSON.stringify(data));
@@ -75,11 +75,11 @@ function actualizarCamion(event) {
 
   const data = {
     patente: document.getElementById("Patente").value,
-    pesoMaximo: parseInt(document.getElementById("PesoMaximo").value),
-    fechaCreacion: "2023-10-14T12:00:00Z",
-    fechaUltimaActualizacion: "2023-10-14T12:00:00Z",
-    idCreador: parseInt(document.getElementById("IdCreador").value),
-    costoPorKilometro: parseInt(document.getElementById("CostoPorKm").value),
+    peso_maximo: parseInt(document.getElementById("PesoMaximo").value),
+    fecha_creacion: "2023-10-14T12:00:00Z",
+    fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
+    id_creador: parseInt(document.getElementById("IdCreador").value),
+    costo_por_kilometro: parseInt(document.getElementById("CostoPorKm").value),
   };
 
   console.log(JSON.stringify(data));
