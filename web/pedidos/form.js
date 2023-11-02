@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     cancelarPedido(idPedido);
   } else {
     document
-      .getElementById("form")
-      .addEventListener("submit", function (event) {
+      .getElementById("buttonSave")
+      .addEventListener("click", function (event) {
         guardarPedido(event);
       });
 
@@ -86,13 +86,13 @@ function obtenerProductosElegidos() {
     }
   });
 
-  return productosElegidos;
+  return ProductosSeleccionados;
 }
 
 function guardarPedido() {
   //armo la data a enviar
   const data = {
-    id: 3,
+    id: "",
     fecha_creacion: "2023-10-14T12:00:00Z",
     fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
     ciudad_destino: document.getElementById("CiudadDestino").value,
@@ -102,6 +102,8 @@ function guardarPedido() {
   };
 
   const urlConFiltro = `http://localhost:8080/pedidos`;
+
+  debugger;
 
   makeRequest(
     `${urlConFiltro}`,

@@ -35,6 +35,7 @@ const urlConFiltro = `http://localhost:8080/productos`;
 
 function guardarProducto() {
   //armo la data a enviar
+  debugger;
   const data = {
     codigo_producto: document.getElementById("CodigoProducto").value,
     fecha_creacion: "2023-10-14T12:00:00Z",
@@ -103,7 +104,7 @@ function eliminarProducto(codProducto) {
     makeRequest(
       `${urlConFiltro}/${codProducto}`,
       Method.DELETE,
-      data,
+      null,
       ContentType.JSON,
       CallType.PRIVATE,
       exitoProducto,
