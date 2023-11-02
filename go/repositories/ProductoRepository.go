@@ -81,7 +81,8 @@ func (repository *ProductoRepository) ObtenerProductosFiltrados(filtroProducto u
 func (repository *ProductoRepository) obtenerProductos(filtro bson.M) ([]*model.Producto, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 
-	var productosList []*model.Producto
+	//Inicializamos el slice de productos por si no hay productos
+	productosList := make([]*model.Producto, 0)
 
 	cursor, err := collection.Find(context.Background(), filtro)
 

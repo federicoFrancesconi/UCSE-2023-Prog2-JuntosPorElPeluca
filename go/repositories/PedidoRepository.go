@@ -52,7 +52,8 @@ func (repository *PedidoRepository) obtenerPedidos(filtro bson.M) ([]*model.Pedi
 		return nil, err
 	}
 
-	var pedidos []*model.Pedido
+	//Inicializamos el slice de pedidos por si no hay pedidos
+	pedidos := make([]*model.Pedido, 0)
 
 	defer cursor.Close(context.Background())
 

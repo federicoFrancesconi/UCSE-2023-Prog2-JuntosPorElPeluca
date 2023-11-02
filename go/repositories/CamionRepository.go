@@ -52,7 +52,8 @@ func (repository CamionRepository) obtenerCamiones(filtro bson.M) ([]model.Camio
 
 	defer cursor.Close(context.Background())
 
-	var camiones []model.Camion
+	//Inicializamos el slice de camiones por si no hay camiones
+	camiones := make([]model.Camion, 0)
 
 	for cursor.Next(context.Background()) {
 		var camion model.Camion

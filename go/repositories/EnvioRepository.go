@@ -55,7 +55,8 @@ func (repository EnvioRepository) obtenerEnvios(filtro bson.M) ([]model.Envio, e
 
 	defer cursor.Close(context.Background())
 
-	var envios []model.Envio
+	//Inicializo el slice de envios por si no hay envios
+	envios := make([]model.Envio, 0)
 
 	for cursor.Next(context.Background()) {
 		var envio model.Envio
@@ -137,7 +138,16 @@ func (repository EnvioRepository) ObtenerEnvioPorId(envio model.Envio) (model.En
 
 	envios, err := repository.obtenerEnvios(filtro)
 
-	return envios[0], err
+	if err != nil {
+		return model.Envio{}, err
+	}
+
+	//Controlo que la lista este vacia
+	if len(envios) == 0 {
+		return model.Envio{}, nil
+	}
+
+	return envios[0], nil
 }
 
 func (repository EnvioRepository) ObtenerCantidadEnviosPorEstado(estado model.EstadoEnvio) (int, error) {
