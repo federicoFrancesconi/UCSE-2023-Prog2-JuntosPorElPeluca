@@ -101,3 +101,22 @@ section {
   background-color: #555;
 }
   
+nav {
+  background-color: yellow;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline;
+  margin-right: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
