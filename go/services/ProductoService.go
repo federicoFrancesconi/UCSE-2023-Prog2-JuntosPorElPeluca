@@ -46,7 +46,8 @@ func (service *ProductoService) ObtenerProductosFiltrados(filtro utils.FiltroPro
 		return nil, err
 	}
 
-	var productosDTO []dto.Producto
+	//Inicializamos el slice de productosDTO por si no hay productos
+	productosDTO := make([]dto.Producto, 0)
 
 	for _, producto := range productos {
 		productosDTO = append(productosDTO, *dto.NewProducto(producto))
