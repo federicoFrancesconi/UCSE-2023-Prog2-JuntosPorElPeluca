@@ -70,16 +70,18 @@ function obtenerProductosElegidos() {
       var tr = checkbox.closest("tr");
       var codigoProducto = tr.cells[1].textContent;
       var nombreProducto = tr.cells[2].textContent;
-      var cantidad = parseInt(tr.cells[3].textContent);
+      var cantidad = parseInt(
+        tr.cells[3].getElementsByTagName("input")[0].value
+      );
       var precioUnitario = parseFloat(tr.cells[4].textContent);
       var pesoUnitario = parseFloat(tr.cells[5].textContent);
 
       var productoSeleccionado = {
-        CodigoProducto: codigoProducto,
-        Nombre: nombreProducto,
-        Cantidad: cantidad,
-        PrecioUnitario: precioUnitario,
-        PesoUnitario: pesoUnitario,
+        codigo_producto: codigoProducto,
+        nombre_producto: nombreProducto,
+        cantidad: cantidad,
+        precio_unitario: precioUnitario,
+        peso_unitario: pesoUnitario,
       };
 
       ProductosSeleccionados.push(productoSeleccionado);
@@ -102,8 +104,6 @@ function guardarPedido() {
   };
 
   const urlConFiltro = `http://localhost:8080/pedidos`;
-
-  debugger;
 
   makeRequest(
     `${urlConFiltro}`,
@@ -128,7 +128,9 @@ function errorPedido(response) {
 
 function aceptarPedido(id) {
   if (confirm("¿Estás seguro de que deseas aceptar este pedido?")) {
-    const urlConFiltro = `http://localhost:8080/${id}/aceptar`;
+    const urlConFiltro = `http://localhost:8080/pedidos/${id}/aceptar`;
+
+    data = [];
 
     makeRequest(
       `${urlConFiltro}`,
@@ -146,12 +148,12 @@ function aceptarPedido(id) {
 
 function cancelarPedido(id) {
   if (confirm("¿Estás seguro de que deseas cancelar este pedido?")) {
-    const urlConFiltro = `http://localhost:8080/${id}/cancelar`;
-
+    const urlConFiltro = `http://localhost:8080/pedidos/${id}/cancelar`;
+    data = [];
     makeRequest(
       `${urlConFiltro}`,
       Method.PUT,
-      null,
+      data,
       ContentType.JSON,
       CallType.PRIVATE,
       exitoPedido,

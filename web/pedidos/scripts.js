@@ -99,7 +99,7 @@ function exitoObtenerPedidos(data) {
                       ? elemento.productos_elegidos
                           .map(
                             (producto) => `
-                      ${producto.nombre}
+                      ${producto.nombre_producto}
                   `
                           )
                           .join(" ")
@@ -108,7 +108,7 @@ function exitoObtenerPedidos(data) {
                   <td>${elemento.ciudad_destino}</td>
                   <td>${elemento.estado}</td>
                   <td>${elemento.fecha_creacion}</td>
-                  <td>${elemento.fecha_utlima_actualizacion}</td>
+                  <td>${elemento.fecha_ultima_actualizacion}</td>
                   <td>${elemento.id_creador}</td>
                   <td class="acciones"> <a href="form.html?id=${
                     elemento.id
