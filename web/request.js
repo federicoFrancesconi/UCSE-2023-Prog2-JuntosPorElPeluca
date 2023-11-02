@@ -63,7 +63,8 @@ async function makeRequest(
   const token = localStorage.getItem("authToken");
   if (isPrivateCall && !token) {
     window.location =
-      window.location.origin + "/login.html?reason=private_call_without_token";
+      window.location.origin +
+      "/web/login/login.html?reason=private_call_without_token";
     return;
   }
 
@@ -103,7 +104,7 @@ async function makeRequest(
 
       if (response.status === 401) {
         window.location =
-          window.location.origin + "/login.html?reason=token_invalid";
+          window.location.origin + "/web/login/login.html?reason=token_invalid";
       }
 
       errorCallback(response.status, responseBody);
