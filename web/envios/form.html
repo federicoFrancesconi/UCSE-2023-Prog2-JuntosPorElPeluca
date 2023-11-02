@@ -19,13 +19,30 @@
             <input type="text" name="IdCreador" id="IdCreador">
         </div>
         <div>
-            <label for="Pedidos">Pedidos</label>
-            <input type="number" name="Pedidos" id="Pedidos">
-        </div>
-        <div>
             <input type="submit" value="Enviar">
         </div>
     </form>
+
+    <div id="listaPedidos">
+        <h2>Pedidos</h2>
+        <table id="tablePedidos">
+            <thead>
+                <tr>
+                    <th>Seleccionar</th>
+                    <th>Id</th>
+                    <th>Ciudad Destino</th>
+                    <th>Estado</th>
+                    <th>Fecha Creacion</th>
+                    <th>Fecha Ultima Actualizacion</th>
+                    <th>Id Creador</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
 
     <script src="form.js"></script>
     <script src="../request.js"></script>
