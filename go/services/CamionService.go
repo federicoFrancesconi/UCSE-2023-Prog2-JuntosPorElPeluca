@@ -32,7 +32,9 @@ func (service *CamionService) ObtenerCamiones() ([]*dto.Camion, error) {
 		return nil, err
 	}
 
-	var camiones []*dto.Camion
+	//Inicializo la lista de camiones por si no hay ninguno
+	camiones := make([]*dto.Camion, 0)
+
 	for _, camionDB := range camionesDB {
 		camion := dto.NewCamion(camionDB)
 		camiones = append(camiones, camion)
@@ -42,8 +44,9 @@ func (service *CamionService) ObtenerCamiones() ([]*dto.Camion, error) {
 
 func (service *CamionService) ObtenerCamionPorPatente(camionConPatente *dto.Camion) (*dto.Camion, error) {
 	camionDB, err := service.camionRepository.ObtenerCamionPorPatente(camionConPatente.GetModel())
-	
+
 	var camion *dto.Camion
+
 	if err != nil {
 		return nil, err
 	}

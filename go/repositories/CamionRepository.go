@@ -4,7 +4,6 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/database"
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"context"
-	"errors"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -86,10 +85,10 @@ func (repository CamionRepository) ObtenerCamionPorPatente(camion model.Camion) 
 
 	//Contempla que no se haya encontrado el camion en la base de datos
 	if len(camiones) == 0 {
-		return model.Camion{}, errors.New("no se encontro el camion")
+		return model.Camion{}, nil
+	} else {
+		return camiones[0], nil
 	}
-
-	return camiones[0], nil
 }
 
 func (repository CamionRepository) ActualizarCamion(camion model.Camion) error {
