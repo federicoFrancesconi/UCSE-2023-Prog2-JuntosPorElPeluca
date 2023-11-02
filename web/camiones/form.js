@@ -102,7 +102,7 @@ function eliminarCamion(patente) {
     makeRequest(
       `${urlConFiltro}/${patente}`,
       Method.DELETE,
-      data,
+      null,
       ContentType.JSON,
       CallType.PRIVATE,
       exitoCamion,
