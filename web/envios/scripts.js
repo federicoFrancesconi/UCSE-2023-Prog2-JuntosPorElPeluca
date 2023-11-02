@@ -5,6 +5,30 @@ customHeaders.append("Accept-Encoding", "gzip, deflate, br");
 customHeaders.append("Connection", "keep-alive");
 
 document.addEventListener("DOMContentLoaded", function (event) {
+  document
+    .getElementById("FiltrarPatente")
+    .addEventListener("click", function (event) {
+      obtenerEnvioFiltrado("patente");
+    });
+
+  document
+    .getElementById("FiltrarEstado")
+    .addEventListener("click", function (event) {
+      obtenerEnvioFiltrado("estado");
+    });
+
+  document
+    .getElementById("FiltrarCiudad")
+    .addEventListener("click", function (event) {
+      obtenerEnvioFiltrado("ciudad");
+    });
+
+  document
+    .getElementById("FiltrarFecha")
+    .addEventListener("click", function (event) {
+      obtenerEnvioFiltrado("fecha");
+    });
+
   obtenerEnvios();
 });
 
@@ -26,6 +50,8 @@ function exitoObtenerEnvio(data) {
   const elementosTable = document //tabla en la que se colocan los envios que se obtienen
     .getElementById("elementosTable")
     .querySelector("tbody");
+
+  elementosTable.innerHTML = "";
 
   // Llenar la tabla con los datos obtenidos
   if (data != null) {

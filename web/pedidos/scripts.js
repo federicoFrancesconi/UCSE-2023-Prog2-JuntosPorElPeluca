@@ -87,6 +87,8 @@ function exitoObtenerPedidos(data) {
     .getElementById("elementosTable")
     .querySelector("tbody");
 
+  elementosTable.innerHTML = "";
+
   // Llenar la tabla con los datos obtenidos
   if (data != null) {
     data.forEach((elemento) => {
