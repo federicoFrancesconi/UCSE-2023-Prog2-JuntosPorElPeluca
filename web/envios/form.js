@@ -36,7 +36,7 @@ function obtenerPedidos() {
 
 function exitoObtenerPedidos(data) {
   const elementosTable = document //tabla en la que se colocan los envios que se obtienen
-    .getElementById("tableProductos")
+    .getElementById("tablePedidos")
     .querySelector("tbody");
 
   data.forEach((elemento) => {
@@ -54,6 +54,8 @@ function exitoObtenerPedidos(data) {
     elementosTable.appendChild(row);
   });
 }
+
+var productos = [];
 
 function obtenerPedidosArray() {
   var PedidosSeleccionados = [];
@@ -76,7 +78,7 @@ function obtenerPedidosArray() {
         fecha_creacion: fechaCreacion,
         fecha_ultima_actualizacion: fechaUltimaActualizacion,
         ciudad_destino: ciudadDestino,
-        productos_elegidos: [],
+        productos_elegidos: productos,
         id_creador: idCreador,
         estado: estado,
       };
@@ -86,6 +88,31 @@ function obtenerPedidosArray() {
   });
 
   return PedidosSeleccionados;
+}
+
+function obtenerProductosDelPedido(idPedido) {
+  const urlConFiltro = `http://localhost:8080/pedidos`;
+
+  makeRequest(
+    `${urlConFiltro}`,
+    Method.GET,
+    null,
+    ContentType.JSON,
+    CallType.PRIVATE,
+    exitoObtenerPedidos(data, idPedido),
+    errorPedido(response)
+  );
+}
+
+function exitoObtenerPedidos(data, idPedido) {
+  data.forEach((elemento) => {
+    if (elemento.idPedido == idPedido) {
+      if (productos.length > 0) {
+        productos = [];
+      }
+      productos.push(elemento.productos_elegidos);
+    }
+  });
 }
 
 const urlConFiltro = `http://localhost:8080/envios`;
