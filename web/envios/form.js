@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 
-//obtiene los productos para mostrar en el form de crear
+//obtiene los pedidos para mostrar en el form de crear
 function obtenerPedidos() {
   const urlConFiltro = `http://localhost:8080/pedidos`;
 
@@ -29,12 +29,12 @@ function obtenerPedidos() {
     null,
     ContentType.JSON,
     CallType.PRIVATE,
-    exitoObtenerPedidos,
-    errorPedido
+    exitoObtenerPedidosEnvio,
+    errorEnvio
   );
 }
 
-function exitoObtenerPedidos(data) {
+function exitoObtenerPedidosEnvio(data) {
   const elementosTable = document //tabla en la que se colocan los envios que se obtienen
     .getElementById("tablePedidos")
     .querySelector("tbody");
@@ -43,12 +43,13 @@ function exitoObtenerPedidos(data) {
     const row = document.createElement("tr"); //crear una fila
 
     row.innerHTML = ` 
-                  <td><input type="checkbox" class="producto-checkbox"></td>
-                  <td>${elemento.codigo_producto}</td>
-                  <td>${elemento.nombre}</td>
-                  <td><input type="text" placeholder="Ingrese la cantidad"></td>
-                  <td>${elemento.precio_unitario}</td>
-                  <td>${elemento.peso_unitario}</td>
+                  <td><input type="checkbox" class="pedido-checkbox"></td>
+                  <td>${elemento.id}</td>
+                  <td>${elemento.ciudad_destino}</td>
+                  <td>${elemento.estado}</td>
+                  <td>${elemento.fecha_creacion}</td>
+                  <td>${elemento.fecha_ultima_actualizacion}</td>
+                  <td>${elemento.id_creador}</td>
                  `;
 
     elementosTable.appendChild(row);
@@ -100,7 +101,7 @@ function obtenerProductosDelPedido(idPedido) {
     ContentType.JSON,
     CallType.PRIVATE,
     exitoObtenerPedidos(data, idPedido),
-    errorPedido(response)
+    errorEnvio(response)
   );
 }
 
@@ -118,6 +119,7 @@ function exitoObtenerPedidos(data, idPedido) {
 const urlConFiltro = `http://localhost:8080/envios`;
 
 function guardarEnvio() {
+  debugger;
   const pedidosArray = obtenerPedidosArray();
 
   //armo la data a enviar
