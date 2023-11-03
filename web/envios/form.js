@@ -125,11 +125,22 @@ function errorEnvio(response) {
 }
 
 function iniciarViaje(id) {
+  dataEnvio = {
+    id: id,
+    fecha_creacion: "2023-10-14T12:00:00Z",
+    fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
+    patente_camion: "",
+    paradas: [],
+    pedidos: [],
+    id_creador: 0,
+    estado: "En Ruta",
+  };
+
   if (confirm("¿Estás seguro de que deseas iniciar el viaje?")) {
     makeRequest(
-      `${urlConFiltro}/${id}/cambiarEstado?estado=En+Ruta`,
+      `${urlConFiltro}/cambiarEstado`,
       Method.PUT,
-      data,
+      dataEnvio,
       ContentType.JSON,
       CallType.PRIVATE,
       exitoEnvio,

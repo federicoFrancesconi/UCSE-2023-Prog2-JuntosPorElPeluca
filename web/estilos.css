@@ -1,8 +1,9 @@
 /* Estilo para la página */
 body {
-    background-color: white;
-    color: black;
-  }
+  font-family: 'Arial', sans-serif;
+  background-color: white;
+  color: black;
+}
   
   /* Estilo para la tabla y sus subcampos */
   table {
@@ -43,14 +44,30 @@ body {
   }
   
   /* Estilo para enlaces */
-  a {
-    color: black;
+  .anchorVerde {
+    padding: 5px;
+    margin: 5px;
+    background-color: lightgreen;
+    border-radius: 5px;
     text-decoration: none;
+    color: #000;
   }
   
-  a:hover {
-    text-decoration: underline;
-    color: black;
+  .anchorVerde:hover {
+    background-color: green;
+  }
+
+  .anchorRojo {
+    padding: 5px;
+    margin: 5px;
+    background-color: red;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #000;
+  }
+  
+  .anchorRojo:hover {
+    background-color: darkred;
   }
 
   /* Estilos del encabezado y la barra de navegación */
@@ -60,10 +77,19 @@ header {
   padding: 10px;
 }
 
+.marginTable{
+  margin-top: 20px;
+}
+
 .navbar {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+.listaNavegacion{
+  display: flex;
+  justify-content: space-around;
 }
 
 .navbar li {
@@ -103,6 +129,10 @@ section {
   
 nav {
   background-color: yellow;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
 }
 
 nav ul {
@@ -117,6 +147,6 @@ nav ul li {
 
 nav a {
   text-decoration: none;
-  color: white;
+  color: #000;
   font-weight: bold;
 }

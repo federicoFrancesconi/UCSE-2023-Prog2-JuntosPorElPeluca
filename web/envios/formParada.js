@@ -64,12 +64,21 @@ function finalizarViaje(id) {
     agregarParada(id);
     debugger;
 
-    data = [];
+    dataEnvio = {
+      id: id,
+      fecha_creacion: "2023-10-14T12:00:00Z",
+      fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
+      patente_camion: "",
+      paradas: [],
+      pedidos: [],
+      id_creador: 0,
+      estado: "Despachado",
+    };
 
     makeRequest(
-      `http://localhost:8080/envios/${id}/cambiarEstado?estado=Despachado`,
+      `http://localhost:8080/envios/cambiarEstado`,
       Method.PUT,
-      data,
+      dataEnvio,
       ContentType.JSON,
       CallType.PRIVATE,
       exitoAgregarParada,
