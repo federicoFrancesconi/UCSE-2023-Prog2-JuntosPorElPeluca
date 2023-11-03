@@ -5,6 +5,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"context"
+	"errors"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -38,7 +39,7 @@ func (repository *PedidoRepository) CrearPedido(pedido model.Pedido) error {
 	pedido.FechaUltimaActualizacion = time.Now()
 
 	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")
-	
+
 	_, err := collection.InsertOne(context.Background(), pedido)
 	return err
 }
@@ -156,7 +157,11 @@ func (repository *PedidoRepository) ActualizarPedido(pedido model.Pedido) error 
 
 	actualizacion := bson.M{"$set": pedido}
 
-	_, err := collection.UpdateOne(context.Background(), filtro, actualizacion)
+	operacion, err := collection.UpdateOne(context.Background(), filtro, actualizacion)
+
+	if operacion.MatchedCount == 0 {
+		return errors.New("no se encontró el pedido a actualizar")
+	}
 
 	return err
 }
