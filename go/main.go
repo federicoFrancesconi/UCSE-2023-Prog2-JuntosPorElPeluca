@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"UCSE-2023-Prog2-TPIntegrador/clients"
 	"UCSE-2023-Prog2-TPIntegrador/database"
 	"UCSE-2023-Prog2-TPIntegrador/handlers"
 	"UCSE-2023-Prog2-TPIntegrador/middlewares"
@@ -34,7 +35,12 @@ func main() {
 }
 
 func mappingRoutes() {
+	//implementa el metodo NewAuthMiddleware
+	authClient := clients.NewAuthClient()
+	authMiddleware := middlewares.NewAuthMiddleware(authClient)
+
 	router.Use(middlewares.CORSMiddleware())
+	router.Use(authMiddleware.ValidateToken)
 
 	//Rutas de pedidos
 	router.GET("/pedidos", pedidoHandler.ObtenerPedidos)
