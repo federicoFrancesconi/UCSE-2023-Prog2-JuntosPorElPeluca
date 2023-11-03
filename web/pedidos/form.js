@@ -5,6 +5,11 @@ customHeaders.append("Accept-Encoding", "gzip, deflate, br");
 customHeaders.append("Connection", "keep-alive");
 
 document.addEventListener("DOMContentLoaded", function (event) {
+  if (!isUserLogged()) {
+    window.location =
+      document.location.origin + "/web/login/login.html?reason=login_required";
+  }
+
   //verifico si tiene el parametro id
   const urlParams = new URLSearchParams(window.location.search);
   const idPedido = urlParams.get("id");
