@@ -37,10 +37,6 @@ func (auth *AuthMiddleware) ValidateToken(c *gin.Context) {
 	}
 
 	//Validar que el usuario tenga alguno de todos los roles que yo quiero en mi aplicacion.
-	if (user.Rol != utils.RolAdministrador) && (user.Rol != utils.RolUsuario) && (user.Rol != utils.RolConductor) {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "El rol del usuario no es válido"})
-		return
-	}
 
 	//Seteamos los datos del usuario logueado en el contexto de GIN.
 	utils.SetUserInContext(c, user)

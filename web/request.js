@@ -59,6 +59,7 @@ async function makeRequest(
     return;
   }
 
+  debugger;
   //Validar que si la pegada es privada exista bearer token, si existe lo agrega como header authorization, sino va a login.html
   const token = localStorage.getItem("authToken");
   if (isPrivateCall && !token) {

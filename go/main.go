@@ -36,11 +36,12 @@ func main() {
 
 func mappingRoutes() {
 	//implementa el metodo NewAuthMiddleware
-	authClient := clients.NewAuthClient()
+	var authClient clients.AuthClientInterface
+	authClient = clients.NewAuthClient()
 	authMiddleware := middlewares.NewAuthMiddleware(authClient)
 
-	router.Use(middlewares.CORSMiddleware())
 	router.Use(authMiddleware.ValidateToken)
+	router.Use(middlewares.CORSMiddleware())
 
 	//Rutas de pedidos
 	router.GET("/pedidos", pedidoHandler.ObtenerPedidos)
