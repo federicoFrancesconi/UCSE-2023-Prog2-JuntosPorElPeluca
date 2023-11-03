@@ -5,6 +5,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"context"
+	"errors"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -119,8 +120,23 @@ func (repository *ProductoRepository) ActualizarProducto(producto model.Producto
 
 	filtro := bson.M{"_id": producto.ObjectId}
 
-	//TODO: ver si anda este tipo de set
-	_, err := collection.UpdateOne(context.Background(), filtro, bson.M{"$set": producto})
+	//Creo una operacion personalizada, para que no actualice nunca la fecha de creacion o el id del creador
+	actualizacion := bson.M{
+		"$set": bson.M{
+			"tipo_producto":   producto.TipoDeProducto,
+			"nombre":          producto.Nombre,
+			"peso_unitario":   producto.PesoUnitario,
+			"precio_unitario": producto.PrecioUnitario,
+			"stock_minimo":    producto.StockMinimo,
+			"stock_actual":    producto.StockActual,
+		},
+	}
+
+	operacion, err := collection.UpdateOne(context.Background(), filtro, actualizacion)
+
+	if operacion.MatchedCount == 0 {
+		return errors.New("no se encontró el producto a actualizar")
+	}
 
 	return err
 }
