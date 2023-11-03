@@ -171,12 +171,6 @@ func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido) error {
 }
 
 func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvio) (float32, error) {
-	//Pone por default las variables del filtro que no interesen
-	filtro.PatenteCamion = ""
-	filtro.UltimaParada = ""
-	filtro.FechaCreacionDesde = time.Time{}
-	filtro.FechaCreacionHasta = time.Time{}
-
 	//Le agrega el estado despachado al filtro, ya que el beneficio lo tienen los despachados
 	filtro.Estado = model.Despachado
 

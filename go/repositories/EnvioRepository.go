@@ -106,14 +106,10 @@ func (repository EnvioRepository) ObtenerEnviosFiltrados(filtroEnvio utils.Filtr
 		filtro["fecha_creacion"] = filtroFecha
 	}
 
-	//TODO: hay que probar que este filtro ande bien
 	if ultimaParada != "" {
-		filtro["paradas"] = bson.M{
-			"$elemMatch": bson.M{
-				"ciudad": ultimaParada,
-			},
-		}
-		filtro["paradas.$slice"] = -1
+		customJavaScript := "this.paradas[this.paradas.length - 1].ciudad === '" + ultimaParada + "'"
+
+		filtro["$where"] = customJavaScript
 	}
 
 	//Tomo la fecha de ultima actualizacion en 0001-01-01 como la ausencia de filtro
