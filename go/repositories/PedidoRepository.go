@@ -99,10 +99,18 @@ func (repository *PedidoRepository) ObtenerPedidosFiltrados(filtroEnvio utils.Fi
 
 	filter := bson.M{}
 
+	idPedidosObjectIds := make([]primitive.ObjectID, len(idPedidos))
+
+	//Convertimos la lista de idPedidos en una lista de ObjectId
+	for i, idPedido := range idPedidos {
+		idPedidoObjectId := utils.GetObjectIDFromStringID(idPedido)
+		idPedidosObjectIds[i] = idPedidoObjectId
+	}
+
 	// Agrego filtros segun los parametros que se pasen
 	//Si el array de idPedidos es mayor a 0, uso el filtro, sino no
 	if len(idPedidos) > 0 {
-		filter["id"] = bson.M{"$in": idPedidos}
+		filter["_id"] = bson.M{"$in": idPedidosObjectIds}
 	}
 
 	//Tomo el estado vacio como la ausencia de filtro

@@ -108,14 +108,12 @@ func (repository EnvioRepository) ObtenerEnviosFiltrados(filtroEnvio utils.Filtr
 
 	//TODO: hay que probar que este filtro ande bien
 	if ultimaParada != "" {
-		if ultimaParada != "" {
-			filtro["paradas"] = bson.M{
-				"$elemMatch": bson.M{
-					"ciudad": ultimaParada,
-				},
-			}
-			filtro["paradas.$slice"] = -1
+		filtro["paradas"] = bson.M{
+			"$elemMatch": bson.M{
+				"ciudad": ultimaParada,
+			},
 		}
+		filtro["paradas.$slice"] = -1
 	}
 
 	//Tomo la fecha de ultima actualizacion en 0001-01-01 como la ausencia de filtro
