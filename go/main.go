@@ -40,8 +40,8 @@ func mappingRoutes() {
 	authClient = clients.NewAuthClient()
 	authMiddleware := middlewares.NewAuthMiddleware(authClient)
 
-	router.Use(authMiddleware.ValidateToken)
 	router.Use(middlewares.CORSMiddleware())
+	router.Use(authMiddleware.ValidateToken)
 
 	//Rutas de pedidos
 	router.GET("/pedidos", pedidoHandler.ObtenerPedidos)
