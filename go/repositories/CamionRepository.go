@@ -4,6 +4,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/database"
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"context"
+	"errors"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -102,9 +103,18 @@ func (repository CamionRepository) ActualizarCamion(camion model.Camion) error {
 
 	actualizacion := bson.M{"$set": camion}
 
-	_, err := collection.UpdateOne(context.TODO(), filtro, actualizacion)
+	operacion, err := collection.UpdateOne(context.TODO(), filtro, actualizacion)
 
-	return err
+	if err != nil {
+		return err
+	}
+
+	//Si no se actualizo ningun camion, devolvemos un error
+	if operacion.MatchedCount == 0 {
+		return errors.New("no se encontró el camion a actualizar")
+	}
+
+	return nil
 }
 
 func (repository CamionRepository) EliminarCamion(camion model.Camion) error {
