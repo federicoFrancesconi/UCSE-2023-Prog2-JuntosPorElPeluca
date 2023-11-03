@@ -221,16 +221,12 @@ func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 func (handler *EnvioHandler) CambiarEstadoEnvio(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	//Recibimos el id del envio a finalizar
-	id := c.Param("id")
-
-	//Recibimos el estado deseado para el envio
-	estado := c.DefaultQuery("estado", "")
-
-	//Creamos el envio para pasarle al service
-	envio := dto.Envio{
-		Id:     id,
-		Estado: model.EstadoEnvio(estado),
+	//Recibimos el envio en el body
+	//Este contiene el id del envio y el nuevo estado
+	var envio dto.Envio
+	if err := c.ShouldBindJSON(&envio); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	operacion, err := handler.envioService.CambiarEstadoEnvio(&envio)
