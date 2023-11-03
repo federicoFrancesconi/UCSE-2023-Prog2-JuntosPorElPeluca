@@ -5,6 +5,7 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/model"
 	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"context"
+	"errors"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -167,7 +168,11 @@ func (repository EnvioRepository) ActualizarEnvio(envio model.Envio) error {
 
 	actualizacion := bson.M{"$set": envio}
 
-	_, err := collection.UpdateOne(context.Background(), filtro, actualizacion)
+	operacion, err := collection.UpdateOne(context.Background(), filtro, actualizacion)
+
+	if operacion.MatchedCount == 0 {
+		return errors.New("no se encontró el envio a actualizar")
+	}
 
 	return err
 }
