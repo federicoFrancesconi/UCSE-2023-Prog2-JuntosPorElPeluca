@@ -17,9 +17,17 @@ body {
   td, th {
     border: 1px solid black;
     padding: 8px;
-    text-align: left;
+    text-align: center;
   }
   
+  .acciones{
+    text-align: start;
+  }
+
+  th, td:hover {
+    background-color: lightgray;
+  }
+
   /* Estilo para encabezados h1, h3, h4 */
   h1, h3, h4 {
     color: black;
@@ -31,16 +39,38 @@ body {
     color: black;
   }
   
+  /*agrega espaciado a los div dentro de un form*/
+  form div {
+    margin: 10px 0px;
+  }
+
   label {
     color: black;
   }
   
+  .filtros div{
+    margin: 10px 0px;
+  }
+
   /* Estilo para campos de entrada */
-  input[type="text"], input[type="checkbox"], input[type="submit"] {
-    background-color: yellow;
+  input[type="text"], input[type="checkbox"], input[type="submit"], input[type="number"] {
     color: black;
     border: 1px solid black;
+    padding: 3px;
+    border-radius: 5px;
+  }
+
+  input[type="submit"]{
+    background-color: green;
+    color: white;
+    border: 1px solid black;
     padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  input[type="submit"]:hover{
+    background-color: darkgreen;
   }
   
   /* Estilo para enlaces */
@@ -51,6 +81,8 @@ body {
     border-radius: 5px;
     text-decoration: none;
     color: #000;
+    display: flex;
+    width: fit-content;
   }
   
   .anchorVerde:hover {

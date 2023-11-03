@@ -35,7 +35,7 @@ function exitoObtenerCamiones(data) {
               <td>${elemento.fecha_ultima_actualizacion}</td>
               <td>${elemento.costo_por_kilometro}</td>
               <td>${elemento.id_creador}</td>
-              <td class="acciones"><a href="form.html?patente=${elemento.patente}&tipo=EDITAR">Editar</a> | <a href="form.html?patente=${elemento.patente}&tipo=ELIMINAR">Eliminar</a></td>
+              <td class="acciones"><a class="anchorVerde" href="form.html?patente=${elemento.patente}&tipo=EDITAR">Editar</a><a class="anchorRojo" href="form.html?patente=${elemento.patente}&tipo=ELIMINAR">Eliminar</a></td>
           `;
 
     elementosTable.appendChild(row);

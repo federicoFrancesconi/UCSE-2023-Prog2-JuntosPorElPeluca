@@ -98,11 +98,11 @@ function exitoObtenerEnvio(data) {
                 }</td>
                 <td>${elemento.id_creador}</td>
                 <td>${elemento.estado}</td>
-                <td class="acciones"><a href="/web/envios/nuevaParada.html?id=${
+                <td class="acciones"><a class="anchorVerde" href="/web/envios/nuevaParada.html?id=${
                   elemento.id
-                }">Nueva Parada</a> | <a href="form.html?id=${
+                }">Nueva Parada</a> <a class="anchorVerde" href="form.html?id=${
         elemento.id
-      }&tipo=INICIAR">Iniciar Viaje</a> | <a href="form.html?id=${
+      }&tipo=INICIAR">Iniciar Viaje</a> <a class="anchorRojo" href="form.html?id=${
         elemento.id
       }&tipo=FINALIZAR">Finalizar Viaje</a></td>
                 `;

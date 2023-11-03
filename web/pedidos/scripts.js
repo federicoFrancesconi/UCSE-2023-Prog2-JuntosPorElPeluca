@@ -114,7 +114,7 @@ function exitoObtenerPedidos(data) {
                   <td>${elemento.id_creador}</td>
                   <td class="acciones"> <a href="form.html?id=${
                     elemento.id
-                  }&tipo=ACEPTAR">Aceptar Pedido</a> | <a href="form.html?id=${
+                  }&tipo=ACEPTAR" class="anchorVerde">Aceptar Pedido</a> <a class="anchorRojo" href="form.html?id=${
         elemento.id
       }&tipo=CANCELAR">Cancelar Pedido</a></td>
                   `;

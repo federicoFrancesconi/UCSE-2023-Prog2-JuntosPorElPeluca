@@ -45,7 +45,7 @@ function exitoObtenerProductos(data) {
                     <td>${elemento.fecha_creacion}</td>
                     <td>${elemento.fecha_ultima_actualizacion}</td>
                     <td>${elemento.id_creador}</td>
-                    <td class="acciones"> <a href="form.html?id=${elemento.codigo_producto}&tipo=ELIMINAR">Eliminar</a> | <a href="form.html?id=${elemento.codigo_producto}&tipo=EDITAR">Editar</a></td>
+                    <td class="acciones"> <a class="anchorRojo" href="form.html?id=${elemento.codigo_producto}&tipo=ELIMINAR">Eliminar</a> <a class="anchorVerde" href="form.html?id=${elemento.codigo_producto}&tipo=EDITAR">Editar</a></td>
                     `;
 
       elementosTable.appendChild(row);

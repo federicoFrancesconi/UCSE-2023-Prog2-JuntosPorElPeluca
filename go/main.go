@@ -44,6 +44,7 @@ func mappingRoutes() {
 	router.PUT("/pedidos/:id/cancelar", pedidoHandler.CancelarPedido)
 
 	//Rutas de envios
+
 	router.GET("/envios", envioHandler.ObtenerEnvios)
 	router.GET("/envios/:id", envioHandler.ObtenerEnvioPorId)
 	router.GET("/envios/beneficioEntreFechas", envioHandler.ObtenerBeneficioEntreFechas)
