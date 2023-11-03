@@ -53,14 +53,14 @@ body {
   }
 
   /* Estilo para campos de entrada */
-  input[type="text"], input[type="checkbox"], input[type="submit"], input[type="number"] {
+  input[type="text"], input[type="checkbox"], input[type="number"] {
     color: black;
     border: 1px solid black;
     padding: 3px;
     border-radius: 5px;
   }
 
-  input[type="submit"]{
+  input[type="submit"], input[type="button"]{
     background-color: green;
     color: white;
     border: 1px solid black;
