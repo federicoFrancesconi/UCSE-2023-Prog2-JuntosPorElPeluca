@@ -33,15 +33,21 @@ func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 	fechaCreacionComienzoStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01T00:00:00Z")
 	fechaCreacionComienzo, err := time.Parse(time.RFC3339, fechaCreacionComienzoStr)
 	if err != nil {
-		// Si hay un error en el parseo, devuelve una fecha default
-		fechaCreacionComienzo = time.Time{}
+		log.Printf("[handler:PedidoHandler][method:ObtenerPedidos][error:%s][user:%s]", err.Error(), user.Codigo)
+
+		// Devuelve badRequest
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	fechaCreacionFinStr := c.DefaultQuery("fechaCreacionFin", "0001-01-01T00:00:00Z")
 	fechaCreacionFin, err := time.Parse(time.RFC3339, fechaCreacionFinStr)
 	if err != nil {
-		// Si hay un error en el parseo, devuelve una fecha default
-		fechaCreacionFin = time.Time{}
+		log.Printf("[handler:PedidoHandler][method:ObtenerPedidos][error:%s][user:%s]", err.Error(), user.Codigo)
+
+		// Devuelve badRequest
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	//Creamos el filtro con los datos obtenidos
