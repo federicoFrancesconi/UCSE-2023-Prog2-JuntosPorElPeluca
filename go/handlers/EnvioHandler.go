@@ -95,15 +95,23 @@ func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 	fechaDesdeStr := c.DefaultQuery("fechaDesde", "0001-01-01T00:00:00Z")
 	fechaDesde, err := time.Parse(time.RFC3339, fechaDesdeStr)
 	if err != nil {
-		// Si hay un error en el parseo, devuelve una fecha default
-		fechaDesde = time.Time{}
+		// Logea el error
+		log.Printf("[handler:EnvioHandler][method:ObtenerBeneficioEntreFechas][error:%s]", err.Error())
+
+		// Devuelve badRequest
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	fechaHastaStr := c.DefaultQuery("fechaHasta", "0001-01-01T00:00:00Z")
 	fechaHasta, err := time.Parse(time.RFC3339, fechaHastaStr)
 	if err != nil {
-		// Si hay un error en el parseo, devuelve una fecha default
-		fechaHasta = time.Time{}
+		// Logea el error
+		log.Printf("[handler:EnvioHandler][method:ObtenerBeneficioEntreFechas][error:%s]", err.Error())
+
+		// Devuelve badRequest
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	//TODO: probar si anda el filtro solamente pasandole un par de parametros
