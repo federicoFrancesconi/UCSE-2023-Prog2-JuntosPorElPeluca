@@ -26,7 +26,7 @@ func (service *CamionService) CrearCamion(camion *dto.Camion) error {
 }
 
 func (service *CamionService) ObtenerCamiones() ([]*dto.Camion, error) {
-	camionesDB, err := service.camionRepository.ObtenerTodosLosCamiones()
+	camionesDB, err := service.camionRepository.ObtenerCamiones()
 
 	if err != nil {
 		return nil, err

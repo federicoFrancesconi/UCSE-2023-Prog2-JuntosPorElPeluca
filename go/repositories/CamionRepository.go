@@ -14,7 +14,7 @@ import (
 type CamionRepositoryInterface interface {
 	CrearCamion(model.Camion) error
 	ObtenerCamionPorPatente(model.Camion) (model.Camion, error)
-	ObtenerTodosLosCamiones() ([]model.Camion, error)
+	ObtenerCamiones() ([]model.Camion, error)
 	ActualizarCamion(model.Camion) error
 	EliminarCamion(model.Camion) error
 }
@@ -69,7 +69,7 @@ func (repository CamionRepository) obtenerCamiones(filtro bson.M) ([]model.Camio
 	return camiones, err
 }
 
-func (repository CamionRepository) ObtenerTodosLosCamiones() ([]model.Camion, error) {
+func (repository CamionRepository) ObtenerCamiones() ([]model.Camion, error) {
 	//Uso un filtro vacio para que no filtre y traiga todos los camiones
 	filtroVacio := bson.M{}
 
