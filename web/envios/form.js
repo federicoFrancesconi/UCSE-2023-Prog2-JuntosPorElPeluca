@@ -99,7 +99,6 @@ function guardarEnvio() {
     patente_camion: document.getElementById("PatenteCamion").value,
     paradas: [],
     pedidos: pedidosArray,
-    id_creador: parseInt(document.getElementById("IdCreador").value),
     estado: "ADespachar",
   };
 

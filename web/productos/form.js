@@ -54,7 +54,7 @@ function guardarProducto() {
     ),
     stock_minimo: parseInt(document.getElementById("StockMinimo").value),
     stock_actual: parseInt(document.getElementById("StockActual").value),
-    id_creador: parseInt(document.getElementById("IdCreador").value),
+    id_creador: 0,
   };
 
   makeRequest(
@@ -81,7 +81,7 @@ function actualizarProducto() {
     ),
     stock_minimo: parseInt(document.getElementById("StockMinimo").value),
     stock_actual: parseInt(document.getElementById("StockActual").value),
-    id_creador: parseInt(document.getElementById("IdCreador").value),
+    id_creador: 0,
   };
 
   debugger;
