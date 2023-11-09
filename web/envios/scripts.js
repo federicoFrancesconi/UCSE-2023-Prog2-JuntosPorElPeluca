@@ -37,9 +37,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
   obtenerEnvios();
 });
 
-function obtenerEnvios() {
-  urlConFiltro = `http://localhost:8080/envios`;
+urlConFiltro = `http://localhost:8080/envios`;
 
+function obtenerEnvios() {
   makeRequest(
     `${urlConFiltro}`,
     Method.GET,
@@ -123,9 +123,9 @@ function errorEnvio(response) {
   throw new Error("Error en la solicitud al servidor.");
 }
 
-function obtenerEnvioFiltrado(tipo) {
-  var url = new URL(urlConFiltro);
+var url = new URL(urlConFiltro);
 
+function obtenerEnvioFiltrado(tipo) {
   switch (tipo) {
     case "patente":
       url.searchParams.set(

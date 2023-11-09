@@ -45,9 +45,9 @@ function obtenerPedidos() {
   );
 }
 
-function obtenerPedidoFiltrado(tipo) {
-  var url = new URL(urlConFiltro);
+var url = new URL(urlConFiltro);
 
+function obtenerPedidoFiltrado(tipo) {
   switch (tipo) {
     case "id":
       url.searchParams.set(

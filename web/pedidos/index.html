@@ -35,7 +35,13 @@
         </div>
         <div>
             <label for="">Estado</label>
-            <input type="text" name="FiltroEstado" id="FiltroEstado">
+            <select id="FiltroEstado" name="FiltroEstado">
+                <option value="Pendiente">Pendiente</option>
+                <option value="Aceptado">Aceptado</option>
+                <option value="Cancelado">Cancelado</option>
+                <option value="Para Enviar">Para Enviar</option>
+                <option value="Enviado">Enviado</option>
+            </select>
             <input type="button" id="FiltrarEstado" value="Filtrar" onclick="obtenerPedidoFiltrado('estado')">
         </div>
         <div>
@@ -50,6 +56,7 @@
             </div>
             <input type="button" id="FiltrarFecha" value="Filtrar" onclick="obtenerPedidoFiltrado('fecha')">
         </div>
+        <a href="/web/pedidos/index.html" class="anchorRojo">Limpiar Filtros</a>
     </div>
 
     <table class="marginTable" id="elementosTable" cellspacing="0" cellpadding="0">
