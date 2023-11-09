@@ -21,7 +21,10 @@ func NewCamionHandler(camionService services.CamionServiceInterface) *CamionHand
 func (handler *CamionHandler) ObtenerCamiones(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	camiones, err := handler.camionService.ObtenerCamiones()
+	//Creo un filtro vacio
+	filtro := utils.FiltroCamion{}
+
+	camiones, err := handler.camionService.ObtenerCamiones(filtro)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
@@ -42,10 +45,10 @@ func (handler *CamionHandler) ObtenerCamionPorPatente(c *gin.Context) {
 
 	patente := c.Param("patente")
 
-	//Generamos el objeto camion para pasarselo al service
-	camionConPatente := dto.Camion{Patente: patente}
+	//Creamos el filtro
+	filtro := utils.FiltroCamion{Patente: patente}
 
-	camion, err := handler.camionService.ObtenerCamionPorPatente(&camionConPatente)
+	camion, err := handler.camionService.ObtenerCamiones(filtro)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {

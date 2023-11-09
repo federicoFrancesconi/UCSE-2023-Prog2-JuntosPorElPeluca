@@ -3,6 +3,7 @@ package repositories
 import (
 	"UCSE-2023-Prog2-TPIntegrador/database"
 	"UCSE-2023-Prog2-TPIntegrador/model"
+	"UCSE-2023-Prog2-TPIntegrador/utils"
 	"context"
 	"errors"
 	"time"
@@ -13,8 +14,7 @@ import (
 
 type CamionRepositoryInterface interface {
 	CrearCamion(model.Camion) error
-	ObtenerCamionPorPatente(model.Camion) (model.Camion, error)
-	ObtenerCamiones() ([]model.Camion, error)
+	ObtenerCamiones(utils.FiltroCamion) ([]model.Camion, error)
 	ActualizarCamion(model.Camion) error
 	EliminarCamion(model.Camion) error
 }
@@ -69,28 +69,16 @@ func (repository CamionRepository) obtenerCamiones(filtro bson.M) ([]model.Camio
 	return camiones, err
 }
 
-func (repository CamionRepository) ObtenerCamiones() ([]model.Camion, error) {
-	//Uso un filtro vacio para que no filtre y traiga todos los camiones
-	filtroVacio := bson.M{}
+func (repository CamionRepository) ObtenerCamiones(filtro utils.FiltroCamion) ([]model.Camion, error) {
+	//Inicializamos el filtro vacio
+	filtroBD := bson.M{}
 
-	return repository.obtenerCamiones(filtroVacio)
-}
-
-func (repository CamionRepository) ObtenerCamionPorPatente(camion model.Camion) (model.Camion, error) {
-	filtro := bson.M{"patente": camion.Patente}
-
-	camiones, err := repository.obtenerCamiones(filtro)
-
-	if err != nil {
-		return model.Camion{}, err
+	//Si el filtro tiene una patente, la agregamos al filtro de la BD
+	if filtro.Patente != "" {
+		filtroBD["patente"] = filtro.Patente
 	}
 
-	//Contempla que no se haya encontrado el camion en la base de datos
-	if len(camiones) == 0 {
-		return model.Camion{}, nil
-	} else {
-		return camiones[0], nil
-	}
+	return repository.obtenerCamiones(filtroBD)
 }
 
 func (repository CamionRepository) ActualizarCamion(camion model.Camion) error {
