@@ -10,11 +10,27 @@ document.addEventListener("DOMContentLoaded", function (event) {
 function obtenerBeneficioEntreFechas() {
   debugger;
   var fechaDesde =
-    document.getElementById("FechaDesde").value + "T00:00:00.00Z";
+    document.getElementById("FechaDesde").value;
   var fechaHasta =
-    document.getElementById("FechaHasta").value + "T00:00:00.00Z";
+    document.getElementById("FechaHasta").value;
 
-  var urlConFiltro = `http://localhost:8080/envios/beneficioEntreFechas?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`;
+  var urlConFiltro = `http://localhost:8080/envios/beneficioEntreFechas`;
+  
+  //Si fechaDesde esta vacio, no se agrega al filtro
+  if (fechaDesde != "") {
+    urlConFiltro += `?fechaDesde=${fechaDesde}`;
+  }
+
+  //Si fechaHasta esta vacio, no se agrega al filtro
+  if (fechaHasta != "") {
+    if (fechaDesde != "") {
+      urlConFiltro += `&fechaHasta=${fechaHasta}`;
+    } else {
+      urlConFiltro += `?fechaHasta=${fechaHasta}`;
+    }
+  }
+
+  //urlConFiltro = `http://localhost:8080/envios/beneficioEntreFechas?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`;
 
   makeRequest(
     `${urlConFiltro}`,

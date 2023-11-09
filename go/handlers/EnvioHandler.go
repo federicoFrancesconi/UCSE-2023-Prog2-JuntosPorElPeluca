@@ -92,8 +92,8 @@ func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
 
 func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 	// Convierte las fechas string a time.Time
-	fechaDesdeStr := c.DefaultQuery("fechaDesde", "0001-01-01T00:00:00Z")
-	fechaDesde, err := time.Parse(time.RFC3339, fechaDesdeStr)
+	fechaDesdeStr := c.DefaultQuery("fechaDesde", "0001-01-01")
+	fechaDesde, err := time.Parse("2006-01-02", fechaDesdeStr)
 	if err != nil {
 		// Logea el error
 		log.Printf("[handler:EnvioHandler][method:ObtenerBeneficioEntreFechas][error:%s]", err.Error())
@@ -103,8 +103,11 @@ func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 		return
 	}
 
-	fechaHastaStr := c.DefaultQuery("fechaHasta", "0001-01-01T00:00:00Z")
-	fechaHasta, err := time.Parse(time.RFC3339, fechaHastaStr)
+	// Create time with specific time (e.g., midnight) to represent the date
+	fechaDesde = time.Date(fechaDesde.Year(), fechaDesde.Month(), fechaDesde.Day(), 0, 0, 0, 0, fechaDesde.Location())
+
+	fechaHastaStr := c.DefaultQuery("fechaHasta", "0001-01-01")
+	fechaHasta, err := time.Parse("2006-01-02", fechaHastaStr)
 	if err != nil {
 		// Logea el error
 		log.Printf("[handler:EnvioHandler][method:ObtenerBeneficioEntreFechas][error:%s]", err.Error())
@@ -114,7 +117,9 @@ func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 		return
 	}
 
-	//TODO: probar si anda el filtro solamente pasandole un par de parametros
+	// Create time with specific time (e.g., midnight) to represent the date
+	fechaHasta = time.Date(fechaHasta.Year(), fechaHasta.Month(), fechaHasta.Day(), 0, 0, 0, 0, fechaHasta.Location())
+
 	//Creamos el filtro, que tiene en cuenta solamente las fechas
 	filtro := utils.FiltroEnvio{
 		FechaUltimaActualizacionDesde: fechaDesde,
