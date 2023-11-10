@@ -46,6 +46,8 @@ function exitoObtenerPedidosEnvio(data) {
     .getElementById("tablePedidos")
     .querySelector("tbody");
 
+  console.log(elementosTable);
+
   data.forEach((elemento) => {
     if (elemento.estado == "Aceptado") {
       const row = document.createElement("tr"); //crear una fila
