@@ -15,7 +15,7 @@ import (
 type ProductoRepositoryInterface interface {
 	CrearProducto(model.Producto) error
 	ObtenerProductoPorCodigo(model.Producto) (*model.Producto, error)
-	ObtenerProductosFiltrados(utils.FiltroProducto) ([]*model.Producto, error)
+	ObtenerProductos(utils.FiltroProducto) ([]*model.Producto, error)
 	ActualizarProducto(model.Producto) error
 	EliminarProducto(model.Producto) error
 }
@@ -59,7 +59,7 @@ func (repository *ProductoRepository) ObtenerProductoPorCodigo(productoConCodigo
 	return &producto, err
 }
 
-func (repository *ProductoRepository) ObtenerProductosFiltrados(filtroProducto utils.FiltroProducto) ([]*model.Producto, error) {
+func (repository *ProductoRepository) ObtenerProductos(filtroProducto utils.FiltroProducto) ([]*model.Producto, error) {
 	//Primero creamos el filtro vacio
 	filtroDB := bson.M{}
 

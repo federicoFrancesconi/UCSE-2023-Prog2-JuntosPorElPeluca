@@ -44,7 +44,7 @@ func (handler *ProductoHandler) ObtenerProductos(c *gin.Context) {
 		TipoProducto:          model.TipoProducto(tipoProducto),
 	}
 
-	productos, err := handler.productoService.ObtenerProductosFiltrados(filtroProducto)
+	productos, err := handler.productoService.ObtenerProductos(filtroProducto)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
