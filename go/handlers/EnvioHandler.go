@@ -192,9 +192,6 @@ func (handler *EnvioHandler) CrearEnvio(c *gin.Context) {
 func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	//Recibimos el id como parametro
-	id := c.Param("id")
-
 	//Obtenemos la nueva parada
 	var parada dto.Parada
 	if err := c.ShouldBindJSON(&parada); err != nil {
@@ -202,31 +199,23 @@ func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 		return
 	}
 
-	//Creamos el envio para pasarle al service
-	envio := dto.Envio{
-		Id: id,
-		Paradas: []dto.Parada{
-			parada,
-		},
-	}
-
-	operacion, err := handler.envioService.AgregarParada(&envio)
+	operacion, err := handler.envioService.AgregarParada(&parada)
 	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:AgregarParada][envio:%+v][user:%s]", err.Error(), user.Codigo)
+		log.Printf("[handler:EnvioHandler][method:AgregarParada][parada:%+v][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	if !operacion {
-		log.Printf("[handler:EnvioHandler][method:AgregarParada][envio:%+v][user:%s]", err.Error(), user.Codigo)
+		log.Printf("[handler:EnvioHandler][method:AgregarParada][parada:%+v][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) //es correcto devolver bad request aca?
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:EnvioHandler][method:AgregarParada][envio:%+v][user:%s]", envio, user.Codigo)
+	log.Printf("[handler:EnvioHandler][method:AgregarParada][parada:%+v][user:%s]", parada, user.Codigo)
 
 	c.JSON(http.StatusOK, true)
 }

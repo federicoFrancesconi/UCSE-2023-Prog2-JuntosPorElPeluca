@@ -32,16 +32,16 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 function agregarParada() {
-  debugger;
+  const urlParams = new URLSearchParams(window.location.search);
+  const idEnvioParada = urlParams.get("id");
+
   const data = {
+    id_envio: idEnvioParada,
     ciudad: document.getElementById("Ciudad").value,
     km_recorridos: parseInt(document.getElementById("KmRecorridos").value),
   };
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const idEnvioParada = urlParams.get("id");
-
-  const urlConFiltro = `http://localhost:8080/envios/${idEnvioParada}/nuevaParada`;
+  const urlConFiltro = `http://localhost:8080/envios/nuevaParada`;
 
   makeRequest(
     `${urlConFiltro}`,

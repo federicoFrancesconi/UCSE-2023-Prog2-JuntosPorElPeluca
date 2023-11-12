@@ -15,7 +15,7 @@ type EnvioServiceInterface interface {
 	ObtenerEnvioPorId(*dto.Envio) (*dto.Envio, error)
 	ObtenerBeneficioEntreFechas(utils.FiltroEnvio) (float32, error)
 	ObtenerCantidadEnviosPorEstado() ([]utils.CantidadEstado, error)
-	AgregarParada(*dto.Envio) (bool, error)
+	AgregarParada(*dto.Parada) (bool, error)
 	CambiarEstadoEnvio(*dto.Envio) (bool, error)
 }
 
@@ -285,8 +285,10 @@ func (service *EnvioService) ObtenerCantidadEnviosPorEstado() ([]utils.CantidadE
 	return cantidadEnviosPorEstados, nil
 }
 
-func (service *EnvioService) AgregarParada(envio *dto.Envio) (bool, error) {
-	//En teoria, recibimos un envio que tiene solamente id y la nueva parada
+func (service *EnvioService) AgregarParada(parada *dto.Parada) (bool, error) {
+	//Recibimos la parada con el id del envio a ingresarla
+	envio := dto.Envio{Id: parada.IdEnvio}
+
 	//Primero buscamos el envio por id
 	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envio.GetModel())
 
