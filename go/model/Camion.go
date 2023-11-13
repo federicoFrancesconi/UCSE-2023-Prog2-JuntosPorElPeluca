@@ -13,7 +13,7 @@ type Camion struct {
 	CostoPorKilometro        float32            `bson:"costo_por_kilometro"`
 	FechaCreacion            time.Time          `bson:"fecha_creacion"`
 	FechaUltimaActualizacion time.Time          `bson:"fecha_ultima_actualizacion"`
-	IdCreador                int                `bson:"id_creador"`
+	IdCreador                string             `bson:"id_creador"`
 }
 
 //funcion para validar,

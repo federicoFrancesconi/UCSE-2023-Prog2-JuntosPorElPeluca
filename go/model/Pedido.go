@@ -13,5 +13,5 @@ type Pedido struct {
 	Estado                   EstadoPedido       `bson:"estado"`
 	FechaCreacion            time.Time          `bson:"fecha_creacion"`
 	FechaUltimaActualizacion time.Time          `bson:"fecha_ultima_actualizacion"`
-	IdCreador                int                `bson:"id_creador"`
+	IdCreador                string             `bson:"id_creador"`
 }

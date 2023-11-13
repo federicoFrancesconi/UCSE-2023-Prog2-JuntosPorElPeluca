@@ -13,7 +13,7 @@ type ProductoService struct {
 }
 
 type ProductoServiceInterface interface {
-	CrearProducto(*dto.Producto) error
+	CrearProducto(*dto.Producto, *dto.User) error
 	ObtenerProductos(utils.FiltroProducto) ([]dto.Producto, error)
 	ActualizarProducto(*dto.Producto) error
 	EliminarProducto(*dto.Producto) error
@@ -25,13 +25,13 @@ func NewProductoService(repository repositories.ProductoRepositoryInterface) *Pr
 	}
 }
 
-func (service *ProductoService) CrearProducto(producto *dto.Producto) error {
+func (service *ProductoService) CrearProducto(producto *dto.Producto, usuario *dto.User) error {
 	//Valido el tipo de producto
 	if !model.EsUnTipoProductoValido(producto.TipoDeProducto) {
 		return errors.New("el tipo de producto ingresado no es válido")
 	}
 
-	return service.repository.CrearProducto(producto.GetModel())
+	return service.repository.CrearProducto(producto.GetModel(), usuario.Codigo)
 }
 
 func (service *ProductoService) ObtenerProductos(filtro utils.FiltroProducto) ([]dto.Producto, error) {

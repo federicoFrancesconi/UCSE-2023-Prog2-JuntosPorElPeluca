@@ -74,7 +74,7 @@ func (handler *CamionHandler) CrearCamion(c *gin.Context) {
 	}
 
 	//Si hay un error, lo devolvemos
-	if err := handler.camionService.CrearCamion(&camion); err != nil {
+	if err := handler.camionService.CrearCamion(&camion, &user); err != nil {
 		log.Printf("[handler:CamionHandler][method:CrearCamion][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

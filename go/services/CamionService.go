@@ -7,7 +7,7 @@ import (
 )
 
 type CamionServiceInterface interface {
-	CrearCamion(*dto.Camion) error
+	CrearCamion(*dto.Camion, *dto.User) error
 	ObtenerCamiones(utils.FiltroCamion) ([]*dto.Camion, error)
 	ActualizarCamion(*dto.Camion) error
 	EliminarCamion(*dto.Camion) error
@@ -21,8 +21,8 @@ func NewCamionService(camionRepository repositories.CamionRepositoryInterface) *
 	return &CamionService{camionRepository: camionRepository}
 }
 
-func (service *CamionService) CrearCamion(camion *dto.Camion) error {
-	return service.camionRepository.CrearCamion(camion.GetModel())
+func (service *CamionService) CrearCamion(camion *dto.Camion, usuario *dto.User) error {
+	return service.camionRepository.CrearCamion(camion.GetModel(), usuario.Codigo)
 }
 
 func (service *CamionService) ObtenerCamiones(filtro utils.FiltroCamion) ([]*dto.Camion, error) {

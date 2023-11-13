@@ -176,7 +176,7 @@ func (handler *EnvioHandler) CrearEnvio(c *gin.Context) {
 	}
 
 	//Si hay un error, lo devolvemos
-	if err := handler.envioService.CrearEnvio(&envio); err != nil {
+	if err := handler.envioService.CrearEnvio(&envio, &user); err != nil {
 		log.Printf("[handler:EnvioHandler][method:CrearEnvio][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

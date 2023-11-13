@@ -13,7 +13,7 @@ import (
 )
 
 type CamionRepositoryInterface interface {
-	CrearCamion(model.Camion) error
+	CrearCamion(model.Camion, string) error
 	ObtenerCamiones(utils.FiltroCamion) ([]model.Camion, error)
 	ActualizarCamion(model.Camion) error
 	EliminarCamion(model.Camion) error
@@ -29,13 +29,14 @@ func NewCamionRepository(db database.DB) *CamionRepository {
 	}
 }
 
-func (repository CamionRepository) CrearCamion(camion model.Camion) error {
+func (repository CamionRepository) CrearCamion(camion model.Camion, codigoUsuario string) error {
 	//Nos aseguramos de que el Id sea creado por mongo
 	camion.ObjectId = primitive.NewObjectID()
 
 	//Seteamos las fechas para el objeto camion
 	camion.FechaCreacion = time.Now()
 	camion.FechaUltimaActualizacion = time.Now()
+	camion.IdCreador = codigoUsuario
 
 	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
 	_, err := collection.InsertOne(context.Background(), camion)

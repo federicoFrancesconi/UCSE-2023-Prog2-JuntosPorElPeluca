@@ -10,7 +10,7 @@ import (
 )
 
 type EnvioServiceInterface interface {
-	CrearEnvio(*dto.Envio) error
+	CrearEnvio(*dto.Envio, *dto.User) error
 	ObtenerEnviosFiltrados(utils.FiltroEnvio) ([]*dto.Envio, error)
 	ObtenerEnvioPorId(*dto.Envio) (*dto.Envio, error)
 	ObtenerBeneficioEntreFechas(utils.FiltroEnvio) (float32, error)
@@ -35,7 +35,7 @@ func NewEnvioService(envioRepository repositories.EnvioRepositoryInterface, cami
 	}
 }
 
-func (service *EnvioService) CrearEnvio(envio *dto.Envio) error {
+func (service *EnvioService) CrearEnvio(envio *dto.Envio, usuario *dto.User) error {
 	envioCabeEnCamion, err := service.envioCabeEnCamion(envio)
 
 	if err != nil {
@@ -57,7 +57,7 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio) error {
 		return err
 	}
 
-	return service.envioRepository.CrearEnvio(envio.GetModel())
+	return service.envioRepository.CrearEnvio(envio.GetModel(), usuario.Codigo)
 }
 
 func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvio) ([]*dto.Envio, error) {

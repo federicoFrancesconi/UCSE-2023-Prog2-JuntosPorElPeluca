@@ -13,7 +13,7 @@ type Envio struct {
 	PatenteCamion            string            `json:"patente_camion"`
 	Paradas                  []Parada          `json:"paradas"`
 	Pedidos                  []string          `json:"pedidos"`
-	IdCreador                int               `json:"id_creador"`
+	IdCreador                string            `json:"id_creador"`
 	Estado                   model.EstadoEnvio `json:"estado"`
 }
 

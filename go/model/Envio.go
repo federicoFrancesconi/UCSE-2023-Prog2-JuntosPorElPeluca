@@ -13,6 +13,6 @@ type Envio struct {
 	PatenteCamion            string             `bson:"patente_camion"`
 	Paradas                  []Parada           `bson:"paradas"`
 	Pedidos                  []string           `bson:"pedidos"`
-	IdCreador                int                `bson:"id_creador"`
+	IdCreador                string             `bson:"id_creador"`
 	Estado                   EstadoEnvio        `bson:"estado"`
 }

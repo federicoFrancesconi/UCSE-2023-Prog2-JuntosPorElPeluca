@@ -13,7 +13,7 @@ import (
 )
 
 type EnvioRepositoryInterface interface {
-	CrearEnvio(envio model.Envio) error
+	CrearEnvio(envio model.Envio, idCreador string) error
 	ObtenerEnvioPorId(envio model.Envio) (model.Envio, error)
 	ObtenerEnviosFiltrados(utils.FiltroEnvio) ([]model.Envio, error)
 	ObtenerCantidadEnviosPorEstado(estado model.EstadoEnvio) (int, error)
@@ -30,7 +30,7 @@ func NewEnvioRepository(db database.DB) *EnvioRepository {
 	}
 }
 
-func (repository EnvioRepository) CrearEnvio(envio model.Envio) error {
+func (repository EnvioRepository) CrearEnvio(envio model.Envio, idCreador string) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 
 	//Aseguramos que el id sea creado por mongo
@@ -39,6 +39,7 @@ func (repository EnvioRepository) CrearEnvio(envio model.Envio) error {
 	//Coloco las fechas
 	envio.FechaCreacion = time.Now()
 	envio.FechaUltimaActualizacion = time.Now()
+	envio.IdCreador = idCreador
 
 	_, err := collection.InsertOne(context.Background(), envio)
 

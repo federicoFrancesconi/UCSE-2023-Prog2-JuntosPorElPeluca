@@ -74,7 +74,7 @@ func (handler *ProductoHandler) CrearProducto(c *gin.Context) {
 	}
 
 	//Creamos el producto en la base de datos
-	if err := handler.productoService.CrearProducto(&producto); err != nil {
+	if err := handler.productoService.CrearProducto(&producto, &user); err != nil {
 		log.Printf("[handler:ProductoHandler][method:CrearProducto][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

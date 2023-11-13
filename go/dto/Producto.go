@@ -16,7 +16,7 @@ type Producto struct {
 	StockActual              int                `json:"stock_actual"`
 	FechaCreacion            time.Time          `json:"fecha_creacion"`
 	FechaUltimaActualizacion time.Time          `json:"fecha_ultima_actualizacion"`
-	IdCreador                int                `json:"id_creador"`
+	IdCreador                string             `json:"id_creador"`
 }
 
 // Crea el dto a partir del modelo

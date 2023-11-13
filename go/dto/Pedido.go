@@ -13,7 +13,7 @@ type Pedido struct {
 	Estado                   model.EstadoPedido `json:"estado"`
 	FechaCreacion            time.Time          `json:"fecha_creacion"`
 	FechaUltimaActualizacion time.Time          `json:"fecha_ultima_actualizacion"`
-	IdCreador                int                `json:"id_creador"`
+	IdCreador                string             `json:"id_creador"`
 }
 
 // Metodo para obtener el modelo a partir del dto

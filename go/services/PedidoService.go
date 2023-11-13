@@ -15,7 +15,7 @@ type PedidoService struct {
 }
 
 type PedidoServiceInterface interface {
-	CrearPedido(*dto.Pedido) error
+	CrearPedido(*dto.Pedido, *dto.User) error
 	ObtenerPedidoPorId(*dto.Pedido) (*dto.Pedido, error)
 	ObtenerPedidosFiltrados(utils.FiltroPedido) ([]dto.Pedido, error)
 	ObtenerCantidadPedidosPorEstado() ([]utils.CantidadEstado, error)
@@ -31,13 +31,13 @@ func NewPedidoService(pedidoRepository repositories.PedidoRepositoryInterface, e
 	}
 }
 
-func (service *PedidoService) CrearPedido(pedido *dto.Pedido) error {
+func (service *PedidoService) CrearPedido(pedido *dto.Pedido, usuario *dto.User) error {
 	//Obligamos a que el estado del pedido sea Pendiente
 	if pedido.Estado != model.Pendiente {
 		pedido.Estado = model.Pendiente
 	}
 
-	return service.pedidoRepository.CrearPedido(pedido.GetModel())
+	return service.pedidoRepository.CrearPedido(pedido.GetModel(), usuario.Codigo)
 }
 
 func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroPedido) ([]dto.Pedido, error) {

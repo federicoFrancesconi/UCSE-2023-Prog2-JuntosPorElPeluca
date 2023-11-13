@@ -11,7 +11,7 @@ type Camion struct {
 	CostoPorKilometro        float32   `json:"costo_por_kilometro"`
 	FechaCreacion            time.Time `json:"fecha_creacion"`
 	FechaUltimaActualizacion time.Time `json:"fecha_ultima_actualizacion"`
-	IdCreador                int       `json:"id_creador"`
+	IdCreador                string    `json:"id_creador"`
 }
 
 func NewCamion(camion model.Camion) *Camion {

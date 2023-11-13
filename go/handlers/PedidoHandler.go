@@ -109,7 +109,7 @@ func (handler *PedidoHandler) CrearPedido(c *gin.Context) {
 	}
 
 	//Creamos el pedido en la base de datos
-	if err := handler.pedidoService.CrearPedido(&pedido); err != nil {
+	if err := handler.pedidoService.CrearPedido(&pedido, &user); err != nil {
 		log.Printf("[handler:PedidoHandler][method:CrearPedido][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
