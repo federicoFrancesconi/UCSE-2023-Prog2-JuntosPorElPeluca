@@ -13,8 +13,8 @@ type EnvioServiceInterface interface {
 	CrearEnvio(*dto.Envio, *dto.User) error
 	ObtenerEnviosFiltrados(utils.FiltroEnvio, *dto.User) ([]*dto.Envio, error)
 	ObtenerEnvioPorId(*dto.Envio, *dto.User) (*dto.Envio, error)
-	ObtenerBeneficioEntreFechas(utils.FiltroEnvio) (float32, error)
-	ObtenerCantidadEnviosPorEstado(*dto.User) ([]utils.CantidadEstado, error)
+	ObtenerBeneficioEntreFechas(utils.FiltroEnvio, *dto.User) (float32, error)
+	ObtenerCantidadEnviosPorEstado() ([]utils.CantidadEstado, error)
 	AgregarParada(*dto.Parada, *dto.User) (bool, error)
 	CambiarEstadoEnvio(*dto.Envio, *dto.User) (bool, error)
 }
@@ -65,7 +65,7 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio, usuario *dto.User) err
 	return service.envioRepository.CrearEnvio(envio.GetModel(), usuario.Codigo)
 }
 
-func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvio, usuario dto.User) ([]*dto.Envio, error) {
+func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvio, usuario *dto.User) ([]*dto.Envio, error) {
 	//Validamos el estado que se paso para filtrar
 	if filtroEnvio.Estado != "" {
 		if !model.EsUnEstadoEnvioValido(filtroEnvio.Estado) {
@@ -188,7 +188,7 @@ func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido, usuario *
 	return service.pedidoRepository.ActualizarPedido(*pedido)
 }
 
-func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvio, usuario dto.User) (float32, error) {
+func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvio, usuario *dto.User) (float32, error) {
 	//Le agrega el estado despachado al filtro, ya que el beneficio lo tienen los despachados
 	filtro.Estado = model.Despachado
 

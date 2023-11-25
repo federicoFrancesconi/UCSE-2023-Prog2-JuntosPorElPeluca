@@ -91,6 +91,8 @@ func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
 }
 
 func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
+	user := dto.NewUser(utils.GetUserInfoFromContext(c))
+
 	// Convierte las fechas string a time.Time
 	fechaDesdeStr := c.DefaultQuery("fechaDesde", "0001-01-01")
 	fechaDesde, err := time.Parse("2006-01-02", fechaDesdeStr)
@@ -127,7 +129,7 @@ func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 	}
 
 	//Llama al service
-	beneficio, err := handler.envioService.ObtenerBeneficioEntreFechas(filtro)
+	beneficio, err := handler.envioService.ObtenerBeneficioEntreFechas(filtro, &user)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
@@ -150,7 +152,7 @@ func (handler *EnvioHandler) ObtenerCantidadEnviosPorEstado(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
 	//Obtenemos el array de cantidades del service
-	cantidades, err := handler.envioService.ObtenerCantidadEnviosPorEstado(&user)
+	cantidades, err := handler.envioService.ObtenerCantidadEnviosPorEstado()
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
