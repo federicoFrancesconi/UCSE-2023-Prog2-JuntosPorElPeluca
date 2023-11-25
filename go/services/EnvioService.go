@@ -11,12 +11,12 @@ import (
 
 type EnvioServiceInterface interface {
 	CrearEnvio(*dto.Envio, *dto.User) error
-	ObtenerEnviosFiltrados(utils.FiltroEnvio) ([]*dto.Envio, error)
-	ObtenerEnvioPorId(*dto.Envio) (*dto.Envio, error)
+	ObtenerEnviosFiltrados(utils.FiltroEnvio, *dto.User) ([]*dto.Envio, error)
+	ObtenerEnvioPorId(*dto.Envio, *dto.User) (*dto.Envio, error)
 	ObtenerBeneficioEntreFechas(utils.FiltroEnvio) (float32, error)
-	ObtenerCantidadEnviosPorEstado() ([]utils.CantidadEstado, error)
-	AgregarParada(*dto.Parada) (bool, error)
-	CambiarEstadoEnvio(*dto.Envio) (bool, error)
+	ObtenerCantidadEnviosPorEstado(*dto.User) ([]utils.CantidadEstado, error)
+	AgregarParada(*dto.Parada, *dto.User) (bool, error)
+	CambiarEstadoEnvio(*dto.Envio, *dto.User) (bool, error)
 }
 
 type EnvioService struct {
@@ -36,6 +36,11 @@ func NewEnvioService(envioRepository repositories.EnvioRepositoryInterface, cami
 }
 
 func (service *EnvioService) CrearEnvio(envio *dto.Envio, usuario *dto.User) error {
+	//valido que el envio lo este creando un camionero
+	if usuario.Rol == "Conductor" {
+		return errors.New("el usuario no tiene permisos para crear un envio")
+	}
+
 	envioCabeEnCamion, err := service.envioCabeEnCamion(envio)
 
 	if err != nil {
@@ -51,7 +56,7 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio, usuario *dto.User) err
 	envio.Estado = model.ADespachar
 
 	//Cambio el estado de los pedidos del envio
-	err = service.enviarPedidosDeEnvio(envio)
+	err = service.enviarPedidosDeEnvio(envio, usuario)
 
 	if err != nil {
 		return err
@@ -60,7 +65,7 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio, usuario *dto.User) err
 	return service.envioRepository.CrearEnvio(envio.GetModel(), usuario.Codigo)
 }
 
-func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvio) ([]*dto.Envio, error) {
+func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvio, usuario dto.User) ([]*dto.Envio, error) {
 	//Validamos el estado que se paso para filtrar
 	if filtroEnvio.Estado != "" {
 		if !model.EsUnEstadoEnvioValido(filtroEnvio.Estado) {
@@ -78,13 +83,15 @@ func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvi
 	envios := []*dto.Envio{}
 
 	for _, envioDB := range enviosDB {
-		envio := dto.NewEnvio(envioDB)
-		envios = append(envios, envio)
+		if usuario.Codigo == envioDB.IdCreador && usuario.Rol == "Conductor" {
+			envio := dto.NewEnvio(envioDB)
+			envios = append(envios, envio)
+		}
 	}
 	return envios, nil
 }
 
-func (service *EnvioService) ObtenerEnvioPorId(envioConID *dto.Envio) (*dto.Envio, error) {
+func (service *EnvioService) ObtenerEnvioPorId(envioConID *dto.Envio, usuario *dto.User) (*dto.Envio, error) {
 	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envioConID.GetModel())
 
 	//Inicializamos el envio por si no hay ninguno
@@ -94,6 +101,11 @@ func (service *EnvioService) ObtenerEnvioPorId(envioConID *dto.Envio) (*dto.Envi
 		return nil, err
 	} else {
 		envio = dto.NewEnvio(envioDB)
+	}
+
+	//valido que el envio sea del camionero que lo esta filtrando
+	if envio.IdCreador != usuario.Codigo {
+		return nil, errors.New("el envio no pertenece al camionero")
 	}
 
 	return envio, nil
@@ -139,9 +151,9 @@ func (service *EnvioService) envioCabeEnCamion(envio *dto.Envio) (bool, error) {
 	}
 }
 
-func (service *EnvioService) enviarPedidosDeEnvio(envio *dto.Envio) error {
+func (service *EnvioService) enviarPedidosDeEnvio(envio *dto.Envio, usuario *dto.User) error {
 	for _, idPedido := range envio.Pedidos {
-		err := service.enviarPedido(&dto.Pedido{Id: idPedido})
+		err := service.enviarPedido(&dto.Pedido{Id: idPedido}, usuario)
 		if err != nil {
 			return err
 		}
@@ -149,12 +161,17 @@ func (service *EnvioService) enviarPedidosDeEnvio(envio *dto.Envio) error {
 	return nil
 }
 
-func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido) error {
+func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido, usuario *dto.User) error {
 	//Primero buscamos el pedido a enviar
 	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoPorEnviar.GetModel())
 
 	if err != nil {
 		return err
+	}
+
+	//valida que el pedido sea del camionero que lo esta filtrando
+	if pedido.IdCreador != usuario.Codigo {
+		return errors.New("el pedido no pertenece al camionero")
 	}
 
 	//Valida que el pedido esté en estado Aceptado
@@ -171,12 +188,12 @@ func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido) error {
 	return service.pedidoRepository.ActualizarPedido(*pedido)
 }
 
-func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvio) (float32, error) {
+func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvio, usuario dto.User) (float32, error) {
 	//Le agrega el estado despachado al filtro, ya que el beneficio lo tienen los despachados
 	filtro.Estado = model.Despachado
 
 	//Obtengo los envios despachados entre las dos fechas pasadas como parametro
-	envios, err := service.ObtenerEnviosFiltrados(filtro)
+	envios, err := service.ObtenerEnviosFiltrados(filtro, usuario)
 
 	if err != nil {
 		return 0, err
@@ -285,12 +302,17 @@ func (service *EnvioService) ObtenerCantidadEnviosPorEstado() ([]utils.CantidadE
 	return cantidadEnviosPorEstados, nil
 }
 
-func (service *EnvioService) AgregarParada(parada *dto.Parada) (bool, error) {
+func (service *EnvioService) AgregarParada(parada *dto.Parada, usuario *dto.User) (bool, error) {
 	//Recibimos la parada con el id del envio a ingresarla
 	envio := dto.Envio{Id: parada.IdEnvio}
 
 	//Primero buscamos el envio por id
 	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envio.GetModel())
+
+	//Validamos que el envio pertenezca al camionero
+	if envioDB.IdCreador != usuario.Codigo {
+		return false, errors.New("el envio no pertenece al camionero")
+	}
 
 	if err != nil {
 		return false, err
@@ -308,7 +330,7 @@ func (service *EnvioService) AgregarParada(parada *dto.Parada) (bool, error) {
 	return true, service.envioRepository.ActualizarEnvio(envioDB)
 }
 
-func (service *EnvioService) CambiarEstadoEnvio(envio *dto.Envio) (bool, error) {
+func (service *EnvioService) CambiarEstadoEnvio(envio *dto.Envio, usuario *dto.User) (bool, error) {
 	//El estado deseado es el que se pasa con el objeto envio como parametro
 	estadoDeseado := envio.Estado
 
@@ -322,6 +344,11 @@ func (service *EnvioService) CambiarEstadoEnvio(envio *dto.Envio) (bool, error) 
 
 	if err != nil {
 		return false, err
+	}
+
+	//Validamos que el envio pertenezca al camionero
+	if envioDB.IdCreador != usuario.Codigo {
+		return false, errors.New("el envio no pertenece al camionero")
 	}
 
 	//Si el estado del envio no es compatible con el deseado, devolvemos un error

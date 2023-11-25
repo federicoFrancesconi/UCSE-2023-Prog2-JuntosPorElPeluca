@@ -53,7 +53,7 @@ func (handler *EnvioHandler) ObtenerEnvios(c *gin.Context) {
 	}
 
 	//Llama al service
-	envios, err := handler.envioService.ObtenerEnviosFiltrados(filtro)
+	envios, err := handler.envioService.ObtenerEnviosFiltrados(filtro, &user)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
@@ -74,7 +74,7 @@ func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
 
 	id := c.Param("id")
 
-	envio, err := handler.envioService.ObtenerEnvioPorId(&dto.Envio{Id: id})
+	envio, err := handler.envioService.ObtenerEnvioPorId(&dto.Envio{Id: id}, &user)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
@@ -150,7 +150,7 @@ func (handler *EnvioHandler) ObtenerCantidadEnviosPorEstado(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
 	//Obtenemos el array de cantidades del service
-	cantidades, err := handler.envioService.ObtenerCantidadEnviosPorEstado()
+	cantidades, err := handler.envioService.ObtenerCantidadEnviosPorEstado(&user)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
@@ -199,7 +199,7 @@ func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 		return
 	}
 
-	operacion, err := handler.envioService.AgregarParada(&parada)
+	operacion, err := handler.envioService.AgregarParada(&parada, &user)
 	if err != nil {
 		log.Printf("[handler:EnvioHandler][method:AgregarParada][parada:%+v][user:%s]", err.Error(), user.Codigo)
 
@@ -231,7 +231,7 @@ func (handler *EnvioHandler) CambiarEstadoEnvio(c *gin.Context) {
 		return
 	}
 
-	operacion, err := handler.envioService.CambiarEstadoEnvio(&envio)
+	operacion, err := handler.envioService.CambiarEstadoEnvio(&envio, &user)
 	if err != nil {
 		log.Printf("[handler:EnvioHandler][method:CambiarEstadoEnvio][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
