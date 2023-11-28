@@ -15,8 +15,8 @@ type ProductoService struct {
 type ProductoServiceInterface interface {
 	CrearProducto(*dto.Producto, *dto.User) error
 	ObtenerProductos(utils.FiltroProducto) ([]dto.Producto, error)
-	ActualizarProducto(*dto.Producto) error
-	EliminarProducto(*dto.Producto) error
+	ActualizarProducto(*dto.Producto, *dto.User) error
+	EliminarProducto(*dto.Producto, *dto.User) error
 }
 
 func NewProductoService(repository repositories.ProductoRepositoryInterface) *ProductoService {
@@ -29,6 +29,11 @@ func (service *ProductoService) CrearProducto(producto *dto.Producto, usuario *d
 	//Valido el tipo de producto
 	if !model.EsUnTipoProductoValido(producto.TipoDeProducto) {
 		return errors.New("el tipo de producto ingresado no es válido")
+	}
+
+	//valido el usuario
+	if !service.validarRol(usuario) {
+		return errors.New("el usuario no tiene permisos para crear un producto")
 	}
 
 	return service.repository.CrearProducto(producto.GetModel(), usuario.Codigo)
@@ -56,15 +61,29 @@ func (service *ProductoService) ObtenerProductos(filtro utils.FiltroProducto) ([
 	return productosDTO, nil
 }
 
-func (service *ProductoService) ActualizarProducto(producto *dto.Producto) error {
+func (service *ProductoService) ActualizarProducto(producto *dto.Producto, usuario *dto.User) error {
 	//Valido el tipo de producto
 	if !model.EsUnTipoProductoValido(producto.TipoDeProducto) {
 		return errors.New("el tipo de producto ingresado no es válido")
 	}
 
+	//valido el usuario
+	if !service.validarRol(usuario) {
+		return errors.New("el usuario no tiene permisos para actualizar un producto")
+	}
+
 	return service.repository.ActualizarProducto(producto.GetModel())
 }
 
-func (service *ProductoService) EliminarProducto(producto *dto.Producto) error {
+func (service *ProductoService) EliminarProducto(producto *dto.Producto, usuario *dto.User) error {
+	//valido el usuario
+	if !service.validarRol(usuario) {
+		return errors.New("el usuario no tiene permisos para eliminar un producto")
+	}
+
 	return service.repository.EliminarProducto(producto.GetModel())
+}
+
+func (service *ProductoService) validarRol(usuario *dto.User) bool {
+	return usuario.Rol == "Administrador"
 }

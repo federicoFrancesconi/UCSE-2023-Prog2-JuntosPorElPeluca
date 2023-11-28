@@ -102,7 +102,7 @@ func (handler *ProductoHandler) ActualizarProducto(c *gin.Context) {
 	}
 
 	//Actualizamos el producto en la base de datos
-	if err := handler.productoService.ActualizarProducto(&producto); err != nil {
+	if err := handler.productoService.ActualizarProducto(&producto, &user); err != nil {
 		log.Printf("[handler:ProductoHandler][method:ActualizarProducto][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -126,7 +126,7 @@ func (handler *ProductoHandler) EliminarProducto(c *gin.Context) {
 	producto := dto.Producto{CodigoProducto: codigo}
 
 	//Eliminamos el producto de la base de datos
-	if err := handler.productoService.EliminarProducto(&producto); err != nil {
+	if err := handler.productoService.EliminarProducto(&producto, &user); err != nil {
 		log.Printf("[handler:ProductoHandler][method:EliminarProducto][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
