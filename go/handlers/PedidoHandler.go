@@ -131,7 +131,7 @@ func (handler *PedidoHandler) AceptarPedido(c *gin.Context) {
 	pedido := dto.Pedido{Id: id}
 
 	//Aceptamos el pedido
-	if err := handler.pedidoService.AceptarPedido(&pedido); err != nil {
+	if err := handler.pedidoService.AceptarPedido(&pedido, &user); err != nil {
 		log.Printf("[handler:PedidoHandler][method:AceptarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -150,7 +150,7 @@ func (handler *PedidoHandler) CancelarPedido(c *gin.Context) {
 	pedido := dto.Pedido{Id: id}
 
 	//Cancelamos el pedido
-	if err := handler.pedidoService.CancelarPedido(&pedido); err != nil {
+	if err := handler.pedidoService.CancelarPedido(&pedido, &user); err != nil {
 		log.Printf("[handler:PedidoHandler][method:CancelarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

@@ -19,8 +19,8 @@ type PedidoServiceInterface interface {
 	ObtenerPedidoPorId(*dto.Pedido) (*dto.Pedido, error)
 	ObtenerPedidosFiltrados(utils.FiltroPedido) ([]dto.Pedido, error)
 	ObtenerCantidadPedidosPorEstado() ([]utils.CantidadEstado, error)
-	AceptarPedido(*dto.Pedido) error
-	CancelarPedido(*dto.Pedido) error
+	AceptarPedido(*dto.Pedido, *dto.User) error
+	CancelarPedido(*dto.Pedido, *dto.User) error
 }
 
 func NewPedidoService(pedidoRepository repositories.PedidoRepositoryInterface, envioRepository repositories.EnvioRepositoryInterface, productoRepository repositories.ProductoRepositoryInterface) *PedidoService {
@@ -32,6 +32,11 @@ func NewPedidoService(pedidoRepository repositories.PedidoRepositoryInterface, e
 }
 
 func (service *PedidoService) CrearPedido(pedido *dto.Pedido, usuario *dto.User) error {
+	//Validamos el rol del usuario
+	if !service.validarRol(usuario) {
+		return errors.New("el usuario no tiene permisos para crear un pedido")
+	}
+
 	//Obligamos a que el estado del pedido sea Pendiente
 	if pedido.Estado != model.Pendiente {
 		pedido.Estado = model.Pendiente
@@ -106,7 +111,12 @@ func (service *PedidoService) ObtenerPedidoPorId(pedidoConId *dto.Pedido) (*dto.
 	}
 }
 
-func (service *PedidoService) AceptarPedido(pedidoPorAceptar *dto.Pedido) error {
+func (service *PedidoService) AceptarPedido(pedidoPorAceptar *dto.Pedido, usuario *dto.User) error {
+	//Validamos el rol del usuario
+	if !service.validarRol(usuario) {
+		return errors.New("el usuario no tiene permisos para aceptar el pedido")
+	}
+
 	//Primero buscamos el pedido a aceptar
 	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoPorAceptar.GetModel())
 
@@ -204,7 +214,12 @@ func (service *PedidoService) ObtenerCantidadPedidosPorEstado() ([]utils.Cantida
 	return cantidadPedidosPorEstados, nil
 }
 
-func (service *PedidoService) CancelarPedido(pedidoPorCancelar *dto.Pedido) error {
+func (service *PedidoService) CancelarPedido(pedidoPorCancelar *dto.Pedido, usuario *dto.User) error {
+	//Validamos el rol del usuario
+	if !service.validarRol(usuario) {
+		return errors.New("el usuario no tiene permisos para crear un pedido")
+	}
+
 	//Primero buscamos el pedido a cancelar
 	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoPorCancelar.GetModel())
 
@@ -224,4 +239,9 @@ func (service *PedidoService) CancelarPedido(pedidoPorCancelar *dto.Pedido) erro
 
 	//Actualiza el pedido en la base de datos
 	return service.pedidoRepository.ActualizarPedido(*pedido)
+}
+
+// valida el rol del usuario
+func (service *PedidoService) validarRol(usuario *dto.User) bool {
+	return usuario.Rol == "Operador"
 }
