@@ -56,7 +56,7 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio, usuario *dto.User) err
 	envio.Estado = model.ADespachar
 
 	//Cambio el estado de los pedidos del envio
-	err = service.enviarPedidosDeEnvio(envio, usuario)
+	err = service.enviarPedidosDeEnvio(envio)
 
 	if err != nil {
 		return err
@@ -83,9 +83,14 @@ func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvi
 	envios := []*dto.Envio{}
 
 	for _, envioDB := range enviosDB {
-		if usuario.Codigo == envioDB.IdCreador && usuario.Rol == "Conductor" {
+		//valido que el envio sea del camionero que lo esta filtrando
+		valido, err := service.validarUsuario(dto.NewEnvio(envioDB), usuario)
+
+		if valido && err == nil {
 			envio := dto.NewEnvio(envioDB)
 			envios = append(envios, envio)
+		} else if err != nil {
+			return nil, err
 		}
 	}
 	return envios, nil
@@ -104,8 +109,10 @@ func (service *EnvioService) ObtenerEnvioPorId(envioConID *dto.Envio, usuario *d
 	}
 
 	//valido que el envio sea del camionero que lo esta filtrando
-	if envio.IdCreador != usuario.Codigo {
-		return nil, errors.New("el envio no pertenece al camionero")
+	valido, err := service.validarUsuario(envio, usuario)
+
+	if !valido && err != nil {
+		return nil, err
 	}
 
 	return envio, nil
@@ -151,9 +158,9 @@ func (service *EnvioService) envioCabeEnCamion(envio *dto.Envio) (bool, error) {
 	}
 }
 
-func (service *EnvioService) enviarPedidosDeEnvio(envio *dto.Envio, usuario *dto.User) error {
+func (service *EnvioService) enviarPedidosDeEnvio(envio *dto.Envio) error {
 	for _, idPedido := range envio.Pedidos {
-		err := service.enviarPedido(&dto.Pedido{Id: idPedido}, usuario)
+		err := service.enviarPedido(&dto.Pedido{Id: idPedido})
 		if err != nil {
 			return err
 		}
@@ -161,17 +168,12 @@ func (service *EnvioService) enviarPedidosDeEnvio(envio *dto.Envio, usuario *dto
 	return nil
 }
 
-func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido, usuario *dto.User) error {
+func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido) error {
 	//Primero buscamos el pedido a enviar
 	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoPorEnviar.GetModel())
 
 	if err != nil {
 		return err
-	}
-
-	//valida que el pedido sea del camionero que lo esta filtrando
-	if pedido.IdCreador != usuario.Codigo {
-		return errors.New("el pedido no pertenece al camionero")
 	}
 
 	//Valida que el pedido esté en estado Aceptado
@@ -309,13 +311,14 @@ func (service *EnvioService) AgregarParada(parada *dto.Parada, usuario *dto.User
 	//Primero buscamos el envio por id
 	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envio.GetModel())
 
-	//Validamos que el envio pertenezca al camionero
-	if envioDB.IdCreador != usuario.Codigo {
-		return false, errors.New("el envio no pertenece al camionero")
-	}
-
 	if err != nil {
 		return false, err
+	}
+
+	//Validamos que el envio pertenezca al camionero
+	valido, err := service.validarUsuario(&envio, usuario)
+	if !valido && err == nil {
+		return false, errors.New("el envio no pertenece al camionero")
 	}
 
 	//Validamos que el envio esté en estado EnRuta
@@ -347,8 +350,9 @@ func (service *EnvioService) CambiarEstadoEnvio(envio *dto.Envio, usuario *dto.U
 	}
 
 	//Validamos que el envio pertenezca al camionero
-	if envioDB.IdCreador != usuario.Codigo {
-		return false, errors.New("el envio no pertenece al camionero")
+	valido, err := service.validarUsuario(envio, usuario)
+	if !valido && err != nil {
+		return false, err
 	}
 
 	//Si el estado del envio no es compatible con el deseado, devolvemos un error
@@ -462,4 +466,25 @@ func (service *EnvioService) descontarStockProducto(productoPedido dto.ProductoP
 
 	//Actualizamos la base de datos
 	return service.productoRepository.ActualizarProducto(*producto)
+}
+
+func (service *EnvioService) validarUsuario(envio *dto.Envio, usuario *dto.User) (bool, error) {
+	//Primero buscamos el envio por id
+	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envio.GetModel())
+
+	if err != nil {
+		return false, err
+	}
+
+	//Validamos que el envio pertenezca al camionero
+	if envioDB.IdCreador != usuario.Codigo {
+		return false, errors.New("el envio no pertenece al camionero")
+	}
+
+	//Verifico si debe ser un conductor quien hace la consulta
+	if usuario.Rol != "Conductor" {
+		return false, errors.New("el usuario no tiene permisos ya que no es un conductor")
+	}
+
+	return true, nil
 }
