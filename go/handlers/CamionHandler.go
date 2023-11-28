@@ -97,7 +97,7 @@ func (handler *CamionHandler) ActualizarCamion(c *gin.Context) {
 	}
 
 	//Si hay un error, lo devolvemos
-	if err := handler.camionService.ActualizarCamion(&camion); err != nil {
+	if err := handler.camionService.ActualizarCamion(&camion, &user); err != nil {
 		log.Printf("[handler:CamionHandler][method:ActualizarCamion][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -119,7 +119,7 @@ func (handler *CamionHandler) EliminarCamion(c *gin.Context) {
 	camionConPatente := dto.Camion{Patente: patente}
 
 	//Si hay un error, lo devolvemos
-	if err := handler.camionService.EliminarCamion(&camionConPatente); err != nil {
+	if err := handler.camionService.EliminarCamion(&camionConPatente, &user); err != nil {
 		log.Printf("[handler:CamionHandler][method:EliminarCamion][envio:%+v][user:%s]", err.Error(), user.Codigo)
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

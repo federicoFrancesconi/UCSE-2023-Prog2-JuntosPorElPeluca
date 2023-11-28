@@ -4,13 +4,14 @@ import (
 	"UCSE-2023-Prog2-TPIntegrador/dto"
 	"UCSE-2023-Prog2-TPIntegrador/repositories"
 	"UCSE-2023-Prog2-TPIntegrador/utils"
+	"errors"
 )
 
 type CamionServiceInterface interface {
 	CrearCamion(*dto.Camion, *dto.User) error
 	ObtenerCamiones(utils.FiltroCamion) ([]*dto.Camion, error)
-	ActualizarCamion(*dto.Camion) error
-	EliminarCamion(*dto.Camion) error
+	ActualizarCamion(*dto.Camion, *dto.User) error
+	EliminarCamion(*dto.Camion, *dto.User) error
 }
 
 type CamionService struct {
@@ -22,6 +23,10 @@ func NewCamionService(camionRepository repositories.CamionRepositoryInterface) *
 }
 
 func (service *CamionService) CrearCamion(camion *dto.Camion, usuario *dto.User) error {
+	if service.validarRol(usuario) == false {
+		return errors.New("El usuario no tiene permisos para crear un camion")
+	}
+
 	return service.camionRepository.CrearCamion(camion.GetModel(), usuario.Codigo)
 }
 
@@ -43,10 +48,22 @@ func (service *CamionService) ObtenerCamiones(filtro utils.FiltroCamion) ([]*dto
 	return camiones, nil
 }
 
-func (service *CamionService) ActualizarCamion(camion *dto.Camion) error {
+func (service *CamionService) ActualizarCamion(camion *dto.Camion, usuario *dto.User) error {
+	if service.validarRol(usuario) == false {
+		return errors.New("El usuario no tiene permisos para actualizar un camion")
+	}
+
 	return service.camionRepository.ActualizarCamion(camion.GetModel())
 }
 
-func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion) error {
+func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion, usuario *dto.User) error {
+	if service.validarRol(usuario) == false {
+		return errors.New("El usuario no tiene permisos para eliminar un camion")
+	}
+
 	return service.camionRepository.EliminarCamion(camionConPatente.GetModel())
+}
+
+func (service *CamionService) validarRol(usuario *dto.User) bool {
+	return usuario.Rol == "Administrador"
 }
