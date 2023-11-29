@@ -62,6 +62,13 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio, usuario *dto.User) err
 		return err
 	}
 
+	//descontar stock de productos
+	err = service.descontarStockProductosDeEnvio(envio)
+
+	if err != nil {
+		return err
+	}
+
 	return service.envioRepository.CrearEnvio(envio.GetModel(), usuario.Codigo)
 }
 
@@ -380,13 +387,6 @@ func (service *EnvioService) CambiarEstadoEnvio(envio *dto.Envio, usuario *dto.U
 func (service *EnvioService) finalizarViaje(envio *dto.Envio) (bool, error) {
 	//pasar pedidos a estado enviado
 	err := service.entregarPedidosDeEnvio(envio)
-
-	if err != nil {
-		return false, err
-	}
-
-	//descontar stock de productos
-	err = service.descontarStockProductosDeEnvio(envio)
 
 	if err != nil {
 		return false, err

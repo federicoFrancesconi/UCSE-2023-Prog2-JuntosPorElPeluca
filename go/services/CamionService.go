@@ -23,8 +23,8 @@ func NewCamionService(camionRepository repositories.CamionRepositoryInterface) *
 }
 
 func (service *CamionService) CrearCamion(camion *dto.Camion, usuario *dto.User) error {
-	if service.validarRol(usuario) == false {
-		return errors.New("El usuario no tiene permisos para crear un camion")
+	if !service.validarRol(usuario) {
+		return errors.New("el usuario no tiene permisos para crear un camion")
 	}
 
 	return service.camionRepository.CrearCamion(camion.GetModel(), usuario.Codigo)
@@ -49,16 +49,16 @@ func (service *CamionService) ObtenerCamiones(filtro utils.FiltroCamion) ([]*dto
 }
 
 func (service *CamionService) ActualizarCamion(camion *dto.Camion, usuario *dto.User) error {
-	if service.validarRol(usuario) == false {
-		return errors.New("El usuario no tiene permisos para actualizar un camion")
+	if !service.validarRol(usuario) {
+		return errors.New("el usuario no tiene permisos para actualizar un camion")
 	}
 
 	return service.camionRepository.ActualizarCamion(camion.GetModel())
 }
 
 func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion, usuario *dto.User) error {
-	if service.validarRol(usuario) == false {
-		return errors.New("El usuario no tiene permisos para eliminar un camion")
+	if !service.validarRol(usuario) {
+		return errors.New("el usuario no tiene permisos para eliminar un camion")
 	}
 
 	return service.camionRepository.EliminarCamion(camionConPatente.GetModel())
