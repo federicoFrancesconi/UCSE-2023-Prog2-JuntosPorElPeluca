@@ -15,7 +15,7 @@ type EnvioServiceInterface interface {
 	ObtenerEnvioPorId(*dto.Envio, *dto.User) (*dto.Envio, error)
 	ObtenerBeneficioEntreFechas(utils.FiltroEnvio, *dto.User) (float32, error)
 	ObtenerCantidadEnviosPorEstado() ([]utils.CantidadEstado, error)
-	AgregarParada(*dto.Parada, *dto.User) (bool, error)
+	AgregarParada(*dto.NuevaParada, *dto.User) (bool, error)
 	CambiarEstadoEnvio(*dto.Envio, *dto.User) (bool, error)
 }
 
@@ -55,6 +55,9 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio, usuario *dto.User) err
 	//al crearlo coloco el envio en estado despachar
 	envio.Estado = model.ADespachar
 
+	//Indicamos el usuario que creo el envio
+	envio.IdCreador = usuario.Codigo
+
 	//Cambio el estado de los pedidos del envio
 	err = service.enviarPedidosDeEnvio(envio)
 
@@ -69,7 +72,7 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio, usuario *dto.User) err
 		return err
 	}
 
-	return service.envioRepository.CrearEnvio(envio.GetModel(), usuario.Codigo)
+	return service.envioRepository.CrearEnvio(envio.GetModel())
 }
 
 func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvio, usuario *dto.User) ([]*dto.Envio, error) {
@@ -311,19 +314,19 @@ func (service *EnvioService) ObtenerCantidadEnviosPorEstado() ([]utils.CantidadE
 	return cantidadEnviosPorEstados, nil
 }
 
-func (service *EnvioService) AgregarParada(parada *dto.Parada, usuario *dto.User) (bool, error) {
-	//Recibimos la parada con el id del envio a ingresarla
-	envio := dto.Envio{Id: parada.IdEnvio}
+func (service *EnvioService) AgregarParada(parada *dto.NuevaParada, usuario *dto.User) (bool, error) {
+	//Recibimos la parada con el id del envioSoloId a ingresarla
+	envioSoloId := dto.Envio{Id: parada.IdEnvio}
 
 	//Primero buscamos el envio por id
-	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envio.GetModel())
+	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envioSoloId.GetModel())
 
 	if err != nil {
 		return false, err
 	}
 
 	//Validamos que el envio pertenezca al camionero
-	valido, err := service.validarUsuario(&envio, usuario)
+	valido, err := service.validarUsuario(dto.NewEnvio(envioDB), usuario)
 	if !valido && err == nil {
 		return false, errors.New("el envio no pertenece al camionero")
 	}
@@ -334,7 +337,7 @@ func (service *EnvioService) AgregarParada(parada *dto.Parada, usuario *dto.User
 	}
 
 	//Agregamos la nueva parada al envio
-	envioDB.Paradas = append(envioDB.Paradas, envio.Paradas[0].GetModel())
+	envioDB.Paradas = append(envioDB.Paradas, parada.GetParada().GetModel())
 
 	//Actualizamos el envio en la base de datos, que ahora tiene la nueva parada
 	return true, service.envioRepository.ActualizarEnvio(envioDB)

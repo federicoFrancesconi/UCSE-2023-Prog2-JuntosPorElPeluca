@@ -195,7 +195,7 @@ func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
 	//Obtenemos la nueva parada
-	var parada dto.Parada
+	var parada dto.NuevaParada
 	if err := c.ShouldBindJSON(&parada); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
