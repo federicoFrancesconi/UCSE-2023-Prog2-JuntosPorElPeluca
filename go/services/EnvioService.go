@@ -183,12 +183,12 @@ func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido) error {
 	pedido, err := service.pedidoRepository.ObtenerPedidoPorId(pedidoPorEnviar.GetModel())
 
 	if err != nil {
-		return err
+		return errors.New("error buscando el pedido en la DB: " + err.Error())
 	}
 
 	//Valida que el pedido esté en estado Aceptado
 	if pedido.Estado != model.Aceptado {
-		return nil
+		return errors.New("el pedido " + pedidoPorEnviar.Id + " no se encuentra en estado Aceptado")
 	}
 
 	//Cambia el estado del pedido a Para enviar, si es que no estaba ya en ese estado
@@ -197,7 +197,13 @@ func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido) error {
 	}
 
 	//Actualiza el pedido en la base de datos
-	return service.pedidoRepository.ActualizarPedido(*pedido)
+	err = service.pedidoRepository.ActualizarPedido(*pedido)
+
+	if err != nil {
+		return errors.New("error actualizando el pedido en la DB: " + err.Error())
+	}
+
+	return nil
 }
 
 func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvio, usuario *dto.User) (float32, error) {
