@@ -42,7 +42,10 @@ func (service *PedidoService) CrearPedido(pedido *dto.Pedido, usuario *dto.User)
 		pedido.Estado = model.Pendiente
 	}
 
-	return service.pedidoRepository.CrearPedido(pedido.GetModel(), usuario.Codigo)
+	//Le agregamos el codigo del usuario que lo creo
+	pedido.IdCreador = usuario.Codigo
+
+	return service.pedidoRepository.CrearPedido(pedido.GetModel())
 }
 
 func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroPedido) ([]dto.Pedido, error) {

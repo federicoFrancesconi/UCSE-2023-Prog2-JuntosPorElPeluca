@@ -13,7 +13,7 @@ import (
 )
 
 type PedidoRepositoryInterface interface {
-	CrearPedido(model.Pedido, string) error
+	CrearPedido(model.Pedido) error
 	ObtenerPedidosFiltrados(utils.FiltroPedido) ([]*model.Pedido, error)
 	ObtenerPedidoPorId(model.Pedido) (*model.Pedido, error)
 	ObtenerCantidadPedidosPorEstado(estado model.EstadoPedido) (int, error)
@@ -30,14 +30,13 @@ func NewPedidoRepository(db database.DB) *PedidoRepository {
 	}
 }
 
-func (repository *PedidoRepository) CrearPedido(pedido model.Pedido, idCreador string) error {
+func (repository *PedidoRepository) CrearPedido(pedido model.Pedido) error {
 	//Nos aseguramos de que el Id sea creado por mongo
 	pedido.ObjectId = primitive.NewObjectID()
 
 	//Seteamos las fechas para el objeto pedido
 	pedido.FechaCreacion = time.Now()
 	pedido.FechaUltimaActualizacion = time.Now()
-	pedido.IdCreador = idCreador
 
 	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")
 

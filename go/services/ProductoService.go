@@ -36,7 +36,10 @@ func (service *ProductoService) CrearProducto(producto *dto.Producto, usuario *d
 		return errors.New("el usuario no tiene permisos para crear un producto")
 	}
 
-	return service.repository.CrearProducto(producto.GetModel(), usuario.Codigo)
+	//Le agregamos el codigo del usuario que lo creo
+	producto.IdCreador = usuario.Codigo
+
+	return service.repository.CrearProducto(producto.GetModel())
 }
 
 func (service *ProductoService) ObtenerProductos(filtro utils.FiltroProducto) ([]dto.Producto, error) {

@@ -27,7 +27,10 @@ func (service *CamionService) CrearCamion(camion *dto.Camion, usuario *dto.User)
 		return errors.New("el usuario no tiene permisos para crear un camion")
 	}
 
-	return service.camionRepository.CrearCamion(camion.GetModel(), usuario.Codigo)
+	//Le agregamos el codigo del usuario que lo creo
+	camion.IdCreador = usuario.Codigo
+
+	return service.camionRepository.CrearCamion(camion.GetModel())
 }
 
 func (service *CamionService) ObtenerCamiones(filtro utils.FiltroCamion) ([]*dto.Camion, error) {

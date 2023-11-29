@@ -13,11 +13,11 @@ import (
 )
 
 type EnvioRepositoryInterface interface {
-	CrearEnvio(envio model.Envio) error
-	ObtenerEnvioPorId(envio model.Envio) (model.Envio, error)
+	CrearEnvio(model.Envio) error
+	ObtenerEnvioPorId(model.Envio) (model.Envio, error)
 	ObtenerEnviosFiltrados(utils.FiltroEnvio) ([]model.Envio, error)
-	ObtenerCantidadEnviosPorEstado(estado model.EstadoEnvio) (int, error)
-	ActualizarEnvio(envio model.Envio) error
+	ObtenerCantidadEnviosPorEstado(model.EstadoEnvio) (int, error)
+	ActualizarEnvio(model.Envio) error
 }
 
 type EnvioRepository struct {

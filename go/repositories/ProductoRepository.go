@@ -13,7 +13,7 @@ import (
 )
 
 type ProductoRepositoryInterface interface {
-	CrearProducto(model.Producto, string) error
+	CrearProducto(model.Producto) error
 	ObtenerProductoPorCodigo(model.Producto) (*model.Producto, error)
 	ObtenerProductos(utils.FiltroProducto) ([]*model.Producto, error)
 	ActualizarProducto(model.Producto) error
@@ -30,14 +30,13 @@ func NewProductoRepository(db database.DB) *ProductoRepository {
 	}
 }
 
-func (repository *ProductoRepository) CrearProducto(producto model.Producto, idCreador string) error {
+func (repository *ProductoRepository) CrearProducto(producto model.Producto) error {
 	//Nos aseguramos de que el Id sea creado por mongo
 	producto.ObjectId = primitive.NewObjectID()
 
 	//Seteamos las fechas del producto
 	producto.FechaCreacion = time.Now()
 	producto.FechaUltimaActualizacion = time.Now()
-	producto.IdCreador = idCreador
 
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 	_, err := collection.InsertOne(context.Background(), producto)
