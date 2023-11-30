@@ -4,9 +4,8 @@ import (
 	"TPIntegrador/dto"
 	"TPIntegrador/services"
 	"TPIntegrador/utils"
+	"TPIntegrador/utils/logging"
 	"TPIntegrador/model"
-	"log"
-	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -31,16 +30,16 @@ func (handler *EnvioHandler) ObtenerEnvios(c *gin.Context) {
 	// Convierte las fechas string a time.Time
 	fechaCreacionDesdeStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01T00:00:00Z")
 	fechaCreacionDesde, err := time.Parse(time.RFC3339, fechaCreacionDesdeStr)
+	//Contemplamos si hay errores en el parseo
 	if err != nil {
-		// Si hay un error en el parseo, devuelve una fecha default
-		fechaCreacionDesde = time.Time{}
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "ObtenerEnvios", err, &user)
 	}
 
 	fechaCreacionHastaStr := c.DefaultQuery("fechaCreacionFin", "0001-01-01T00:00:00Z")
 	fechaCreacionHasta, err := time.Parse(time.RFC3339, fechaCreacionHastaStr)
+	//Contemplamos si hay errores en el parseo
 	if err != nil {
-		// Si hay un error en el parseo, devuelve una fecha default
-		fechaCreacionHasta = time.Time{}
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "ObtenerEnvios", err, &user)
 	}
 
 	//Creamos el filtro
@@ -57,16 +56,12 @@ func (handler *EnvioHandler) ObtenerEnvios(c *gin.Context) {
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:ObtenerEnvios][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "ObtenerEnvios", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:AulaHandler][method:ObtenerEnvios][cantidad:%d][user:%s]", len(envios), user.Codigo)
-
-	c.JSON(http.StatusOK, envios)
+	logging.LoggearResultadoYResponder(c, "EnvioHandler", "ObtenerEnvios", envios, &user)
 }
 
 func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
@@ -78,16 +73,12 @@ func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:ObtenerEnvioPorId][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "ObtenerEnvioPorId", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:EnvioHandler][method:ObtenerEnvioPorId][id:%s][user:%s]", id, user.Codigo)
-
-	c.JSON(http.StatusOK, envio)
+	logging.LoggearResultadoYResponder(c, "EnvioHandler", "ObtenerEnvioPorId", envio, &user)
 }
 
 func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
@@ -97,29 +88,21 @@ func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 	fechaDesdeStr := c.DefaultQuery("fechaDesde", "0001-01-01")
 	fechaDesde, err := time.Parse("2006-01-02", fechaDesdeStr)
 	if err != nil {
-		// Logea el error
-		log.Printf("[handler:EnvioHandler][method:ObtenerBeneficioEntreFechas][error:%s]", err.Error())
-
-		// Devuelve badRequest
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "ObtenerBeneficioEntreFechas", err, &user)
 		return
 	}
 
-	// Create time with specific time (e.g., midnight) to represent the date
+	//Convertimos la fecha a un time con hora 0
 	fechaDesde = time.Date(fechaDesde.Year(), fechaDesde.Month(), fechaDesde.Day(), 0, 0, 0, 0, fechaDesde.Location())
 
 	fechaHastaStr := c.DefaultQuery("fechaHasta", "0001-01-01")
 	fechaHasta, err := time.Parse("2006-01-02", fechaHastaStr)
 	if err != nil {
-		// Logea el error
-		log.Printf("[handler:EnvioHandler][method:ObtenerBeneficioEntreFechas][error:%s]", err.Error())
-
-		// Devuelve badRequest
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "ObtenerBeneficioEntreFechas", err, &user)
 		return
 	}
 
-	// Create time with specific time (e.g., midnight) to represent the date
+	//Convertimos la fecha a un time con hora 0
 	fechaHasta = time.Date(fechaHasta.Year(), fechaHasta.Month(), fechaHasta.Day(), 0, 0, 0, 0, fechaHasta.Location())
 
 	//Creamos el filtro, que tiene en cuenta solamente las fechas
@@ -133,19 +116,15 @@ func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:ObtenerBeneficioEntreFechas][envio:%+v]", err.Error())
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "ObtenerBeneficioEntreFechas", err, &user)
 		return
 	}
 
-	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:EnvioHandler][method:ObtenerBeneficioEntreFechas][beneficio:%f]", beneficio)
-
-	// Meto el beneficio dentro de una estructura
+	// Meto el beneficio dentro de una estructura para que el json quede con el formato que se pide
 	response := map[string]float64{"beneficio": beneficio}
 
-	c.JSON(http.StatusOK, response)
+	//Agregamos un log para indicar información relevante del resultado
+	logging.LoggearResultadoYResponder(c, "EnvioHandler", "ObtenerBeneficioEntreFechas", response, &user)
 }
 
 func (handler *EnvioHandler) ObtenerCantidadEnviosPorEstado(c *gin.Context) {
@@ -156,39 +135,33 @@ func (handler *EnvioHandler) ObtenerCantidadEnviosPorEstado(c *gin.Context) {
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:ObtenerCantidadEnviosPorEstado][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "ObtenerCantidadEnviosPorEstado", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:EnvioHandler][method:ObtenerCantidadEnviosPorEstado][cantidad:%d][user:%s]", len(cantidades), user.Codigo)
-
-	c.JSON(http.StatusOK, cantidades)
+	logging.LoggearResultadoYResponder(c, "EnvioHandler", "ObtenerCantidadEnviosPorEstado", cantidades, &user)
 }
 
 func (handler *EnvioHandler) CrearEnvio(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
 	var envio dto.Envio
-	if err := c.ShouldBindJSON(&envio); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err := c.ShouldBindJSON(&envio)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "CrearEnvio", err, &user)
 		return
 	}
 
 	//Si hay un error, lo devolvemos
-	if err := handler.envioService.CrearEnvio(&envio, &user); err != nil {
-		log.Printf("[handler:EnvioHandler][method:CrearEnvio][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err = handler.envioService.CrearEnvio(&envio, &user)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "CrearEnvio", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:EnvioHandler][method:CrearEnvio][envio:%+v][user:%s]", envio, user.Codigo)
-
-	c.JSON(http.StatusOK, true)
+	logging.LoggearResultadoYResponder(c, "EnvioHandler", "CrearEnvio", true, &user)
 }
 
 func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
@@ -196,30 +169,20 @@ func (handler *EnvioHandler) AgregarParada(c *gin.Context) {
 
 	//Obtenemos la nueva parada
 	var parada dto.NuevaParada
-	if err := c.ShouldBindJSON(&parada); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err := c.ShouldBindJSON(&parada)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "AgregarParada", err, &user)
 		return
 	}
 
 	operacion, err := handler.envioService.AgregarParada(&parada, &user)
-	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:AgregarParada][parada:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if !operacion {
-		log.Printf("[handler:EnvioHandler][method:AgregarParada][parada:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) //es correcto devolver bad request aca?
+	if err != nil || !operacion {
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "AgregarParada", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:EnvioHandler][method:AgregarParada][parada:%+v][user:%s]", parada, user.Codigo)
-
-	c.JSON(http.StatusOK, true)
+	logging.LoggearResultadoYResponder(c, "EnvioHandler", "AgregarParada", true, &user)
 }
 
 func (handler *EnvioHandler) CambiarEstadoEnvio(c *gin.Context) {
@@ -228,28 +191,18 @@ func (handler *EnvioHandler) CambiarEstadoEnvio(c *gin.Context) {
 	//Recibimos el envio en el body
 	//Este contiene el id del envio y el nuevo estado
 	var envio dto.Envio
-	if err := c.ShouldBindJSON(&envio); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err := c.ShouldBindJSON(&envio)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "CambiarEstadoEnvio", err, &user)
 		return
 	}
 
 	operacion, err := handler.envioService.CambiarEstadoEnvio(&envio, &user)
-	if err != nil {
-		log.Printf("[handler:EnvioHandler][method:CambiarEstadoEnvio][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if !operacion {
-		log.Printf("[handler:EnvioHandler][method:CambiarEstadoEnvio][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err != nil || !operacion {
+		logging.LoggearErrorYResponder(c, "EnvioHandler", "CambiarEstadoEnvio", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:EnvioHandler][method:CambiarEstadoEnvio][envio:%+v][user:%s]", envio, user.Codigo)
-
-	c.JSON(http.StatusOK, true)
+	logging.LoggearResultadoYResponder(c, "EnvioHandler", "CambiarEstadoEnvio", true, &user)
 }

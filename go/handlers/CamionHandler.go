@@ -4,8 +4,7 @@ import (
 	"TPIntegrador/dto"
 	"TPIntegrador/services"
 	"TPIntegrador/utils"
-	"log"
-	"net/http"
+	"TPIntegrador/utils/logging"
 
 	"github.com/gin-gonic/gin"
 )
@@ -28,16 +27,12 @@ func (handler *CamionHandler) ObtenerCamiones(c *gin.Context) {
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
-		log.Printf("[handler:CamionHandler][method:ObtenerCamiones][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "CamionHandler", "ObtenerCamiones", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:CamionHandler][method:ObtenerCamiones][cantidad:%d][user:%s]", len(camiones), user.Codigo)
-
-	c.JSON(http.StatusOK, camiones)
+	logging.LoggearResultadoYResponder(c, "CamionHandler", "ObtenerCamiones", camiones, &user)
 }
 
 func (handler *CamionHandler) ObtenerCamionPorPatente(c *gin.Context) {
@@ -52,62 +47,53 @@ func (handler *CamionHandler) ObtenerCamionPorPatente(c *gin.Context) {
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
-		log.Printf("[handler:CamionHandler][method:ObtenerCamionPorPatente][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "CamionHandler", "ObtenerCamionPorPatente", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:CamionHandler][method:ObtenerCamionPorPatente][patente:%s][user:%s]", patente, user.Codigo)
-
-	c.JSON(http.StatusOK, camion)
+	logging.LoggearResultadoYResponder(c, "CamionHandler", "ObtenerCamionPorPatente", camion, &user)
 }
 
 func (handler *CamionHandler) CrearCamion(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
 	var camion dto.Camion
-	if err := c.ShouldBindJSON(&camion); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err := c.ShouldBindJSON(&camion)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "CamionHandler", "CrearCamion", err, &user)
 		return
 	}
 
 	//Si hay un error, lo devolvemos
-	if err := handler.camionService.CrearCamion(&camion, &user); err != nil {
-		log.Printf("[handler:CamionHandler][method:CrearCamion][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err = handler.camionService.CrearCamion(&camion, &user)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "CamionHandler", "CrearCamion", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:CamionHandler][method:CrearCamion][camion:%+v][user:%s]", camion, user.Codigo)
-
-	c.JSON(http.StatusOK, true)
+	logging.LoggearResultadoYResponder(c, "CamionHandler", "CrearCamion", true, &user)
 }
 
 func (handler *CamionHandler) ActualizarCamion(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
 	var camion dto.Camion
-	if err := c.ShouldBindJSON(&camion); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	err := c.ShouldBindJSON(&camion)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "CamionHandler", "ActualizarCamion", err, &user)
 	}
 
 	//Si hay un error, lo devolvemos
-	if err := handler.camionService.ActualizarCamion(&camion, &user); err != nil {
-		log.Printf("[handler:CamionHandler][method:ActualizarCamion][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err = handler.camionService.ActualizarCamion(&camion, &user)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "CamionHandler", "ActualizarCamion", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:CamionHandler][method:ActualizarCamion][camion:%+v][user:%s]", camion, user.Codigo)
-
-	c.JSON(http.StatusOK, true)
+	logging.LoggearResultadoYResponder(c, "CamionHandler", "ActualizarCamion", true, &user)
 }
 
 func (handler *CamionHandler) EliminarCamion(c *gin.Context) {
@@ -119,15 +105,12 @@ func (handler *CamionHandler) EliminarCamion(c *gin.Context) {
 	camionConPatente := dto.Camion{Patente: patente}
 
 	//Si hay un error, lo devolvemos
-	if err := handler.camionService.EliminarCamion(&camionConPatente, &user); err != nil {
-		log.Printf("[handler:CamionHandler][method:EliminarCamion][envio:%+v][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err := handler.camionService.EliminarCamion(&camionConPatente, &user)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "CamionHandler", "EliminarCamion", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:CamionHandler][method:EliminarCamion][patente:%s][user:%s]", patente, user.Codigo)
-
-	c.JSON(http.StatusOK, true)
+	logging.LoggearResultadoYResponder(c, "CamionHandler", "EliminarCamion", true, &user)
 }

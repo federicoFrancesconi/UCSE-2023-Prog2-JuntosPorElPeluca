@@ -4,9 +4,8 @@ import (
 	"TPIntegrador/dto"
 	"TPIntegrador/services"
 	"TPIntegrador/utils"
+	"TPIntegrador/utils/logging"
 	"TPIntegrador/model"
-	"log"
-	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -33,20 +32,14 @@ func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 	fechaCreacionComienzoStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01T00:00:00Z")
 	fechaCreacionComienzo, err := time.Parse(time.RFC3339, fechaCreacionComienzoStr)
 	if err != nil {
-		log.Printf("[handler:PedidoHandler][method:ObtenerPedidos][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		// Devuelve badRequest
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "PedidoHandler", "ObtenerPedidos", err, &user)
 		return
 	}
 
 	fechaCreacionFinStr := c.DefaultQuery("fechaCreacionFin", "0001-01-01T00:00:00Z")
 	fechaCreacionFin, err := time.Parse(time.RFC3339, fechaCreacionFinStr)
 	if err != nil {
-		log.Printf("[handler:PedidoHandler][method:ObtenerPedidos][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		// Devuelve badRequest
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "PedidoHandler", "ObtenerPedidos", err, &user)
 		return
 	}
 
@@ -63,16 +56,12 @@ func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
-		log.Printf("[handler:PedidoHandler][method:ObtenerPedidos][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "PedidoHandler", "ObtenerPedidos", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:PedidoHandler][method:ObtenerPedidos][cantidad:%d][user:%s]", len(pedidos), user.Codigo)
-
-	c.JSON(http.StatusOK, pedidos)
+	logging.LoggearResultadoYResponder(c, "PedidoHandler", "ObtenerPedidos", pedidos, &user)
 }
 
 func (handler *PedidoHandler) ObtenerCantidadPedidosPorEstado(c *gin.Context) {
@@ -83,16 +72,11 @@ func (handler *PedidoHandler) ObtenerCantidadPedidosPorEstado(c *gin.Context) {
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
-		log.Printf("[handler:PedidoHandler][method:ObtenerCantidadesPedidosPorEstado][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "PedidoHandler", "ObtenerCantidadPedidosPorEstado", err, &user)
 		return
 	}
 
-	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:PedidoHandler][method:ObtenerCantidadesPedidosPorEstado][cantidad:%d][user:%s]", len(cantidades), user.Codigo)
-
-	c.JSON(http.StatusOK, cantidades)
+	logging.LoggearResultadoYResponder(c, "PedidoHandler", "ObtenerCantidadPedidosPorEstado", cantidades, &user)
 }
 
 func (handler *PedidoHandler) CrearPedido(c *gin.Context) {
@@ -101,25 +85,21 @@ func (handler *PedidoHandler) CrearPedido(c *gin.Context) {
 	var pedido dto.Pedido
 
 	//Parseamos el body del request y lo guardamos en el objeto pedido
-	if err := c.ShouldBindJSON(&pedido); err != nil {
-		log.Printf("[handler:PedidoHandler][method:CrearPedido][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err := c.ShouldBindJSON(&pedido)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "PedidoHandler", "CrearPedido", err, &user)
 		return
 	}
 
 	//Creamos el pedido en la base de datos
-	if err := handler.pedidoService.CrearPedido(&pedido, &user); err != nil {
-		log.Printf("[handler:PedidoHandler][method:CrearPedido][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err = handler.pedidoService.CrearPedido(&pedido, &user)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "PedidoHandler", "CrearPedido", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:PedidoHandler][method:CrearPedido][id:%s][user:%s]", pedido.Id, user.Codigo)
-
-	c.JSON(http.StatusOK, true)
+	logging.LoggearResultadoYResponder(c, "PedidoHandler", "CrearPedido", pedido, &user)
 }
 
 func (handler *PedidoHandler) AceptarPedido(c *gin.Context) {
@@ -131,14 +111,14 @@ func (handler *PedidoHandler) AceptarPedido(c *gin.Context) {
 	pedido := dto.Pedido{Id: id}
 
 	//Aceptamos el pedido
-	if err := handler.pedidoService.AceptarPedido(&pedido, &user); err != nil {
-		log.Printf("[handler:PedidoHandler][method:AceptarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err := handler.pedidoService.AceptarPedido(&pedido, &user)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "PedidoHandler", "AceptarPedido", err, &user)
 		return
 	}
 
-	c.JSON(http.StatusOK, true)
+	//Agregamos un log para indicar información relevante del resultado
+	logging.LoggearResultadoYResponder(c, "PedidoHandler", "AceptarPedido", true, &user)
 }
 
 func (handler *PedidoHandler) CancelarPedido(c *gin.Context) {
@@ -150,12 +130,12 @@ func (handler *PedidoHandler) CancelarPedido(c *gin.Context) {
 	pedido := dto.Pedido{Id: id}
 
 	//Cancelamos el pedido
-	if err := handler.pedidoService.CancelarPedido(&pedido, &user); err != nil {
-		log.Printf("[handler:PedidoHandler][method:CancelarPedido][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err := handler.pedidoService.CancelarPedido(&pedido, &user)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "PedidoHandler", "CancelarPedido", err, &user)
 		return
 	}
 
-	c.JSON(http.StatusOK, true)
+	//Agregamos un log para indicar información relevante del resultado
+	logging.LoggearResultadoYResponder(c, "PedidoHandler", "CancelarPedido", true, &user)
 }

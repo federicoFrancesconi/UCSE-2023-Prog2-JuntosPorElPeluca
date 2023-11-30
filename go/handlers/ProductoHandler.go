@@ -4,9 +4,8 @@ import (
 	"TPIntegrador/dto"
 	"TPIntegrador/services"
 	"TPIntegrador/utils"
+	"TPIntegrador/utils/logging"
 	"TPIntegrador/model"
-	"log"
-	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -29,9 +28,7 @@ func (handler *ProductoHandler) ObtenerProductos(c *gin.Context) {
 	filtrarPorStockMinimo, err := strconv.ParseBool(filtrarPorStockMinimoStr)
 
 	if err != nil {
-		log.Printf("[handler:ProductoHandler][method:ObtenerProductos][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "ProductoHandler", "ObtenerProductos", err, &user)
 		return
 	}
 
@@ -48,16 +45,12 @@ func (handler *ProductoHandler) ObtenerProductos(c *gin.Context) {
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
-		log.Printf("[handler:ProductoHandler][method:ObtenerProductos][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logging.LoggearErrorYResponder(c, "ProductoHandler", "ObtenerProductos", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:ProductoHandler][method:ObtenerProductos][cantidad:%d][user:%s]", len(productos), user.Codigo)
-
-	c.JSON(http.StatusOK, productos)
+	logging.LoggearResultadoYResponder(c, "ProductoHandler", "ObtenerProductos", productos, &user)
 }
 
 func (handler *ProductoHandler) CrearProducto(c *gin.Context) {
@@ -66,25 +59,21 @@ func (handler *ProductoHandler) CrearProducto(c *gin.Context) {
 	var producto dto.Producto
 
 	//Parseamos el body del request y lo guardamos en el objeto producto
-	if err := c.ShouldBindJSON(&producto); err != nil {
-		log.Printf("[handler:ProductoHandler][method:CrearProducto][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err := c.ShouldBindJSON(&producto)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "ProductoHandler", "CrearProducto", err, &user)
 		return
 	}
 
 	//Creamos el producto en la base de datos
-	if err := handler.productoService.CrearProducto(&producto, &user); err != nil {
-		log.Printf("[handler:ProductoHandler][method:CrearProducto][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err = handler.productoService.CrearProducto(&producto, &user)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "ProductoHandler", "CrearProducto", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:ProductoHandler][method:CrearProducto][user:%s]", user.Codigo)
-
-	c.JSON(http.StatusCreated, true)
+	logging.LoggearResultadoYResponder(c, "ProductoHandler", "CrearProducto", true, &user)
 }
 
 // Handler para actualizar un producto
@@ -94,25 +83,21 @@ func (handler *ProductoHandler) ActualizarProducto(c *gin.Context) {
 	var producto dto.Producto
 
 	//Parseamos el body del request y lo guardamos en el objeto producto
-	if err := c.ShouldBindJSON(&producto); err != nil {
-		log.Printf("[handler:ProductoHandler][method:ActualizarProducto][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err := c.ShouldBindJSON(&producto)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "ProductoHandler", "ActualizarProducto", err, &user)
 		return
 	}
 
 	//Actualizamos el producto en la base de datos
-	if err := handler.productoService.ActualizarProducto(&producto, &user); err != nil {
-		log.Printf("[handler:ProductoHandler][method:ActualizarProducto][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err = handler.productoService.ActualizarProducto(&producto, &user)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "ProductoHandler", "ActualizarProducto", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:ProductoHandler][method:ActualizarProducto][user:%s]", user.Codigo)
-
-	c.JSON(http.StatusOK, true)
+	logging.LoggearResultadoYResponder(c, "ProductoHandler", "ActualizarProducto", true, &user)
 }
 
 // Handler para eliminar un producto
@@ -126,15 +111,12 @@ func (handler *ProductoHandler) EliminarProducto(c *gin.Context) {
 	producto := dto.Producto{CodigoProducto: codigo}
 
 	//Eliminamos el producto de la base de datos
-	if err := handler.productoService.EliminarProducto(&producto, &user); err != nil {
-		log.Printf("[handler:ProductoHandler][method:EliminarProducto][error:%s][user:%s]", err.Error(), user.Codigo)
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err := handler.productoService.EliminarProducto(&producto, &user)
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "ProductoHandler", "EliminarProducto", err, &user)
 		return
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	log.Printf("[handler:ProductoHandler][method:EliminarProducto][user:%s]", user.Codigo)
-
-	c.JSON(http.StatusOK, true)
+	logging.LoggearResultadoYResponder(c, "ProductoHandler", "EliminarProducto", true, &user)
 }
