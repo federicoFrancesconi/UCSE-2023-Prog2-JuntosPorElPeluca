@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"UCSE-2023-Prog2-TPIntegrador/dto"
-	"UCSE-2023-Prog2-TPIntegrador/model"
-	"UCSE-2023-Prog2-TPIntegrador/services"
-	"UCSE-2023-Prog2-TPIntegrador/utils"
+	"TPIntegrador/dto"
+	"TPIntegrador/services"
+	"TPIntegrador/utils"
+	"TPIntegrador/model"
 	"log"
 	"net/http"
 	"time"

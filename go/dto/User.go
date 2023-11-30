@@ -1,6 +1,6 @@
 package dto
 
-import "UCSE-2023-Prog2-TPIntegrador/clients/responses"
+import "TPIntegrador/clients/responses"
 
 type User struct {
 	Codigo   string `json:"codigo"`

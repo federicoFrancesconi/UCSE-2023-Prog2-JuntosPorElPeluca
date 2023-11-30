@@ -1,9 +1,9 @@
 package repositories
 
 import (
-	"UCSE-2023-Prog2-TPIntegrador/database"
-	"UCSE-2023-Prog2-TPIntegrador/model"
-	"UCSE-2023-Prog2-TPIntegrador/utils"
+	"TPIntegrador/database"
+	"TPIntegrador/utils"
+	"TPIntegrador/model"
 	"context"
 	"errors"
 	"time"

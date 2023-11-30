@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"UCSE-2023-Prog2-TPIntegrador/model"
+	"TPIntegrador/model"
 	"time"
 )
 

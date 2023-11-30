@@ -1,7 +1,7 @@
 package clients
 
 import (
-	"UCSE-2023-Prog2-TPIntegrador/clients/responses"
+	"TPIntegrador/clients/responses"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -50,7 +50,7 @@ func (auth *AuthClient) GetUserInfo(token string) (*responses.UserInfo, error) {
 	//Si el codigo es distinto de 200, es porque dio un error.
 	if response.StatusCode != 200 {
 		fmt.Println("Error al realizar la solicitud GET:", responseBody)
-		return nil, errors.New("La peticion respondio con error")
+		return nil, errors.New("la peticion respondio con error")
 	}
 
 	if err != nil {

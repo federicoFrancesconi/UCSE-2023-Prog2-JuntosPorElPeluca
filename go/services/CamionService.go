@@ -1,9 +1,9 @@
 package services
 
 import (
-	"UCSE-2023-Prog2-TPIntegrador/dto"
-	"UCSE-2023-Prog2-TPIntegrador/repositories"
-	"UCSE-2023-Prog2-TPIntegrador/utils"
+	"TPIntegrador/dto"
+	"TPIntegrador/utils"
+	"TPIntegrador/repositories"
 	"errors"
 )
 

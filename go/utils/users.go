@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"UCSE-2023-Prog2-TPIntegrador/clients/responses"
+	"TPIntegrador/clients/responses"
 
 	"github.com/gin-gonic/gin"
 )

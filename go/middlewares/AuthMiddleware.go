@@ -1,8 +1,8 @@
 package middlewares
 
 import (
-	"UCSE-2023-Prog2-TPIntegrador/clients"
-	"UCSE-2023-Prog2-TPIntegrador/utils"
+	"TPIntegrador/clients"
+	"TPIntegrador/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
