@@ -14,6 +14,7 @@ type Camion struct {
 	FechaCreacion            time.Time          `bson:"fecha_creacion"`
 	FechaUltimaActualizacion time.Time          `bson:"fecha_ultima_actualizacion"`
 	IdCreador                string             `bson:"id_creador"`
+	EstaActivo               bool               `bson:"esta_activo"`
 }
 
-//funcion para validar,
+//TODO: funcion para validar,

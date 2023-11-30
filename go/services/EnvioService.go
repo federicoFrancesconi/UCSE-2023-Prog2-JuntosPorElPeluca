@@ -2,9 +2,9 @@ package services
 
 import (
 	"TPIntegrador/dto"
-	"TPIntegrador/utils"
-	"TPIntegrador/repositories"
 	"TPIntegrador/model"
+	"TPIntegrador/repositories"
+	"TPIntegrador/utils"
 	"errors"
 	"fmt"
 )
@@ -130,14 +130,20 @@ func (service *EnvioService) ObtenerEnvioPorId(envioConID *dto.Envio, usuario *d
 
 func (service *EnvioService) envioCabeEnCamion(envio *dto.Envio) (bool, error) {
 	//Primero buscamos el camion por patente
-	filtroPorPatente := utils.FiltroCamion{Patente: envio.PatenteCamion}
-	camiones, err := service.camionRepository.ObtenerCamiones(filtroPorPatente)
+	filtroPorPatente := utils.FiltroCamion{Patente: envio.PatenteCamion, EstaActivo: true}
 
-	camion := camiones[0]
+	camiones, err := service.camionRepository.ObtenerCamiones(filtroPorPatente)
 
 	if err != nil {
 		return false, err
 	}
+
+	//Si no existe el camion, devolvemos un error
+	if len(camiones) == 0 {
+		return false, errors.New("no existe el camion, o bien ha sido dado de baja")
+	}
+
+	camion := camiones[0]
 
 	//Obtenemos el peso total de los pedidos
 	var pesoTotal float64 = 0
@@ -270,13 +276,19 @@ func (service *EnvioService) obtenerPrecioTotalProductosDeEnvio(envio *dto.Envio
 
 func (service *EnvioService) obtenerCostoEnvio(envio *dto.Envio) (float64, error) {
 	//Obtiene el camion del envio para conocer el costoPorKilometro
-	filtroPorPatente := utils.FiltroCamion{Patente: envio.PatenteCamion}
+	filtroPorPatente := utils.FiltroCamion{Patente: envio.PatenteCamion, EstaActivo: true}
 	camiones, err := service.camionRepository.ObtenerCamiones(filtroPorPatente)
-	camion := camiones[0]
 
 	if err != nil {
 		return 0, err
 	}
+
+	//Si no existe el camion, devolvemos un error
+	if len(camiones) == 0 {
+		return 0, errors.New("no existe el camion, o bien ha sido dado de baja")
+	}
+
+	camion := camiones[0]
 
 	//Suma los kilometros de cada parada
 	var kilometrosRecorridos int = 0

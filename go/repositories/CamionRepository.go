@@ -16,7 +16,6 @@ type CamionRepositoryInterface interface {
 	CrearCamion(model.Camion) error
 	ObtenerCamiones(utils.FiltroCamion) ([]model.Camion, error)
 	ActualizarCamion(model.Camion) error
-	EliminarCamion(model.Camion) error
 }
 
 type CamionRepository struct {
@@ -103,15 +102,4 @@ func (repository CamionRepository) ActualizarCamion(camion model.Camion) error {
 	}
 
 	return nil
-}
-
-func (repository CamionRepository) EliminarCamion(camion model.Camion) error {
-	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
-
-	//Generamos el filtro para eliminar el camion
-	filtro := bson.M{"patente": camion.Patente}
-
-	_, err := collection.DeleteOne(context.Background(), filtro)
-
-	return err
 }

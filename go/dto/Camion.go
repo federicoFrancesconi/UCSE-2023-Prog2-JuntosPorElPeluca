@@ -12,6 +12,7 @@ type Camion struct {
 	FechaCreacion            time.Time `json:"fecha_creacion"`
 	FechaUltimaActualizacion time.Time `json:"fecha_ultima_actualizacion"`
 	IdCreador                string    `json:"id_creador"`
+	EstaActivo               bool      `json:"esta_activo"`
 }
 
 func NewCamion(camion model.Camion) *Camion {
@@ -22,6 +23,7 @@ func NewCamion(camion model.Camion) *Camion {
 		FechaCreacion:            camion.FechaCreacion,
 		FechaUltimaActualizacion: camion.FechaUltimaActualizacion,
 		IdCreador:                camion.IdCreador,
+		EstaActivo:               camion.EstaActivo,
 	}
 }
 
@@ -33,5 +35,6 @@ func (camion Camion) GetModel() model.Camion {
 		FechaCreacion:            camion.FechaCreacion,
 		FechaUltimaActualizacion: camion.FechaUltimaActualizacion,
 		IdCreador:                camion.IdCreador,
+		EstaActivo:               camion.EstaActivo,
 	}
 }

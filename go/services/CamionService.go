@@ -34,6 +34,9 @@ func (service *CamionService) CrearCamion(camion *dto.Camion, usuario *dto.User)
 }
 
 func (service *CamionService) ObtenerCamiones(filtro utils.FiltroCamion) ([]*dto.Camion, error) {
+	//Aseguramos que el filtro tenga el campo esta_activo en true
+	filtro.EstaActivo = true
+
 	camionesDB, err := service.camionRepository.ObtenerCamiones(filtro)
 
 	if err != nil {
@@ -59,12 +62,34 @@ func (service *CamionService) ActualizarCamion(camion *dto.Camion, usuario *dto.
 	return service.camionRepository.ActualizarCamion(camion.GetModel())
 }
 
+//En lugar de eliminar el camion, actualiza el campo esta_activo a false
 func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion, usuario *dto.User) error {
 	if !service.validarRol(usuario) {
 		return errors.New("el usuario no tiene permisos para eliminar un camion")
 	}
 
-	return service.camionRepository.EliminarCamion(camionConPatente.GetModel())
+	//Creamos el filtro para obtener el camion
+	filtro := utils.FiltroCamion{Patente: camionConPatente.Patente}
+
+	//Obtengo el camion de la base de datos
+	camiones, err := service.camionRepository.ObtenerCamiones(filtro)
+
+	if err != nil {
+		return err
+	}
+
+	//Si no existe el camion, devuelvo un error
+	if len(camiones) == 0 {
+		return errors.New("no existe el camion")
+	}
+
+	camion := camiones[0]
+
+	//Actualizo el campo esta_activo a false
+	camion.EstaActivo = false
+
+	//Actualizo el camion
+	return service.camionRepository.ActualizarCamion(camion)
 }
 
 func (service *CamionService) validarRol(usuario *dto.User) bool {
