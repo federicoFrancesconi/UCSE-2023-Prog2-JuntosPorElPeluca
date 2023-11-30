@@ -10,8 +10,8 @@ type Producto struct {
 	CodigoProducto           string             `json:"codigo_producto"`
 	TipoDeProducto           model.TipoProducto `json:"tipo_producto"`
 	Nombre                   string             `json:"nombre"`
-	PesoUnitario             float32            `json:"peso_unitario"`
-	PrecioUnitario           float32            `json:"precio_unitario"`
+	PesoUnitario             float64            `json:"peso_unitario"`
+	PrecioUnitario           float64            `json:"precio_unitario"`
 	StockMinimo              int                `json:"stock_minimo"`
 	StockActual              int                `json:"stock_actual"`
 	FechaCreacion            time.Time          `json:"fecha_creacion"`

@@ -6,22 +6,22 @@
                 "codigo_producto": "P001",
                 "nombre_producto": "Chocolate Bar",
                 "cantidad": 5,
-                "precio_unitario": 1,
-                "peso_unitario": 0
+                "precio_unitario": 1.5,
+                "peso_unitario": 0.2
             },
             {
                 "codigo_producto": "P002",
                 "nombre_producto": "Cola Drink",
                 "cantidad": 3,
-                "precio_unitario": 1,
-                "peso_unitario": 0
+                "precio_unitario": 1.0,
+                "peso_unitario": 0.5
             }
         ],
         "ciudad_destino": "Buenos Aires",
         "estado": "Pendiente",
         "fecha_creacion": "2023-10-16T10:00:00Z",
         "fecha_ultima_actualizacion": "2023-10-16T10:15:00Z",
-        "id_creador": 1
+        "id_creador": "1"
     },
     {
         "id": "P002",
@@ -30,22 +30,22 @@
                 "codigo_producto": "P003",
                 "nombre_producto": "Tobacco Pack",
                 "cantidad": 2,
-                "precio_unitario": 6,
-                "peso_unitario": 0
+                "precio_unitario": 6.0,
+                "peso_unitario": 0.03
             },
             {
                 "codigo_producto": "P004",
                 "nombre_producto": "Rice Bag",
                 "cantidad": 4,
-                "precio_unitario": 3,
-                "peso_unitario": 1
+                "precio_unitario": 3.0,
+                "peso_unitario": 1.0
             }
         ],
         "ciudad_destino": "Córdoba",
         "estado": "Pendiente",
         "fecha_creacion": "2023-10-16T11:00:00Z",
         "fecha_ultima_actualizacion": "2023-10-16T11:15:00Z",
-        "id_creador": 2
+        "id_creador": "2"
     },
     {
         "id": "P003",
@@ -54,22 +54,22 @@
                 "codigo_producto": "P005",
                 "nombre_producto": "Toothpaste",
                 "cantidad": 3,
-                "precio_unitario": 2,
-                "peso_unitario": 0
+                "precio_unitario": 2.5,
+                "peso_unitario": 0.1
             },
             {
                 "codigo_producto": "P006",
                 "nombre_producto": "Candy Bag",
                 "cantidad": 2,
-                "precio_unitario": 1,
-                "peso_unitario": 0
+                "precio_unitario": 1.0,
+                "peso_unitario": 0.3
             }
         ],
         "ciudad_destino": "Rosario",
         "estado": "Pendiente",
         "fecha_creacion": "2023-10-16T12:00:00Z",
         "fecha_ultima_actualizacion": "2023-10-16T12:15:00Z",
-        "id_creador": 3
+        "id_creador": "3"
     },
     {
         "id": "P004",
@@ -78,22 +78,22 @@
                 "codigo_producto": "P007",
                 "nombre_producto": "Water Bottle",
                 "cantidad": 4,
-                "precio_unitario": 1,
-                "peso_unitario": 0
+                "precio_unitario": 1.2,
+                "peso_unitario": 0.5
             },
             {
                 "codigo_producto": "P008",
                 "nombre_producto": "Lighter",
                 "cantidad": 2,
-                "precio_unitario": 5,
-                "peso_unitario": 0
+                "precio_unitario": 5.0,
+                "peso_unitario": 0.02
             }
         ],
         "ciudad_destino": "Mendoza",
         "estado": "Pendiente",
         "fecha_creacion": "2023-10-16T13:00:00Z",
         "fecha_ultima_actualizacion": "2023-10-16T13:15:00Z",
-        "id_creador": 4
+        "id_creador": "4"
     },
     {
         "id": "P005",
@@ -102,22 +102,22 @@
                 "codigo_producto": "P009",
                 "nombre_producto": "Cereal Box",
                 "cantidad": 3,
-                "precio_unitario": 4,
-                "peso_unitario": 0
+                "precio_unitario": 4.5,
+                "peso_unitario": 0.5
             },
             {
                 "codigo_producto": "P010",
                 "nombre_producto": "Hand Sanitizer",
                 "cantidad": 5,
-                "precio_unitario": 3,
-                "peso_unitario": 0
+                "precio_unitario": 3.0,
+                "peso_unitario": 0.2
             }
         ],
         "ciudad_destino": "La Plata",
         "estado": "Pendiente",
         "fecha_creacion": "2023-10-16T14:00:00Z",
         "fecha_ultima_actualizacion": "2023-10-16T14:15:00Z",
-        "id_creador": 5
+        "id_creador": "5"
     },
     {
         "id": "P006",
@@ -126,22 +126,22 @@
                 "codigo_producto": "P001",
                 "nombre_producto": "Chocolate Bar",
                 "cantidad": 6,
-                "precio_unitario": 1,
-                "peso_unitario": 0
+                "precio_unitario": 1.5,
+                "peso_unitario": 0.2
             },
             {
                 "codigo_producto": "P003",
                 "nombre_producto": "Tobacco Pack",
                 "cantidad": 3,
-                "precio_unitario": 6,
-                "peso_unitario": 0
+                "precio_unitario": 6.0,
+                "peso_unitario": 0.03
             }
         ],
         "ciudad_destino": "Buenos Aires",
         "estado": "Pendiente",
         "fecha_creacion": "2023-10-16T15:00:00Z",
         "fecha_ultima_actualizacion": "2023-10-16T15:15:00Z",
-        "id_creador": 1
+        "id_creador": "1"
     },
     {
         "id": "P007",
@@ -150,22 +150,22 @@
                 "codigo_producto": "P002",
                 "nombre_producto": "Cola Drink",
                 "cantidad": 4,
-                "precio_unitario": 1,
-                "peso_unitario": 0
+                "precio_unitario": 1.0,
+                "peso_unitario": 0.5
             },
             {
                 "codigo_producto": "P004",
                 "nombre_producto": "Rice Bag",
                 "cantidad": 2,
-                "precio_unitario": 3,
-                "peso_unitario": 1
+                "precio_unitario": 3.0,
+                "peso_unitario": 1.0
             }
         ],
         "ciudad_destino": "Córdoba",
         "estado": "Pendiente",
         "fecha_creacion": "2023-10-16T16:00:00Z",
         "fecha_ultima_actualizacion": "2023-10-16T16:15:00Z",
-        "id_creador": 2
+        "id_creador": "2"
     },
     {
         "id": "P008",
@@ -174,22 +174,22 @@
                 "codigo_producto": "P005",
                 "nombre_producto": "Toothpaste",
                 "cantidad": 2,
-                "precio_unitario": 2,
-                "peso_unitario": 0
+                "precio_unitario": 2.5,
+                "peso_unitario": 0.1
             },
             {
                 "codigo_producto": "P006",
                 "nombre_producto": "Candy Bag",
                 "cantidad": 3,
-                "precio_unitario": 1,
-                "peso_unitario": 0
+                "precio_unitario": 1.0,
+                "peso_unitario": 0.3
             }
         ],
         "ciudad_destino": "Rosario",
         "estado": "Pendiente",
         "fecha_creacion": "2023-10-16T17:00:00Z",
         "fecha_ultima_actualizacion": "2023-10-16T17:15:00Z",
-        "id_creador": 3
+        "id_creador": "3"
     },
     {
         "id": "P009",
@@ -198,22 +198,22 @@
                 "codigo_producto": "P007",
                 "nombre_producto": "Water Bottle",
                 "cantidad": 3,
-                "precio_unitario": 1,
-                "peso_unitario": 0
+                "precio_unitario": 1.2,
+                "peso_unitario": 0.5
             },
             {
                 "codigo_producto": "P008",
                 "nombre_producto": "Lighter",
                 "cantidad": 2,
-                "precio_unitario": 5,
-                "peso_unitario": 0
+                "precio_unitario": 5.0,
+                "peso_unitario": 0.02
             }
         ],
         "ciudad_destino": "Mendoza",
         "estado": "Pendiente",
         "fecha_creacion": "2023-10-16T18:00:00Z",
         "fecha_ultima_actualizacion": "2023-10-16T18:15:00Z",
-        "id_creador": 4
+        "id_creador": "4"
     },
     {
         "id": "P010",
@@ -222,21 +222,21 @@
                 "codigo_producto": "P009",
                 "nombre_producto": "Cereal Box",
                 "cantidad": 2,
-                "precio_unitario": 4,
-                "peso_unitario": 0
+                "precio_unitario": 4.5,
+                "peso_unitario": 0.5
             },
             {
                 "codigo_producto": "P010",
                 "nombre_producto": "Hand Sanitizer",
                 "cantidad": 4,
-                "precio_unitario": 3,
-                "peso_unitario": 0
+                "precio_unitario": 3.0,
+                "peso_unitario": 0.2
             }
         ],
         "ciudad_destino": "La Plata",
         "estado": "Pendiente",
         "fecha_creacion": "2023-10-16T19:00:00Z",
         "fecha_ultima_actualizacion": "2023-10-16T19:15:00Z",
-        "id_creador": 5
+        "id_creador": "5"
     }
 ]

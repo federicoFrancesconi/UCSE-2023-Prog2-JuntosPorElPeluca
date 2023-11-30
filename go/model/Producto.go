@@ -10,8 +10,8 @@ type Producto struct {
 	ObjectId                 primitive.ObjectID `bson:"_id,omitempty"`
 	TipoDeProducto           TipoProducto       `bson:"tipo_producto"`
 	Nombre                   string             `bson:"nombre"`
-	PesoUnitario             float32            `bson:"peso_unitario"`
-	PrecioUnitario           float32            `bson:"precio_unitario"`
+	PesoUnitario             float64            `bson:"peso_unitario"`
+	PrecioUnitario           float64            `bson:"precio_unitario"`
 	StockMinimo              int                `bson:"stock_minimo"`
 	StockActual              int                `bson:"stock_actual"`
 	FechaCreacion            time.Time          `bson:"fecha_creacion"`

@@ -13,7 +13,7 @@ type EnvioServiceInterface interface {
 	CrearEnvio(*dto.Envio, *dto.User) error
 	ObtenerEnviosFiltrados(utils.FiltroEnvio, *dto.User) ([]*dto.Envio, error)
 	ObtenerEnvioPorId(*dto.Envio, *dto.User) (*dto.Envio, error)
-	ObtenerBeneficioEntreFechas(utils.FiltroEnvio, *dto.User) (float32, error)
+	ObtenerBeneficioEntreFechas(utils.FiltroEnvio, *dto.User) (float64, error)
 	ObtenerCantidadEnviosPorEstado() ([]utils.CantidadEstado, error)
 	AgregarParada(*dto.NuevaParada, *dto.User) (bool, error)
 	CambiarEstadoEnvio(*dto.Envio, *dto.User) (bool, error)
@@ -140,7 +140,7 @@ func (service *EnvioService) envioCabeEnCamion(envio *dto.Envio) (bool, error) {
 	}
 
 	//Obtenemos el peso total de los pedidos
-	var pesoTotal float32 = 0
+	var pesoTotal float64 = 0
 	for _, idPedido := range envio.Pedidos {
 		//Generamos el pedido para buscar
 		pedidoParaBuscar := dto.Pedido{Id: idPedido}
@@ -152,7 +152,7 @@ func (service *EnvioService) envioCabeEnCamion(envio *dto.Envio) (bool, error) {
 		}
 
 		//Calculo el peso del pedido sumando el peso de cada producto elegido
-		var peso float32 = 0
+		var peso float64 = 0
 		for _, producto := range pedido.ProductosElegidos {
 			peso += producto.ObtenerPesoProductoPedido()
 		}
@@ -161,7 +161,7 @@ func (service *EnvioService) envioCabeEnCamion(envio *dto.Envio) (bool, error) {
 	}
 
 	//Verificamos si el peso total de los pedidos es menor o igual al peso maximo del camion
-	if pesoTotal <= float32(camion.PesoMaximo) {
+	if pesoTotal <= float64(camion.PesoMaximo) {
 		return true, nil
 	} else {
 		return false, nil
@@ -206,7 +206,7 @@ func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido) error {
 	return nil
 }
 
-func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvio, usuario *dto.User) (float32, error) {
+func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvio, usuario *dto.User) (float64, error) {
 	//Le agrega el estado despachado al filtro, ya que el beneficio lo tienen los despachados
 	filtro.Estado = model.Despachado
 
@@ -218,7 +218,7 @@ func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvi
 	}
 
 	//Suma el precio de los pedidos de cada envio
-	var beneficioBruto float32 = 0
+	var beneficioBruto float64 = 0
 	for _, envio := range envios {
 		precioTotal, err := service.obtenerPrecioTotalProductosDeEnvio(envio)
 
@@ -230,7 +230,7 @@ func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvi
 	}
 
 	//Suma el costo de los envios
-	var costoEnvios float32 = 0
+	var costoEnvios float64 = 0
 	for _, envio := range envios {
 		costoEnvio, err := service.obtenerCostoEnvio(envio)
 
@@ -246,8 +246,8 @@ func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvi
 	return beneficioNeto, nil
 }
 
-func (service *EnvioService) obtenerPrecioTotalProductosDeEnvio(envio *dto.Envio) (float32, error) {
-	var precioTotal float32 = 0
+func (service *EnvioService) obtenerPrecioTotalProductosDeEnvio(envio *dto.Envio) (float64, error) {
+	var precioTotal float64 = 0
 
 	for _, idPedido := range envio.Pedidos {
 		//Generamos el pedido para buscar
@@ -268,7 +268,7 @@ func (service *EnvioService) obtenerPrecioTotalProductosDeEnvio(envio *dto.Envio
 	return precioTotal, nil
 }
 
-func (service *EnvioService) obtenerCostoEnvio(envio *dto.Envio) (float32, error) {
+func (service *EnvioService) obtenerCostoEnvio(envio *dto.Envio) (float64, error) {
 	//Obtiene el camion del envio para conocer el costoPorKilometro
 	filtroPorPatente := utils.FiltroCamion{Patente: envio.PatenteCamion}
 	camiones, err := service.camionRepository.ObtenerCamiones(filtroPorPatente)
@@ -285,7 +285,7 @@ func (service *EnvioService) obtenerCostoEnvio(envio *dto.Envio) (float32, error
 		kilometrosRecorridos += envio.Paradas[i].KmRecorridos
 	}
 
-	costoEnvio := camion.CostoPorKilometro * float32(kilometrosRecorridos)
+	costoEnvio := camion.CostoPorKilometro * float64(kilometrosRecorridos)
 
 	return costoEnvio, nil
 }

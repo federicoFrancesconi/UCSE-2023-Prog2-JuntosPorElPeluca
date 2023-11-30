@@ -143,7 +143,7 @@ func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 	log.Printf("[handler:EnvioHandler][method:ObtenerBeneficioEntreFechas][beneficio:%f]", beneficio)
 
 	// Meto el beneficio dentro de una estructura
-	response := map[string]float32{"beneficio": beneficio}
+	response := map[string]float64{"beneficio": beneficio}
 
 	c.JSON(http.StatusOK, response)
 }
