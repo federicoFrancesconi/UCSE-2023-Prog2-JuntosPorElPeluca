@@ -2,8 +2,9 @@ package services
 
 import (
 	"TPIntegrador/dto"
-	"TPIntegrador/utils"
+	"TPIntegrador/model"
 	"TPIntegrador/repositories"
+	"TPIntegrador/utils"
 	"errors"
 )
 
@@ -16,10 +17,14 @@ type CamionServiceInterface interface {
 
 type CamionService struct {
 	camionRepository repositories.CamionRepositoryInterface
+	envioRepository repositories.EnvioRepositoryInterface
 }
 
-func NewCamionService(camionRepository repositories.CamionRepositoryInterface) *CamionService {
-	return &CamionService{camionRepository: camionRepository}
+func NewCamionService(camionRepository repositories.CamionRepositoryInterface, envioRepository repositories.EnvioRepositoryInterface) *CamionService {
+	return &CamionService{
+		camionRepository: camionRepository,
+		envioRepository: envioRepository,
+	}
 }
 
 func (service *CamionService) CrearCamion(camion *dto.Camion, usuario *dto.User) error {
@@ -85,6 +90,18 @@ func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion, usuar
 
 	camion := camiones[0]
 
+	//Valido que el camion no tenga envios actualmente
+	err, tieneEnvios := service.camionTieneEnviosActualmente(dto.NewCamion(camion))
+
+	if err != nil {
+		return err
+	}
+
+	//Si tiene envios, devuelvo un error
+	if tieneEnvios {
+		return errors.New("el camion tiene envios actualmente")
+	}
+
 	//Actualizo el campo esta_activo a false
 	camion.EstaActivo = false
 
@@ -94,4 +111,32 @@ func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion, usuar
 
 func (service *CamionService) validarRol(usuario *dto.User) bool {
 	return usuario.Rol == "Administrador"
+}
+
+func (service *CamionService) camionTieneEnviosActualmente(camion *dto.Camion) (error, bool) {
+	//Creamos el filtro para obtener los envios
+	filtro := utils.FiltroEnvio{PatenteCamion: camion.Patente, Estado: model.ADespachar}
+
+	//Obtengo los envios de la base de datos
+	enviosADespachar, err := service.envioRepository.ObtenerEnviosFiltrados(filtro)
+
+	if err != nil {
+		return errors.New("error al obtener los envios a despachar"), false
+	}
+
+	//Hacemos lo mismo para los envios que estan En Ruta
+	filtro.Estado = model.EnRuta
+
+	enviosEnRuta, err := service.envioRepository.ObtenerEnviosFiltrados(filtro)
+
+	if err != nil {
+		return errors.New("error al obtener los envios en ruta"), false
+	}
+
+	//Si no hay envios, devuelvo false
+	if len(enviosADespachar) == 0 && len(enviosEnRuta) == 0 {
+		return nil, false
+	}
+
+	return nil, true
 }

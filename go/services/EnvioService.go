@@ -276,7 +276,8 @@ func (service *EnvioService) obtenerPrecioTotalProductosDeEnvio(envio *dto.Envio
 
 func (service *EnvioService) obtenerCostoEnvio(envio *dto.Envio) (float64, error) {
 	//Obtiene el camion del envio para conocer el costoPorKilometro
-	filtroPorPatente := utils.FiltroCamion{Patente: envio.PatenteCamion, EstaActivo: true}
+	//Para el costo no es necesario filtrar por activo, ya que el camion puede estar dado de baja y el envio ya creado
+	filtroPorPatente := utils.FiltroCamion{Patente: envio.PatenteCamion}
 	camiones, err := service.camionRepository.ObtenerCamiones(filtroPorPatente)
 
 	if err != nil {
@@ -285,7 +286,7 @@ func (service *EnvioService) obtenerCostoEnvio(envio *dto.Envio) (float64, error
 
 	//Si no existe el camion, devolvemos un error
 	if len(camiones) == 0 {
-		return 0, errors.New("no existe el camion, o bien ha sido dado de baja")
+		return 0, errors.New("no existe el camion")
 	}
 
 	camion := camiones[0]
