@@ -77,6 +77,11 @@ func (repository CamionRepository) ObtenerCamiones(filtro utils.FiltroCamion) ([
 		filtroBD["patente"] = filtro.Patente
 	}
 
+	//Si el filtro tiene la propiedad de EstaActivo, la agregamos al filtro de la BD
+	if filtro.FiltrarPorEstaActivo {
+		filtroBD["esta_activo"] = filtro.EstaActivo
+	}
+
 	return repository.obtenerCamiones(filtroBD)
 }
 

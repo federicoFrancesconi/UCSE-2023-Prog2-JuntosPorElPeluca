@@ -41,6 +41,7 @@ func (service *CamionService) CrearCamion(camion *dto.Camion, usuario *dto.User)
 func (service *CamionService) ObtenerCamiones(filtro utils.FiltroCamion) ([]*dto.Camion, error) {
 	//Aseguramos que el filtro tenga el campo esta_activo en true
 	filtro.EstaActivo = true
+	filtro.FiltrarPorEstaActivo = true
 
 	camionesDB, err := service.camionRepository.ObtenerCamiones(filtro)
 

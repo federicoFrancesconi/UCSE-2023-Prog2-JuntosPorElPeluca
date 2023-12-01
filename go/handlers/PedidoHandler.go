@@ -99,7 +99,7 @@ func (handler *PedidoHandler) CrearPedido(c *gin.Context) {
 	}
 
 	//Agregamos un log para indicar información relevante del resultado
-	logging.LoggearResultadoYResponder(c, "PedidoHandler", "CrearPedido", pedido, &user)
+	logging.LoggearResultadoYResponder(c, "PedidoHandler", "CrearPedido", true, &user)
 }
 
 func (handler *PedidoHandler) AceptarPedido(c *gin.Context) {

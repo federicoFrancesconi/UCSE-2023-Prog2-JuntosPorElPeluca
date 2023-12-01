@@ -130,7 +130,7 @@ func (service *EnvioService) ObtenerEnvioPorId(envioConID *dto.Envio, usuario *d
 
 func (service *EnvioService) envioCabeEnCamion(envio *dto.Envio) (bool, error) {
 	//Primero buscamos el camion por patente
-	filtroPorPatente := utils.FiltroCamion{Patente: envio.PatenteCamion, EstaActivo: true}
+	filtroPorPatente := utils.FiltroCamion{Patente: envio.PatenteCamion, EstaActivo: true, FiltrarPorEstaActivo: true}
 
 	camiones, err := service.camionRepository.ObtenerCamiones(filtroPorPatente)
 
@@ -277,7 +277,7 @@ func (service *EnvioService) obtenerPrecioTotalProductosDeEnvio(envio *dto.Envio
 func (service *EnvioService) obtenerCostoEnvio(envio *dto.Envio) (float64, error) {
 	//Obtiene el camion del envio para conocer el costoPorKilometro
 	//Para el costo no es necesario filtrar por activo, ya que el camion puede estar dado de baja y el envio ya creado
-	filtroPorPatente := utils.FiltroCamion{Patente: envio.PatenteCamion}
+	filtroPorPatente := utils.FiltroCamion{Patente: envio.PatenteCamion, FiltrarPorEstaActivo: false}
 	camiones, err := service.camionRepository.ObtenerCamiones(filtroPorPatente)
 
 	if err != nil {
