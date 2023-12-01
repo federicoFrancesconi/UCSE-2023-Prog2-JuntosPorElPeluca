@@ -14,7 +14,7 @@ import (
 
 type PedidoRepositoryInterface interface {
 	CrearPedido(model.Pedido) error
-	ObtenerPedidosFiltrados(utils.FiltroPedido) ([]*model.Pedido, error)
+	ObtenerPedidos(utils.FiltroPedido) ([]*model.Pedido, error)
 	ObtenerPedidoPorId(model.Pedido) (*model.Pedido, error)
 	ObtenerCantidadPedidosPorEstado(estado model.EstadoPedido) (int, error)
 	ActualizarPedido(pedido model.Pedido) error
@@ -74,24 +74,7 @@ func (repository *PedidoRepository) obtenerPedidos(filtro bson.M) ([]*model.Pedi
 	return pedidos, nil
 }
 
-func (repository *PedidoRepository) ObtenerPedidoPorId(pedidoConId model.Pedido) (*model.Pedido, error) {
-	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")
-
-	filtro := bson.M{"_id": pedidoConId.ObjectId}
-
-	var pedido model.Pedido
-
-	err := collection.FindOne(context.Background(), filtro).Decode(&pedido)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &pedido, err
-}
-
-// Falta lo de idEnvio
-func (repository *PedidoRepository) ObtenerPedidosFiltrados(filtroEnvio utils.FiltroPedido) ([]*model.Pedido, error) {
+func (repository *PedidoRepository) ObtenerPedidos(filtroEnvio utils.FiltroPedido) ([]*model.Pedido, error) {
 	//Desestructuramos el filtro
 	idPedidos := filtroEnvio.IdPedidos
 	estado := filtroEnvio.Estado
@@ -132,6 +115,23 @@ func (repository *PedidoRepository) ObtenerPedidosFiltrados(filtroEnvio utils.Fi
 	}
 
 	return repository.obtenerPedidos(filter)
+}
+
+func (repository *PedidoRepository) ObtenerPedidoPorId(pedidoConId model.Pedido) (*model.Pedido, error) {
+	filtro := bson.M{"_id": pedidoConId.ObjectId}
+
+	pedidos, err := repository.obtenerPedidos(filtro)
+
+	if err != nil {
+		return nil, err
+	}
+
+	//Controlo que la lista este vacia
+	if len(pedidos) == 0 {
+		return nil, nil
+	}
+
+	return pedidos[0], err
 }
 
 func (repository *PedidoRepository) ObtenerCantidadPedidosPorEstado(estado model.EstadoPedido) (int, error) {

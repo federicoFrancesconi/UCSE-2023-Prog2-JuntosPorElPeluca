@@ -14,8 +14,8 @@ import (
 
 type EnvioRepositoryInterface interface {
 	CrearEnvio(model.Envio) error
+	ObtenerEnvios(utils.FiltroEnvio) ([]model.Envio, error)
 	ObtenerEnvioPorId(model.Envio) (model.Envio, error)
-	ObtenerEnviosFiltrados(utils.FiltroEnvio) ([]model.Envio, error)
 	ObtenerCantidadEnviosPorEstado(model.EstadoEnvio) (int, error)
 	ActualizarEnvio(model.Envio) error
 }
@@ -72,7 +72,7 @@ func (repository EnvioRepository) obtenerEnvios(filtro bson.M) ([]model.Envio, e
 	return envios, err
 }
 
-func (repository EnvioRepository) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvio) ([]model.Envio, error) {
+func (repository EnvioRepository) ObtenerEnvios(filtroEnvio utils.FiltroEnvio) ([]model.Envio, error) {
 	//Desestructuramos el filtro
 	patente := filtroEnvio.PatenteCamion
 	estado := filtroEnvio.Estado

@@ -119,7 +119,7 @@ func (service *CamionService) camionTieneEnviosActualmente(camion *dto.Camion) (
 	filtro := utils.FiltroEnvio{PatenteCamion: camion.Patente, Estado: model.ADespachar}
 
 	//Obtengo los envios de la base de datos
-	enviosADespachar, err := service.envioRepository.ObtenerEnviosFiltrados(filtro)
+	enviosADespachar, err := service.envioRepository.ObtenerEnvios(filtro)
 
 	if err != nil {
 		return errors.New("error al obtener los envios a despachar"), false
@@ -128,7 +128,7 @@ func (service *CamionService) camionTieneEnviosActualmente(camion *dto.Camion) (
 	//Hacemos lo mismo para los envios que estan En Ruta
 	filtro.Estado = model.EnRuta
 
-	enviosEnRuta, err := service.envioRepository.ObtenerEnviosFiltrados(filtro)
+	enviosEnRuta, err := service.envioRepository.ObtenerEnvios(filtro)
 
 	if err != nil {
 		return errors.New("error al obtener los envios en ruta"), false

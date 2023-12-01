@@ -52,7 +52,7 @@ func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 	}
 
 	//Obtenemos los pedidos
-	pedidos, err := handler.pedidoService.ObtenerPedidosFiltrados(filtro)
+	pedidos, err := handler.pedidoService.ObtenerPedidos(filtro)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {

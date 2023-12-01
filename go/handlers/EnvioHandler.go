@@ -52,7 +52,7 @@ func (handler *EnvioHandler) ObtenerEnvios(c *gin.Context) {
 	}
 
 	//Llama al service
-	envios, err := handler.envioService.ObtenerEnviosFiltrados(filtro, &user)
+	envios, err := handler.envioService.ObtenerEnvios(filtro, &user)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {

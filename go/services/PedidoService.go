@@ -16,8 +16,8 @@ type PedidoService struct {
 
 type PedidoServiceInterface interface {
 	CrearPedido(*dto.Pedido, *dto.User) error
+	ObtenerPedidos(utils.FiltroPedido) ([]dto.Pedido, error)
 	ObtenerPedidoPorId(*dto.Pedido) (*dto.Pedido, error)
-	ObtenerPedidosFiltrados(utils.FiltroPedido) ([]dto.Pedido, error)
 	ObtenerCantidadPedidosPorEstado() ([]utils.CantidadEstado, error)
 	AceptarPedido(*dto.Pedido, *dto.User) error
 	CancelarPedido(*dto.Pedido, *dto.User) error
@@ -48,7 +48,7 @@ func (service *PedidoService) CrearPedido(pedido *dto.Pedido, usuario *dto.User)
 	return service.pedidoRepository.CrearPedido(pedido.GetModel())
 }
 
-func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroPedido) ([]dto.Pedido, error) {
+func (service *PedidoService) ObtenerPedidos(filtroPedido utils.FiltroPedido) ([]dto.Pedido, error) {
 	//Obtenemos el id del envio, si es que se filtró por el mismo
 	idEnvio := filtroPedido.IdEnvio
 
@@ -83,7 +83,7 @@ func (service *PedidoService) ObtenerPedidosFiltrados(filtroPedido utils.FiltroP
 		return nil, errors.New("el estado ingresado para filtrar no es válido")
 	}
 
-	pedidos, err := service.pedidoRepository.ObtenerPedidosFiltrados(filtroPedido)
+	pedidos, err := service.pedidoRepository.ObtenerPedidos(filtroPedido)
 	if err != nil {
 		return nil, err
 	}

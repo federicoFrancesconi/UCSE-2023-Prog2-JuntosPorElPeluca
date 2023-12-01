@@ -11,7 +11,7 @@ import (
 
 type EnvioServiceInterface interface {
 	CrearEnvio(*dto.Envio, *dto.User) error
-	ObtenerEnviosFiltrados(utils.FiltroEnvio, *dto.User) ([]*dto.Envio, error)
+	ObtenerEnvios(utils.FiltroEnvio, *dto.User) ([]*dto.Envio, error)
 	ObtenerEnvioPorId(*dto.Envio, *dto.User) (*dto.Envio, error)
 	ObtenerBeneficioEntreFechas(utils.FiltroEnvio, *dto.User) (float64, error)
 	ObtenerCantidadEnviosPorEstado() ([]utils.CantidadEstado, error)
@@ -75,7 +75,7 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio, usuario *dto.User) err
 	return service.envioRepository.CrearEnvio(envio.GetModel())
 }
 
-func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvio, usuario *dto.User) ([]*dto.Envio, error) {
+func (service *EnvioService) ObtenerEnvios(filtroEnvio utils.FiltroEnvio, usuario *dto.User) ([]*dto.Envio, error) {
 	//Validamos el estado que se paso para filtrar
 	if filtroEnvio.Estado != "" {
 		if !model.EsUnEstadoEnvioValido(filtroEnvio.Estado) {
@@ -83,7 +83,7 @@ func (service *EnvioService) ObtenerEnviosFiltrados(filtroEnvio utils.FiltroEnvi
 		}
 	}
 
-	enviosDB, err := service.envioRepository.ObtenerEnviosFiltrados(filtroEnvio)
+	enviosDB, err := service.envioRepository.ObtenerEnvios(filtroEnvio)
 
 	if err != nil {
 		return nil, err
@@ -217,7 +217,7 @@ func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvi
 	filtro.Estado = model.Despachado
 
 	//Obtengo los envios despachados entre las dos fechas pasadas como parametro
-	envios, err := service.ObtenerEnviosFiltrados(filtro, usuario)
+	envios, err := service.ObtenerEnvios(filtro, usuario)
 
 	if err != nil {
 		return 0, err

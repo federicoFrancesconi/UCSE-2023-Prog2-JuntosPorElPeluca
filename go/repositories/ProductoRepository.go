@@ -14,8 +14,8 @@ import (
 
 type ProductoRepositoryInterface interface {
 	CrearProducto(model.Producto) error
-	ObtenerProductoPorCodigo(model.Producto) (*model.Producto, error)
 	ObtenerProductos(utils.FiltroProducto) ([]*model.Producto, error)
+	ObtenerProductoPorCodigo(model.Producto) (*model.Producto, error)
 	ActualizarProducto(model.Producto) error
 	EliminarProducto(model.Producto) error
 }
@@ -44,19 +44,19 @@ func (repository *ProductoRepository) CrearProducto(producto model.Producto) err
 }
 
 func (repository *ProductoRepository) ObtenerProductoPorCodigo(productoConCodigo model.Producto) (*model.Producto, error) {
-	collection := repository.db.GetClient().Database("empresa").Collection("productos")
-
 	filtro := bson.M{"_id": productoConCodigo.ObjectId}
 
-	var producto model.Producto
-
-	err := collection.FindOne(context.Background(), filtro).Decode(&producto)
+	productos, err := repository.obtenerProductos(filtro)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &producto, err
+	if len(productos) == 0 {
+		return nil, errors.New("no se encontró el producto")
+	}
+
+	return productos[0], err
 }
 
 func (repository *ProductoRepository) ObtenerProductos(filtroProducto utils.FiltroProducto) ([]*model.Producto, error) {

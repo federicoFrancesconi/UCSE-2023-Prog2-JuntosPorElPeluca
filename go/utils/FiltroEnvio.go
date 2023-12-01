@@ -6,7 +6,6 @@ import (
 )
 
 type FiltroEnvio struct {
-	IdEnvio					   string
 	PatenteCamion                 string
 	Estado                        model.EstadoEnvio
 	UltimaParada                  string
