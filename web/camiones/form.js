@@ -48,7 +48,7 @@ function guardarCamion(event) {
     peso_maximo: parseInt(document.getElementById("PesoMaximo").value),
     fecha_creacion: "2023-10-14T12:00:00Z",
     fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
-    id_creador: 0,
+    id_creador: "",
     costo_por_kilometro: parseInt(document.getElementById("CostoPorKm").value),
   };
 
@@ -83,7 +83,7 @@ function actualizarCamion(event) {
     peso_maximo: parseInt(document.getElementById("PesoMaximo").value),
     fecha_creacion: "2023-10-14T12:00:00Z",
     fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
-    id_creador: 0,
+    id_creador: "",
     costo_por_kilometro: parseInt(document.getElementById("CostoPorKm").value),
   };
 

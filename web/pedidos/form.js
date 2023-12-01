@@ -104,7 +104,7 @@ function guardarPedido() {
     fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
     ciudad_destino: document.getElementById("CiudadDestino").value,
     productos_elegidos: obtenerProductosElegidos(),
-    id_creador: 0,
+    id_creador: "",
     estado: "Pendiente",
   };
 
