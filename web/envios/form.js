@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 //obtiene los pedidos para mostrar en el form de crear
 function obtenerPedidos() {
-  const urlConFiltro = `http://localhost:8080/pedidos`;
+  const urlConFiltro = `http://localhost:8080/pedidos?estado=Aceptado`;
 
   makeRequest(
     `${urlConFiltro}`,
@@ -41,10 +41,6 @@ function obtenerPedidos() {
 
 var productosPedidos = [];
 
-/*
-este metodo cuando recibe los pedidos los filtra por los que tienen la condicion de aceptados y los muestra en la tabla
-el back deberia darme la opcion de pasarle un parametro y que me traiga solo los aceptados para que los muestre en la tabla
-*/
 function exitoObtenerPedidosEnvio(data) {
   const elementosTable = document //tabla en la que se colocan los envios que se obtienen
     .getElementById("tablePedidos")
@@ -53,7 +49,6 @@ function exitoObtenerPedidosEnvio(data) {
   console.log(elementosTable);
 
   data.forEach((elemento) => {
-    if (elemento.estado == "Aceptado") {
       const row = document.createElement("tr"); //crear una fila
 
       row.innerHTML = ` 
@@ -71,7 +66,6 @@ function exitoObtenerPedidosEnvio(data) {
       };
       productosPedidos.push(nuevoObjetoPedido);
       elementosTable.appendChild(row);
-    }
   });
 }
 
