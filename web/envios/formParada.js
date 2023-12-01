@@ -67,7 +67,7 @@ function errorAgregarParada(response) {
 function finalizarViaje(id) {
   if (confirm("¿Estás seguro de que deseas finalizar el viaje?")) {
     //TODO: le pasamos un id como parametro a agregarParada, pero no hay funcion que reciba un id
-    agregarParada(id);
+    agregarParada();
     debugger;
 
     dataEnvio = {
