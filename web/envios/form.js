@@ -41,6 +41,10 @@ function obtenerPedidos() {
 
 var productosPedidos = [];
 
+/*
+este metodo cuando recibe los pedidos los filtra por los que tienen la condicion de aceptados y los muestra en la tabla
+el back deberia darme la opcion de pasarle un parametro y que me traiga solo los aceptados para que los muestre en la tabla
+*/
 function exitoObtenerPedidosEnvio(data) {
   const elementosTable = document //tabla en la que se colocan los envios que se obtienen
     .getElementById("tablePedidos")
