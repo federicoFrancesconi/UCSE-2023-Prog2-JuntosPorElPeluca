@@ -43,7 +43,7 @@ function guardarProducto() {
   //armo la data a enviar
   debugger;
   const data = {
-    codigo_producto: document.getElementById("CodigoProducto").value,
+    codigo_producto: '',
     fecha_creacion: "2023-10-14T12:00:00Z",
     fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
     tipo_producto: document.getElementById("TipoProducto").value,
@@ -70,7 +70,7 @@ function guardarProducto() {
 
 function actualizarProducto() {
   const data = {
-    codigo_producto: document.getElementById("CodigoProducto").value,
+    codigo_producto: '',
     fecha_creacion: "2023-10-14T12:00:00Z",
     fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
     tipo_producto: document.getElementById("TipoProducto").value,
