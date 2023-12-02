@@ -64,17 +64,19 @@ function obtenerPedidoFiltrado(tipo) {
     case "fecha":
       url.searchParams.set(
         "fechaCreacionComienzo",
-        document.getElementById("FechaDesde").value + "T00:00:00.00Z"
+        document.getElementById("FechaDesde").value
       );
       url.searchParams.set(
         "fechaCreacionFin",
-        document.getElementById("FechaHasta").value + "T00:00:00.00Z"
+        document.getElementById("FechaHasta").value
       );
       break;
     default:
       url = `http://localhost:8080/pedidos`;
       break;
   }
+
+  debugger;
 
   makeRequest(
     `${url}`,

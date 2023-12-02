@@ -29,15 +29,15 @@ func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 	estado := c.DefaultQuery("estado", "")
 
 	// Convierte las fechas string a time.Time
-	fechaCreacionComienzoStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01T00:00:00Z")
-	fechaCreacionComienzo, err := time.Parse(time.RFC3339, fechaCreacionComienzoStr)
+	fechaCreacionComienzoStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01")
+	fechaCreacionComienzo, err := time.Parse("2006-01-02", fechaCreacionComienzoStr)
 	if err != nil {
 		logging.LoggearErrorYResponder(c, "PedidoHandler", "ObtenerPedidos", err, &user)
 		return
 	}
 
-	fechaCreacionFinStr := c.DefaultQuery("fechaCreacionFin", "0001-01-01T00:00:00Z")
-	fechaCreacionFin, err := time.Parse(time.RFC3339, fechaCreacionFinStr)
+	fechaCreacionFinStr := c.DefaultQuery("fechaCreacionFin", "0001-01-01")
+	fechaCreacionFin, err := time.Parse("2006-01-02", fechaCreacionFinStr)
 	if err != nil {
 		logging.LoggearErrorYResponder(c, "PedidoHandler", "ObtenerPedidos", err, &user)
 		return

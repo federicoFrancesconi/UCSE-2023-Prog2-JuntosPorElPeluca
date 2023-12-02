@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 function obtenerBeneficioEntreFechas() {
-  debugger;
   var fechaDesde =
     document.getElementById("FechaDesde").value;
   var fechaHasta =
