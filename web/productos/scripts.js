@@ -59,9 +59,9 @@ function exitoObtenerProductos(data) {
 }
 
 function errorObtenerProductos(response) {
-  alert("Error en la solicitud al servidor.");
+  alert(response.Error);
   console.log(response.json());
-  throw new Error("Error en la solicitud al servidor.");
+  throw new Error(response.Error);
 }
 
 function obtenerProductoFiltrado(tipo) {

@@ -116,7 +116,7 @@ function exitoObtenerPedidos(data) {
 }
 
 function errorObtenerPedidos(response) {
-  alert("Error en la solicitud al servidor.");
+  alert(response.Error);
   console.log(response.json());
-  throw new Error("Error en la solicitud al servidor.");
+  throw new Error(response.Error);
 }

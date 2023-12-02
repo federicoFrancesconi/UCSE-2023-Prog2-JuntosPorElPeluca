@@ -41,7 +41,6 @@ const urlConFiltro = `http://localhost:8080/productos`;
 
 function guardarProducto() {
   //armo la data a enviar
-  debugger;
   const data = {
     codigo_producto: '',
     fecha_creacion: "2023-10-14T12:00:00Z",
@@ -84,8 +83,6 @@ function actualizarProducto() {
     id_creador: "",
   };
 
-  debugger;
-
   makeRequest(
     `${urlConFiltro}`,
     Method.PUT,
@@ -103,9 +100,9 @@ function exitoProducto(data) {
 }
 
 function errorProducto(response) {
-  alert("Error en la solicitud al servidor.");
+  alert(response.Error);
   console.log(response.json());
-  throw new Error("Error en la solicitud al servidor.");
+  throw new Error(response.Error);
 }
 
 function eliminarProducto(codProducto) {

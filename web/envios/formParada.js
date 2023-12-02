@@ -59,9 +59,9 @@ function exitoAgregarParada(data) {
 }
 
 function errorAgregarParada(response) {
-  alert("Error en la solicitud al servidor.");
+  alert(response.Error);
   console.log(response.json());
-  throw new Error("Error en la solicitud al servidor.");
+  throw new Error(response.Error);
 }
 
 function finalizarViaje(id) {

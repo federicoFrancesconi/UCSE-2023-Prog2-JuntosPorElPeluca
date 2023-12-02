@@ -47,8 +47,9 @@ function exitoObtenerBeneficioEntreFechas(data) {
 }
 
 function errorGraficos(response) {
-  alert("Error en la solicitud al servidor.");
+  alert(response.Error);
   console.log(response.json());
+  throw new Error(response.Error);
 }
 
 function dibujarGraficoPedidos() {
