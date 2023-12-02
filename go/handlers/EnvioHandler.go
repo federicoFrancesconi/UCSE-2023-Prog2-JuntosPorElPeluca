@@ -28,15 +28,15 @@ func (handler *EnvioHandler) ObtenerEnvios(c *gin.Context) {
 	estado := c.DefaultQuery("estado", "")
 
 	// Convierte las fechas string a time.Time
-	fechaCreacionDesdeStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01T00:00:00Z")
-	fechaCreacionDesde, err := time.Parse(time.RFC3339, fechaCreacionDesdeStr)
+	fechaCreacionDesdeStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01")
+	fechaCreacionDesde, err := time.Parse("2006-01-02", fechaCreacionDesdeStr)
 	//Contemplamos si hay errores en el parseo
 	if err != nil {
 		logging.LoggearErrorYResponder(c, "EnvioHandler", "ObtenerEnvios", err, &user)
 	}
 
-	fechaCreacionHastaStr := c.DefaultQuery("fechaCreacionFin", "0001-01-01T00:00:00Z")
-	fechaCreacionHasta, err := time.Parse(time.RFC3339, fechaCreacionHastaStr)
+	fechaCreacionHastaStr := c.DefaultQuery("fechaCreacionFin", "0001-01-01")
+	fechaCreacionHasta, err := time.Parse("2006-01-02", fechaCreacionHastaStr)
 	//Contemplamos si hay errores en el parseo
 	if err != nil {
 		logging.LoggearErrorYResponder(c, "EnvioHandler", "ObtenerEnvios", err, &user)
