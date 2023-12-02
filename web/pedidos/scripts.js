@@ -13,21 +13,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
   obtenerPedidos();
 
   document
-    .getElementById("FiltroId")
+    .getElementById("AplicarFiltros")
     .addEventListener("click", function (event) {
-      obtenerPedidoFiltrado("id");
-    });
-
-  document
-    .getElementById("FiltroEstado")
-    .addEventListener("click", function (event) {
-      obtenerPedidoFiltrado("estado");
-    });
-
-  document
-    .getElementById("FiltrarFecha")
-    .addEventListener("click", function (event) {
-      obtenerPedidoFiltrado("fecha");
+      obtenerPedidoFiltrado();
     });
 });
 
@@ -47,36 +35,32 @@ function obtenerPedidos() {
 
 var url = new URL(urlConFiltro);
 
-function obtenerPedidoFiltrado(tipo) {
-  switch (tipo) {
-    case "id":
-      url.searchParams.set(
-        "idEnvio",
-        document.getElementById("FiltroId").value
-      );
-      break;
-    case "estado":
-      url.searchParams.set(
-        "estado",
-        document.getElementById("FiltroEstado").value
-      );
-      break;
-    case "fecha":
-      url.searchParams.set(
-        "fechaCreacionComienzo",
-        document.getElementById("FechaDesde").value
-      );
-      url.searchParams.set(
-        "fechaCreacionFin",
-        document.getElementById("FechaHasta").value
-      );
-      break;
-    default:
-      url = `http://localhost:8080/pedidos`;
-      break;
+function obtenerPedidoFiltrado() {
+  if (document.getElementById("FiltroId").value != '') {
+    url.searchParams.set(
+      "idEnvio",
+      document.getElementById("FiltroId").value
+    );
   }
 
-  debugger;
+  if (document.getElementById("FiltroEstado").value != '') {
+    url.searchParams.set(
+      "estado",
+      document.getElementById("FiltroEstado").value
+    );
+  }
+
+  if (document.getElementById("FechaDesde").value != '' && document.getElementById("FechaHasta").value != '') {
+    url.searchParams.set(
+      "fechaCreacionComienzo",
+      document.getElementById("FechaDesde").value
+    );
+
+    url.searchParams.set(
+      "fechaCreacionFin",
+      document.getElementById("FechaHasta").value
+    );
+  }
 
   makeRequest(
     `${url}`,

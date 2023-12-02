@@ -32,7 +32,6 @@
         <div>
             <label for="">Id Envio</label>
             <input type="text" name="FiltroId" id="FiltroId">
-            <input type="button" id="FiltrarId" value="Filtrar" onclick="obtenerPedidoFiltrado('id')">
         </div>
         <div>
             <label for="">Estado</label>
@@ -43,7 +42,6 @@
                 <option value="Para Enviar">Para Enviar</option>
                 <option value="Enviado">Enviado</option>
             </select>
-            <input type="button" id="FiltrarEstado" value="Filtrar" onclick="obtenerPedidoFiltrado('estado')">
         </div>
         <div>
             <label for="">Rango de fecha de creacion</label>
@@ -55,8 +53,8 @@
                 <label for="">Hasta</label>
                 <input type="date" name="FechaHasta" id="FechaHasta">
             </div>
-            <input type="button" id="FiltrarFecha" value="Filtrar" onclick="obtenerPedidoFiltrado('fecha')">
         </div>
+        <input type="button" id="AplicarFiltros" value="Filtrar" onclick="obtenerPedidoFiltrado()">
         <a href="/web/pedidos/index.html" class="anchorRojo">Limpiar Filtros</a>
     </div>
 

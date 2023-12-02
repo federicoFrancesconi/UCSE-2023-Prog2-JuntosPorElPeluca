@@ -11,27 +11,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
   }
 
   document
-    .getElementById("FiltrarPatente")
+    .getElementById("AplicarFiltros")
     .addEventListener("click", function (event) {
-      obtenerEnvioFiltrado("patente");
-    });
-
-  document
-    .getElementById("FiltrarEstado")
-    .addEventListener("click", function (event) {
-      obtenerEnvioFiltrado("estado");
-    });
-
-  document
-    .getElementById("FiltrarCiudad")
-    .addEventListener("click", function (event) {
-      obtenerEnvioFiltrado("ciudad");
-    });
-
-  document
-    .getElementById("FiltrarFecha")
-    .addEventListener("click", function (event) {
-      obtenerEnvioFiltrado("fecha");
+      obtenerEnvioFiltrado();
     });
 
   obtenerEnvios();
@@ -123,41 +105,39 @@ function errorEnvio(response) {
   throw new Error("Error en la solicitud al servidor.");
 }
 
-var url = new URL(urlConFiltro);
+function obtenerEnvioFiltrado() {
+  var url = new URL(urlConFiltro);
 
-function obtenerEnvioFiltrado(tipo) {
-  switch (tipo) {
-    case "patente":
-      url.searchParams.set(
-        "patente",
-        document.getElementById("FiltroPatente").value
-      );
-      break;
-    case "estado":
-      url.searchParams.set(
-        "estado",
-        document.getElementById("FiltroEstado").value
-      );
-      break;
-    case "fecha":
-      url.searchParams.set(
-        "fechaCreacionComienzo",
-        document.getElementById("FechaDesde").value + "T00:00:00.00Z"
-      );
-      url.searchParams.set(
-        "fechaCreacionFin",
-        document.getElementById("FechaHasta").value + "T00:00:00.00Z"
-      );
-      break;
-    case "ciudad":
-      url.searchParams.set(
-        "ultimaParada",
-        document.getElementById("FiltroCiudad").value
-      );
-      break;
-    default:
-      url = `http://localhost:8080/pedidos`;
-      break;
+  if(document.getElementById("FiltroPatente").value != ""){
+    url.searchParams.set(
+      "patente",
+      document.getElementById("FiltroPatente").value
+    );
+  }
+
+  if(document.getElementById("FiltroEstado").value != ""){
+    url.searchParams.set(
+      "estado",
+      document.getElementById("FiltroEstado").value
+    );
+  }
+
+  if(document.getElementById("FechaDesde").value != "" && document.getElementById("FechaHasta").value != ""){
+    url.searchParams.set(
+      "fechaCreacionComienzo",
+      document.getElementById("FechaDesde").value 
+    );
+    url.searchParams.set(
+      "fechaCreacionFin",
+      document.getElementById("FechaHasta").value
+    );
+  }
+
+  if(document.getElementById("FiltroCiudad").value != ""){
+    url.searchParams.set(
+      "ultimaParada",
+      document.getElementById("FiltroCiudad").value
+    );
   }
 
   makeRequest(
