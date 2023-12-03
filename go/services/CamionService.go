@@ -17,13 +17,13 @@ type CamionServiceInterface interface {
 
 type CamionService struct {
 	camionRepository repositories.CamionRepositoryInterface
-	envioRepository repositories.EnvioRepositoryInterface
+	envioRepository  repositories.EnvioRepositoryInterface
 }
 
 func NewCamionService(camionRepository repositories.CamionRepositoryInterface, envioRepository repositories.EnvioRepositoryInterface) *CamionService {
 	return &CamionService{
 		camionRepository: camionRepository,
-		envioRepository: envioRepository,
+		envioRepository:  envioRepository,
 	}
 }
 
@@ -68,7 +68,7 @@ func (service *CamionService) ActualizarCamion(camion *dto.Camion, usuario *dto.
 	return service.camionRepository.ActualizarCamion(camion.GetModel())
 }
 
-//En lugar de eliminar el camion, actualiza el campo esta_activo a false
+// En lugar de eliminar el camion, actualiza el campo esta_activo a false
 func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion, usuario *dto.User) error {
 	if !service.validarRol(usuario) {
 		return errors.New("el usuario no tiene permisos para eliminar un camion")
@@ -111,7 +111,7 @@ func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion, usuar
 }
 
 func (service *CamionService) validarRol(usuario *dto.User) bool {
-	return usuario.Rol == "Administrador"
+	return usuario.Rol == string(utils.Administrador)
 }
 
 func (service *CamionService) camionTieneEnviosActualmente(camion *dto.Camion) (error, bool) {

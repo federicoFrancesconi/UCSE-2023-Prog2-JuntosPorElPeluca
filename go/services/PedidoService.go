@@ -2,9 +2,9 @@ package services
 
 import (
 	"TPIntegrador/dto"
-	"TPIntegrador/utils"
-	"TPIntegrador/repositories"
 	"TPIntegrador/model"
+	"TPIntegrador/repositories"
+	"TPIntegrador/utils"
 	"errors"
 )
 
@@ -246,5 +246,5 @@ func (service *PedidoService) CancelarPedido(pedidoPorCancelar *dto.Pedido, usua
 
 // valida el rol del usuario
 func (service *PedidoService) validarRol(usuario *dto.User) bool {
-	return usuario.Rol == "Operador"
+	return usuario.Rol == string(utils.Operador)
 }

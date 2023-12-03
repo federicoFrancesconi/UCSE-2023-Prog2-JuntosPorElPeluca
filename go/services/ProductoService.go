@@ -2,9 +2,9 @@ package services
 
 import (
 	"TPIntegrador/dto"
-	"TPIntegrador/utils"
-	"TPIntegrador/repositories"
 	"TPIntegrador/model"
+	"TPIntegrador/repositories"
+	"TPIntegrador/utils"
 	"errors"
 )
 
@@ -88,5 +88,5 @@ func (service *ProductoService) EliminarProducto(producto *dto.Producto, usuario
 }
 
 func (service *ProductoService) validarRol(usuario *dto.User) bool {
-	return usuario.Rol == "Administrador"
+	return usuario.Rol == string(utils.Administrador)
 }

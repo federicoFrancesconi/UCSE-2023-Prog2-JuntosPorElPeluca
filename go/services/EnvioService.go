@@ -37,7 +37,7 @@ func NewEnvioService(envioRepository repositories.EnvioRepositoryInterface, cami
 
 func (service *EnvioService) CrearEnvio(envio *dto.Envio, usuario *dto.User) error {
 	//valido que el envio lo este creando un camionero
-	if usuario.Rol == "Conductor" {
+	if !service.validarRol(usuario) {
 		return errors.New("el usuario no tiene permisos para crear un envio")
 	}
 
@@ -504,9 +504,13 @@ func (service *EnvioService) validarUsuario(envio *dto.Envio, usuario *dto.User)
 	}
 
 	//Verifico si debe ser un conductor quien hace la consulta
-	if usuario.Rol != "Conductor" {
+	if !service.validarRol(usuario) {
 		return false, errors.New("el usuario no tiene permisos ya que no es un conductor")
 	}
 
 	return true, nil
+}
+
+func (service *EnvioService) validarRol(usuario *dto.User) bool {
+	return usuario.Rol == string(utils.Conductor)
 }
