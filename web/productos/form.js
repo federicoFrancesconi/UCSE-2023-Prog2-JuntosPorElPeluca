@@ -23,18 +23,19 @@ document.addEventListener("DOMContentLoaded", function (event) {
     operacion == "EDITAR"
   ) {
     document
-      .getElementById("form")
-      .addEventListener("submit", function (event) {
-        actualizarProducto(event);
+      .getElementById("buttonSave")
+      .addEventListener("click", function (event) {
+        guardarProducto(event);
       });
+
     document.getElementById("CodigoProducto").value = codProducto;
 
     obtenerProductoPorId(codProducto);
   } else {
     document
-      .getElementById("form")
-      .addEventListener("submit", function (event) {
-        guardarProducto(event);
+      .getElementById("buttonSave")
+      .addEventListener("click", function (event) {
+        actualizarProducto(event);
       });
   }
 });
