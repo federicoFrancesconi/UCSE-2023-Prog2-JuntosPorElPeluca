@@ -23,19 +23,17 @@
 
     <div>
         <h3>Beneficio entre fechas</h3>
-        <form action="/" method="post" id="form">   
-            <div>
-                <label for="">Desde</label>
-                <input type="date" name="FechaDesde" id="FechaDesde">
-            </div>
-            <div>
-                <label for="">Hasta</label>
-                <input type="date" name="FechaHasta" id="FechaHasta">
-            </div>
-            <div>
-                <input type="submit" value="Enviar">
-            </div>
-        </form>
+        <div>
+            <label for="">Desde</label>
+            <input type="date" name="FechaDesde" id="FechaDesde">
+        </div>
+        <div>
+            <label for="">Hasta</label>
+            <input type="date" name="FechaHasta" id="FechaHasta">
+        </div>
+        <div>
+            <input type="button" value="Filtrar" onclick="obtenerBeneficioEntreFechas('tipo')">
+        </div>
         <h4>Beneficio: </h4>
         <h4 id="beneficio"></h4>
     </div>

@@ -1,20 +1,14 @@
 document.addEventListener("DOMContentLoaded", function (event) {
-  document.getElementById("form").addEventListener("submit", function (event) {
-    obtenerBeneficioEntreFechas(event);
-  });
-
   dibujarGraficoPedidos();
   dibujarGraficoEnvios();
 });
 
 function obtenerBeneficioEntreFechas() {
-  var fechaDesde =
-    document.getElementById("FechaDesde").value;
-  var fechaHasta =
-    document.getElementById("FechaHasta").value;
+  var fechaDesde = document.getElementById("FechaDesde").value;
+  var fechaHasta = document.getElementById("FechaHasta").value;
 
   var urlConFiltro = `http://localhost:8080/envios/beneficioEntreFechas`;
-  
+
   //Si fechaDesde esta vacio, no se agrega al filtro
   if (fechaDesde != "") {
     urlConFiltro += `?fechaDesde=${fechaDesde}`;
