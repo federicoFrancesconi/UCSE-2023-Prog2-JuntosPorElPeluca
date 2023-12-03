@@ -13,9 +13,9 @@ import (
 )
 
 type CamionRepositoryInterface interface {
-	CrearCamion(model.Camion) error
-	ObtenerCamiones(utils.FiltroCamion) ([]model.Camion, error)
-	ActualizarCamion(model.Camion) error
+	CrearCamion(*model.Camion) error
+	ObtenerCamiones(utils.FiltroCamion) ([]*model.Camion, error)
+	ActualizarCamion(*model.Camion) error
 }
 
 type CamionRepository struct {
@@ -28,7 +28,7 @@ func NewCamionRepository(db database.DB) *CamionRepository {
 	}
 }
 
-func (repository CamionRepository) CrearCamion(camion model.Camion) error {
+func (repository CamionRepository) CrearCamion(camion *model.Camion) error {
 	//Nos aseguramos de que el Id sea creado por mongo
 	camion.ObjectId = primitive.NewObjectID()
 
@@ -41,7 +41,7 @@ func (repository CamionRepository) CrearCamion(camion model.Camion) error {
 	return err
 }
 
-func (repository CamionRepository) obtenerCamiones(filtro bson.M) ([]model.Camion, error) {
+func (repository CamionRepository) obtenerCamiones(filtro bson.M) ([]*model.Camion, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("camiones")
 
 	cursor, err := collection.Find(context.TODO(), filtro)
@@ -53,7 +53,7 @@ func (repository CamionRepository) obtenerCamiones(filtro bson.M) ([]model.Camio
 	defer cursor.Close(context.Background())
 
 	//Inicializamos el slice de camiones por si no hay camiones
-	camiones := make([]model.Camion, 0)
+	camiones := make([]*model.Camion, 0)
 
 	for cursor.Next(context.Background()) {
 		var camion model.Camion
@@ -62,13 +62,13 @@ func (repository CamionRepository) obtenerCamiones(filtro bson.M) ([]model.Camio
 			return nil, err
 		}
 
-		camiones = append(camiones, camion)
+		camiones = append(camiones, &camion)
 	}
 
 	return camiones, err
 }
 
-func (repository CamionRepository) ObtenerCamiones(filtro utils.FiltroCamion) ([]model.Camion, error) {
+func (repository CamionRepository) ObtenerCamiones(filtro utils.FiltroCamion) ([]*model.Camion, error) {
 	//Inicializamos el filtro vacio
 	filtroBD := bson.M{}
 
@@ -85,7 +85,7 @@ func (repository CamionRepository) ObtenerCamiones(filtro utils.FiltroCamion) ([
 	return repository.obtenerCamiones(filtroBD)
 }
 
-func (repository CamionRepository) ActualizarCamion(camion model.Camion) error {
+func (repository CamionRepository) ActualizarCamion(camion *model.Camion) error {
 	//Actualizamos la fecha de actualizacion del camion
 	camion.FechaUltimaActualizacion = time.Now()
 

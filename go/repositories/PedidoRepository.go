@@ -13,11 +13,11 @@ import (
 )
 
 type PedidoRepositoryInterface interface {
-	CrearPedido(model.Pedido) error
-	ObtenerPedidos(utils.FiltroPedido) ([]*model.Pedido, error)
-	ObtenerPedidoPorId(model.Pedido) (*model.Pedido, error)
-	ObtenerCantidadPedidosPorEstado(estado model.EstadoPedido) (int, error)
-	ActualizarPedido(pedido model.Pedido) error
+	CrearPedido(*model.Pedido) error
+	ObtenerPedidos(*utils.FiltroPedido) ([]*model.Pedido, error)
+	ObtenerPedidoPorId(*model.Pedido) (*model.Pedido, error)
+	ObtenerCantidadPedidosPorEstado(model.EstadoPedido) (int, error)
+	ActualizarPedido(*model.Pedido) error
 }
 
 type PedidoRepository struct {
@@ -30,7 +30,7 @@ func NewPedidoRepository(db database.DB) *PedidoRepository {
 	}
 }
 
-func (repository *PedidoRepository) CrearPedido(pedido model.Pedido) error {
+func (repository *PedidoRepository) CrearPedido(pedido *model.Pedido) error {
 	//Nos aseguramos de que el Id sea creado por mongo
 	pedido.ObjectId = primitive.NewObjectID()
 
@@ -74,12 +74,12 @@ func (repository *PedidoRepository) obtenerPedidos(filtro bson.M) ([]*model.Pedi
 	return pedidos, nil
 }
 
-func (repository *PedidoRepository) ObtenerPedidos(filtroEnvio utils.FiltroPedido) ([]*model.Pedido, error) {
+func (repository *PedidoRepository) ObtenerPedidos(filtro *utils.FiltroPedido) ([]*model.Pedido, error) {
 	//Desestructuramos el filtro
-	idPedidos := filtroEnvio.IdPedidos
-	estado := filtroEnvio.Estado
-	fechaCreacionComienzo := filtroEnvio.FechaCreacionComienzo
-	fechaCreacionFin := filtroEnvio.FechaCreacionFin
+	idPedidos := filtro.IdPedidos
+	estado := filtro.Estado
+	fechaCreacionComienzo := filtro.FechaCreacionComienzo
+	fechaCreacionFin := filtro.FechaCreacionFin
 
 	filter := bson.M{}
 
@@ -117,7 +117,7 @@ func (repository *PedidoRepository) ObtenerPedidos(filtroEnvio utils.FiltroPedid
 	return repository.obtenerPedidos(filter)
 }
 
-func (repository *PedidoRepository) ObtenerPedidoPorId(pedidoConId model.Pedido) (*model.Pedido, error) {
+func (repository *PedidoRepository) ObtenerPedidoPorId(pedidoConId *model.Pedido) (*model.Pedido, error) {
 	filtro := bson.M{"_id": pedidoConId.ObjectId}
 
 	pedidos, err := repository.obtenerPedidos(filtro)
@@ -148,7 +148,7 @@ func (repository *PedidoRepository) ObtenerCantidadPedidosPorEstado(estado model
 	return int(cantidad), nil
 }
 
-func (repository *PedidoRepository) ActualizarPedido(pedido model.Pedido) error {
+func (repository *PedidoRepository) ActualizarPedido(pedido *model.Pedido) error {
 	pedido.FechaUltimaActualizacion = time.Now()
 
 	collection := repository.db.GetClient().Database("empresa").Collection("pedidos")

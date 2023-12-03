@@ -13,11 +13,11 @@ import (
 )
 
 type ProductoRepositoryInterface interface {
-	CrearProducto(model.Producto) error
+	CrearProducto(*model.Producto) error
 	ObtenerProductos(utils.FiltroProducto) ([]*model.Producto, error)
-	ObtenerProductoPorCodigo(model.Producto) (*model.Producto, error)
-	ActualizarProducto(model.Producto) error
-	EliminarProducto(model.Producto) error
+	ObtenerProductoPorCodigo(*model.Producto) (*model.Producto, error)
+	ActualizarProducto(*model.Producto) error
+	EliminarProducto(*model.Producto) error
 }
 
 type ProductoRepository struct {
@@ -30,7 +30,7 @@ func NewProductoRepository(db database.DB) *ProductoRepository {
 	}
 }
 
-func (repository *ProductoRepository) CrearProducto(producto model.Producto) error {
+func (repository *ProductoRepository) CrearProducto(producto *model.Producto) error {
 	//Nos aseguramos de que el Id sea creado por mongo
 	producto.ObjectId = primitive.NewObjectID()
 
@@ -43,7 +43,7 @@ func (repository *ProductoRepository) CrearProducto(producto model.Producto) err
 	return err
 }
 
-func (repository *ProductoRepository) ObtenerProductoPorCodigo(productoConCodigo model.Producto) (*model.Producto, error) {
+func (repository *ProductoRepository) ObtenerProductoPorCodigo(productoConCodigo *model.Producto) (*model.Producto, error) {
 	filtro := bson.M{"_id": productoConCodigo.ObjectId}
 
 	productos, err := repository.obtenerProductos(filtro)
@@ -112,7 +112,7 @@ func (repository *ProductoRepository) obtenerProductos(filtro bson.M) ([]*model.
 	return productosList, nil
 }
 
-func (repository *ProductoRepository) ActualizarProducto(producto model.Producto) error {
+func (repository *ProductoRepository) ActualizarProducto(producto *model.Producto) error {
 	//Actualizamos la fecha de actualizacion del producto
 	producto.FechaUltimaActualizacion = time.Now()
 
@@ -141,7 +141,7 @@ func (repository *ProductoRepository) ActualizarProducto(producto model.Producto
 	return err
 }
 
-func (repository *ProductoRepository) EliminarProducto(producto model.Producto) error {
+func (repository *ProductoRepository) EliminarProducto(producto *model.Producto) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("productos")
 
 	filtro := bson.M{"_id": producto.ObjectId}

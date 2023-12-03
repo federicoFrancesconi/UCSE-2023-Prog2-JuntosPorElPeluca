@@ -16,7 +16,7 @@ type PedidoService struct {
 
 type PedidoServiceInterface interface {
 	CrearPedido(*dto.Pedido, *dto.User) error
-	ObtenerPedidos(utils.FiltroPedido) ([]dto.Pedido, error)
+	ObtenerPedidos(utils.FiltroPedido) ([]*dto.Pedido, error)
 	ObtenerPedidoPorId(*dto.Pedido) (*dto.Pedido, error)
 	ObtenerCantidadPedidosPorEstado() ([]utils.CantidadEstado, error)
 	AceptarPedido(*dto.Pedido, *dto.User) error
@@ -48,7 +48,7 @@ func (service *PedidoService) CrearPedido(pedido *dto.Pedido, usuario *dto.User)
 	return service.pedidoRepository.CrearPedido(pedido.GetModel())
 }
 
-func (service *PedidoService) ObtenerPedidos(filtroPedido utils.FiltroPedido) ([]dto.Pedido, error) {
+func (service *PedidoService) ObtenerPedidos(filtroPedido utils.FiltroPedido) ([]*dto.Pedido, error) {
 	//Obtenemos el id del envio, si es que se filtró por el mismo
 	idEnvio := filtroPedido.IdEnvio
 
@@ -71,7 +71,7 @@ func (service *PedidoService) ObtenerPedidos(filtroPedido utils.FiltroPedido) ([
 
 		if idPedidos == nil {
 			//Si no hay pedidos, devolvemos un array vacio
-			return []dto.Pedido{}, nil
+			return []*dto.Pedido{}, nil
 		}
 	}
 
@@ -83,16 +83,16 @@ func (service *PedidoService) ObtenerPedidos(filtroPedido utils.FiltroPedido) ([
 		return nil, errors.New("el estado ingresado para filtrar no es válido")
 	}
 
-	pedidos, err := service.pedidoRepository.ObtenerPedidos(filtroPedido)
+	pedidos, err := service.pedidoRepository.ObtenerPedidos(&filtroPedido)
 	if err != nil {
 		return nil, err
 	}
 
 	//Inicializamos el array de pedidosDTO por si esta vacio
-	var pedidosDTO []dto.Pedido = []dto.Pedido{}
+	var pedidosDTO []*dto.Pedido = []*dto.Pedido{}
 
 	for _, pedido := range pedidos {
-		pedidoDTO := *dto.NewPedido(pedido)
+		pedidoDTO := dto.NewPedido(pedido)
 		pedidosDTO = append(pedidosDTO, pedidoDTO)
 	}
 
@@ -143,7 +143,7 @@ func (service *PedidoService) AceptarPedido(pedidoPorAceptar *dto.Pedido, usuari
 	}
 
 	//Actualiza el pedido en la base de datos
-	return service.pedidoRepository.ActualizarPedido(*pedido)
+	return service.pedidoRepository.ActualizarPedido(pedido)
 }
 
 func (service *PedidoService) hayStockDisponiblePedido(pedido *model.Pedido) bool {
@@ -241,7 +241,7 @@ func (service *PedidoService) CancelarPedido(pedidoPorCancelar *dto.Pedido, usua
 	}
 
 	//Actualiza el pedido en la base de datos
-	return service.pedidoRepository.ActualizarPedido(*pedido)
+	return service.pedidoRepository.ActualizarPedido(pedido)
 }
 
 // valida el rol del usuario

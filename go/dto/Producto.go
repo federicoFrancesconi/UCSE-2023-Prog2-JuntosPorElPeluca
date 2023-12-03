@@ -36,8 +36,8 @@ func NewProducto(producto *model.Producto) *Producto {
 }
 
 // Crea el modelo a partir del dto
-func (producto Producto) GetModel() model.Producto {
-	return model.Producto{
+func (producto Producto) GetModel() *model.Producto {
+	return &model.Producto{
 		ObjectId:                 utils.GetObjectIDFromStringID(producto.CodigoProducto),
 		TipoDeProducto:           producto.TipoDeProducto,
 		Nombre:                   producto.Nombre,

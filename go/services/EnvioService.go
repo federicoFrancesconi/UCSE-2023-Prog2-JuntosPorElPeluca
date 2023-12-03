@@ -83,7 +83,7 @@ func (service *EnvioService) ObtenerEnvios(filtroEnvio utils.FiltroEnvio, usuari
 		}
 	}
 
-	enviosDB, err := service.envioRepository.ObtenerEnvios(filtroEnvio)
+	enviosDB, err := service.envioRepository.ObtenerEnvios(&filtroEnvio)
 
 	if err != nil {
 		return nil, err
@@ -94,10 +94,10 @@ func (service *EnvioService) ObtenerEnvios(filtroEnvio utils.FiltroEnvio, usuari
 
 	for _, envioDB := range enviosDB {
 		//valido que el envio sea del camionero que lo esta filtrando
-		valido, err := service.validarUsuario(dto.NewEnvio(envioDB), usuario)
+		valido, err := service.validarUsuario(dto.NewEnvio(*envioDB), usuario)
 
 		if valido && err == nil {
-			envio := dto.NewEnvio(envioDB)
+			envio := dto.NewEnvio(*envioDB)
 			envios = append(envios, envio)
 		} else if err != nil {
 			return nil, err
@@ -115,7 +115,7 @@ func (service *EnvioService) ObtenerEnvioPorId(envioConID *dto.Envio, usuario *d
 	if err != nil {
 		return nil, err
 	} else {
-		envio = dto.NewEnvio(envioDB)
+		envio = dto.NewEnvio(*envioDB)
 	}
 
 	//valido que el envio sea del camionero que lo esta filtrando
@@ -203,7 +203,7 @@ func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido) error {
 	}
 
 	//Actualiza el pedido en la base de datos
-	err = service.pedidoRepository.ActualizarPedido(*pedido)
+	err = service.pedidoRepository.ActualizarPedido(pedido)
 
 	if err != nil {
 		return errors.New("error actualizando el pedido en la DB: " + err.Error())
@@ -345,7 +345,7 @@ func (service *EnvioService) AgregarParada(parada *dto.NuevaParada, usuario *dto
 	}
 
 	//Validamos que el envio pertenezca al camionero
-	valido, err := service.validarUsuario(dto.NewEnvio(envioDB), usuario)
+	valido, err := service.validarUsuario(dto.NewEnvio(*envioDB), usuario)
 	if !valido && err == nil {
 		return false, errors.New("el envio no pertenece al camionero")
 	}
@@ -400,7 +400,7 @@ func (service *EnvioService) CambiarEstadoEnvio(envio *dto.Envio, usuario *dto.U
 
 	//Si el envio pasa a estado Despachado, finaliza el viaje, por lo que hay que hacer otras operaciones
 	if estadoDeseado == model.Despachado {
-		service.finalizarViaje(dto.NewEnvio(envioDB))
+		service.finalizarViaje(dto.NewEnvio(*envioDB))
 	}
 
 	return true, nil
@@ -449,7 +449,7 @@ func (service *EnvioService) entregarPedido(pedidoPorEntregar *dto.Pedido) error
 	}
 
 	//Actualiza el pedido en la base de datos
-	return service.pedidoRepository.ActualizarPedido(*pedido)
+	return service.pedidoRepository.ActualizarPedido(pedido)
 }
 
 func (service *EnvioService) descontarStockProductosDeEnvio(envio *dto.Envio) error {
@@ -487,7 +487,7 @@ func (service *EnvioService) descontarStockProducto(productoPedido dto.ProductoP
 	producto.StockActual = producto.StockActual - productoPedido.Cantidad
 
 	//Actualizamos la base de datos
-	return service.productoRepository.ActualizarProducto(*producto)
+	return service.productoRepository.ActualizarProducto(producto)
 }
 
 func (service *EnvioService) validarUsuario(envio *dto.Envio, usuario *dto.User) (bool, error) {
