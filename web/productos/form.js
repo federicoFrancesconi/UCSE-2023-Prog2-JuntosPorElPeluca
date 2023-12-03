@@ -28,6 +28,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
         actualizarProducto(event);
       });
     document.getElementById("CodigoProducto").value = codProducto;
+
+    obtenerProductoPorId(codProducto);
   } else {
     document
       .getElementById("form")
@@ -119,4 +121,26 @@ function eliminarProducto(codProducto) {
   } else {
     window.location = document.location.origin + "/web/productos/index.html";
   }
+}
+
+function obtenerProductoPorId(codProducto) {
+  makeRequest(
+    `${urlConFiltro}/${codProducto}`,
+    Method.GET,
+    null,
+    ContentType.JSON,
+    CallType.PRIVATE,
+    exitoObtenerProducto,
+    errorProducto
+  );
+}
+
+function exitoObtenerProducto(data) {
+  document.getElementById("CodigoProducto").value = data.codigo_producto;
+  document.getElementById("TipoProducto").value = data.tipo_producto;
+  document.getElementById("Nombre").value = data.nombre;
+  document.getElementById("PesoUnitario").value = data.peso_unitario;
+  document.getElementById("PrecioUnitario").value = data.precio_unitario;
+  document.getElementById("StockMinimo").value = data.stock_minimo;
+  document.getElementById("StockActual").value = data.stock_actual;
 }
