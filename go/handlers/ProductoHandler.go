@@ -53,6 +53,27 @@ func (handler *ProductoHandler) ObtenerProductos(c *gin.Context) {
 	logging.LoggearResultadoYResponder(c, "ProductoHandler", "ObtenerProductos", productos, &user)
 }
 
+func (handler *ProductoHandler) ObtenerProductoPorCodigo(c *gin.Context) {
+	user := dto.NewUser(utils.GetUserInfoFromContext(c))
+
+	//Recibimos el codigo del producto a buscar
+	codigo := c.Param("codigo")
+
+	//Creamos el objeto producto
+	productoConCodigo := dto.Producto{CodigoProducto: codigo}
+
+	producto, err := handler.productoService.ObtenerProductoPorCodigo(&productoConCodigo, &user)
+
+	//Si hay un error, lo devolvemos
+	if err != nil {
+		logging.LoggearErrorYResponder(c, "ProductoHandler", "ObtenerProductoPorCodigo", err, &user)
+		return
+	}
+
+	//Agregamos un log para indicar información relevante del resultado
+	logging.LoggearResultadoYResponder(c, "ProductoHandler", "ObtenerProductoPorCodigo", producto, &user)
+}
+
 func (handler *ProductoHandler) CrearProducto(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 

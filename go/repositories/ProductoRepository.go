@@ -63,12 +63,9 @@ func (repository *ProductoRepository) ObtenerProductos(filtroProducto utils.Filt
 	//Primero creamos el filtro vacio
 	filtroDB := bson.M{}
 
-	// Write a custom JavaScript expression using $where
-	customJavaScript := "this.stock_actual < this.stock_minimo"
-
-	//Si quiere filtrar por stock minimo, lo agregamos al filtro
+	//Si quiere filtrar por stock minimo, lo agregamos al filtro (que usa JavaScript para la condicion)
 	if filtroProducto.FiltrarPorStockMinimo {
-		filtroDB["$where"] = customJavaScript
+		filtroDB["$where"] = "this.stock_actual < this.stock_minimo"
 	}
 
 	//Si quiere filtrar por tipo de producto, lo agregamos al filtro
