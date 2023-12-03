@@ -43,7 +43,9 @@ func (handler *CamionHandler) ObtenerCamionPorPatente(c *gin.Context) {
 	//Creamos el filtro
 	filtro := utils.FiltroCamion{Patente: patente}
 
-	camion, err := handler.camionService.ObtenerCamiones(filtro)
+	listaCamiones, err := handler.camionService.ObtenerCamiones(filtro)
+
+	camion := listaCamiones[0]
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
