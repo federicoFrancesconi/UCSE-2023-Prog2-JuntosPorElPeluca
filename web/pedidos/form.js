@@ -122,6 +122,7 @@ function guardarPedido() {
 }
 
 function exitoPedido(data) {
+  alert("Operacion exitosa");
   window.location = window.location.origin + "/web/pedidos/index.html";
 }
 

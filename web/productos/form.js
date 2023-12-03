@@ -95,7 +95,7 @@ function actualizarProducto() {
 }
 
 function exitoProducto(data) {
-  debugger;
+  alert("Operacion exitosa");
   window.location = window.location.origin + "/web/productos/index.html";
 }
 
