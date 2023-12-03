@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"TPIntegrador/database"
-	"TPIntegrador/utils"
 	"TPIntegrador/model"
+	"TPIntegrador/utils"
 	"context"
 	"errors"
 	"time"
@@ -93,7 +93,14 @@ func (repository CamionRepository) ActualizarCamion(camion *model.Camion) error 
 
 	filtro := bson.M{"patente": camion.Patente}
 
-	actualizacion := bson.M{"$set": camion}
+	//Solo actualizamos ciertos campos
+	actualizacion := bson.M{"$set": bson.M{
+		"patente":                    camion.Patente,
+		"peso_maximo":                camion.PesoMaximo,
+		"costo_por_kilometro":        camion.CostoPorKilometro,
+		"fecha_ultima_actualizacion": camion.FechaUltimaActualizacion,
+		"esta_activo":                camion.EstaActivo,
+	}}
 
 	operacion, err := collection.UpdateOne(context.TODO(), filtro, actualizacion)
 

@@ -35,6 +35,9 @@ func (service *CamionService) CrearCamion(camion *dto.Camion, usuario *dto.User)
 	//Le agregamos el codigo del usuario que lo creo
 	camion.IdCreador = usuario.Codigo
 
+	//Indicamos que el camion esta activo
+	camion.EstaActivo = true
+
 	return service.camionRepository.CrearCamion(camion.GetModel())
 }
 
@@ -64,6 +67,9 @@ func (service *CamionService) ActualizarCamion(camion *dto.Camion, usuario *dto.
 	if !service.validarRol(usuario) {
 		return errors.New("el usuario no tiene permisos para actualizar un camion")
 	}
+
+	//Aseguramos que el camion sigue activo
+	camion.EstaActivo = true
 
 	return service.camionRepository.ActualizarCamion(camion.GetModel())
 }

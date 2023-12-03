@@ -155,7 +155,11 @@ func (repository *PedidoRepository) ActualizarPedido(pedido *model.Pedido) error
 
 	filtro := bson.M{"_id": pedido.ObjectId}
 
-	actualizacion := bson.M{"$set": pedido}
+	//Solo permitimos que se actualicen ciertos campos
+	actualizacion := bson.M{"$set": bson.M{
+		"estado":                    pedido.Estado,
+		"fecha_ultima_actualizacion": pedido.FechaUltimaActualizacion,
+	}}
 
 	operacion, err := collection.UpdateOne(context.Background(), filtro, actualizacion)
 

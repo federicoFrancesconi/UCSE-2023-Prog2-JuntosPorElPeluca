@@ -166,7 +166,14 @@ func (repository EnvioRepository) ActualizarEnvio(envio *model.Envio) error {
 	//seteo la fecha de actualizacion
 	envio.FechaUltimaActualizacion = time.Now()
 
-	actualizacion := bson.M{"$set": envio}
+	//Solo actualizamos ciertos campos
+	actualizacion := bson.M{"$set": bson.M{
+		"estado":                    envio.Estado,
+		"fecha_ultima_actualizacion": envio.FechaUltimaActualizacion,
+		"patente_camion":            envio.PatenteCamion,
+		"pedidos":                   envio.Pedidos,
+		"paradas":                   envio.Paradas,
+	}}
 
 	operacion, err := collection.UpdateOne(context.Background(), filtro, actualizacion)
 

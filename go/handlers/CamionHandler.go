@@ -85,7 +85,7 @@ func (handler *CamionHandler) ActualizarCamion(c *gin.Context) {
 		logging.LoggearErrorYResponder(c, "CamionHandler", "ActualizarCamion", err, &user)
 	}
 
-	//Si hay un error, lo devolvemos
+	//Pasamos el camion para actualizar al service
 	err = handler.camionService.ActualizarCamion(&camion, &user)
 	if err != nil {
 		logging.LoggearErrorYResponder(c, "CamionHandler", "ActualizarCamion", err, &user)
