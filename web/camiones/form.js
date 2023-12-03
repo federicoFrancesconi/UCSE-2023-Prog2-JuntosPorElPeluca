@@ -66,6 +66,7 @@ function guardarCamion(event) {
 }
 
 function exitoCamion(data) {
+  alert("Operacion exitosa");
   window.location = window.location.origin + "/web/camiones/index.html";
 }
 

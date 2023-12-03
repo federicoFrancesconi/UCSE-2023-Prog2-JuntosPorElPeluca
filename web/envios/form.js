@@ -119,6 +119,7 @@ function guardarEnvio() {
 }
 
 function exitoEnvio(data) {
+  alert("Operacion exitosa");
   window.location = window.location.origin + "/web/envios/index.html";
 }
 
