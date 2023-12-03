@@ -13,11 +13,11 @@ import (
 )
 
 type EnvioRepositoryInterface interface {
-	CrearEnvio(model.Envio) error
-	ObtenerEnvios(utils.FiltroEnvio) ([]model.Envio, error)
-	ObtenerEnvioPorId(model.Envio) (model.Envio, error)
+	CrearEnvio(*model.Envio) error
+	ObtenerEnvios(*utils.FiltroEnvio) ([]*model.Envio, error)
+	ObtenerEnvioPorId(*model.Envio) (*model.Envio, error)
 	ObtenerCantidadEnviosPorEstado(model.EstadoEnvio) (int, error)
-	ActualizarEnvio(model.Envio) error
+	ActualizarEnvio(*model.Envio) error
 }
 
 type EnvioRepository struct {
@@ -30,7 +30,7 @@ func NewEnvioRepository(db database.DB) *EnvioRepository {
 	}
 }
 
-func (repository EnvioRepository) CrearEnvio(envio model.Envio) error {
+func (repository EnvioRepository) CrearEnvio(envio *model.Envio) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 
 	//Aseguramos que el id sea creado por mongo
@@ -45,7 +45,7 @@ func (repository EnvioRepository) CrearEnvio(envio model.Envio) error {
 	return err
 }
 
-func (repository EnvioRepository) obtenerEnvios(filtro bson.M) ([]model.Envio, error) {
+func (repository EnvioRepository) obtenerEnvios(filtro bson.M) ([]*model.Envio, error) {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 
 	cursor, err := collection.Find(context.TODO(), filtro)
@@ -57,7 +57,7 @@ func (repository EnvioRepository) obtenerEnvios(filtro bson.M) ([]model.Envio, e
 	defer cursor.Close(context.Background())
 
 	//Inicializo el slice de envios por si no hay envios
-	envios := make([]model.Envio, 0)
+	envios := make([]*model.Envio, 0)
 
 	for cursor.Next(context.Background()) {
 		var envio model.Envio
@@ -66,13 +66,13 @@ func (repository EnvioRepository) obtenerEnvios(filtro bson.M) ([]model.Envio, e
 			return nil, err
 		}
 
-		envios = append(envios, envio)
+		envios = append(envios, &envio)
 	}
 
 	return envios, err
 }
 
-func (repository EnvioRepository) ObtenerEnvios(filtroEnvio utils.FiltroEnvio) ([]model.Envio, error) {
+func (repository EnvioRepository) ObtenerEnvios(filtroEnvio *utils.FiltroEnvio) ([]*model.Envio, error) {
 	//Desestructuramos el filtro
 	patente := filtroEnvio.PatenteCamion
 	estado := filtroEnvio.Estado
@@ -128,18 +128,18 @@ func (repository EnvioRepository) ObtenerEnvios(filtroEnvio utils.FiltroEnvio) (
 	return repository.obtenerEnvios(filtro)
 }
 
-func (repository EnvioRepository) ObtenerEnvioPorId(envio model.Envio) (model.Envio, error) {
+func (repository EnvioRepository) ObtenerEnvioPorId(envio *model.Envio) (*model.Envio, error) {
 	filtro := bson.M{"_id": envio.ObjectId}
 
 	envios, err := repository.obtenerEnvios(filtro)
 
 	if err != nil {
-		return model.Envio{}, err
+		return &model.Envio{}, err
 	}
 
 	//Controlo que la lista este vacia
 	if len(envios) == 0 {
-		return model.Envio{}, nil
+		return &model.Envio{}, nil
 	}
 
 	return envios[0], nil
@@ -159,7 +159,7 @@ func (repository EnvioRepository) ObtenerCantidadEnviosPorEstado(estado model.Es
 	return int(cantidad), nil
 }
 
-func (repository EnvioRepository) ActualizarEnvio(envio model.Envio) error {
+func (repository EnvioRepository) ActualizarEnvio(envio *model.Envio) error {
 	collection := repository.db.GetClient().Database("empresa").Collection("envios")
 	filtro := bson.M{"_id": envio.ObjectId}
 

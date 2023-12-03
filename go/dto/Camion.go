@@ -27,8 +27,8 @@ func NewCamion(camion model.Camion) *Camion {
 	}
 }
 
-func (camion Camion) GetModel() model.Camion {
-	return model.Camion{
+func (camion Camion) GetModel() *model.Camion {
+	return &model.Camion{
 		Patente:                  camion.Patente,
 		PesoMaximo:               camion.PesoMaximo,
 		CostoPorKilometro:        camion.CostoPorKilometro,

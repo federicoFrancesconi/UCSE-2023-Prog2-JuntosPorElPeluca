@@ -17,8 +17,8 @@ type Pedido struct {
 }
 
 // Metodo para obtener el modelo a partir del dto
-func (pedido Pedido) GetModel() model.Pedido {
-	return model.Pedido{
+func (pedido Pedido) GetModel() *model.Pedido {
+	return &model.Pedido{
 		ObjectId:                 utils.GetObjectIDFromStringID(pedido.Id),
 		ProductosElegidos:        pedido.getProductosElegidos(),
 		CiudadDestino:            pedido.CiudadDestino,

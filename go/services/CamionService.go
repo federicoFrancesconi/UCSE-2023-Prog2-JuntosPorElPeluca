@@ -17,13 +17,13 @@ type CamionServiceInterface interface {
 
 type CamionService struct {
 	camionRepository repositories.CamionRepositoryInterface
-	envioRepository repositories.EnvioRepositoryInterface
+	envioRepository  repositories.EnvioRepositoryInterface
 }
 
 func NewCamionService(camionRepository repositories.CamionRepositoryInterface, envioRepository repositories.EnvioRepositoryInterface) *CamionService {
 	return &CamionService{
 		camionRepository: camionRepository,
-		envioRepository: envioRepository,
+		envioRepository:  envioRepository,
 	}
 }
 
@@ -53,7 +53,7 @@ func (service *CamionService) ObtenerCamiones(filtro utils.FiltroCamion) ([]*dto
 	camiones := make([]*dto.Camion, 0)
 
 	for _, camionDB := range camionesDB {
-		camion := dto.NewCamion(camionDB)
+		camion := dto.NewCamion(*camionDB)
 		camiones = append(camiones, camion)
 	}
 
@@ -68,7 +68,7 @@ func (service *CamionService) ActualizarCamion(camion *dto.Camion, usuario *dto.
 	return service.camionRepository.ActualizarCamion(camion.GetModel())
 }
 
-//En lugar de eliminar el camion, actualiza el campo esta_activo a false
+// En lugar de eliminar el camion, actualiza el campo esta_activo a false
 func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion, usuario *dto.User) error {
 	if !service.validarRol(usuario) {
 		return errors.New("el usuario no tiene permisos para eliminar un camion")
@@ -92,7 +92,7 @@ func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion, usuar
 	camion := camiones[0]
 
 	//Valido que el camion no tenga envios actualmente
-	err, tieneEnvios := service.camionTieneEnviosActualmente(dto.NewCamion(camion))
+	err, tieneEnvios := service.camionTieneEnviosActualmente(dto.NewCamion(*camion))
 
 	if err != nil {
 		return err
@@ -111,7 +111,7 @@ func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion, usuar
 }
 
 func (service *CamionService) validarRol(usuario *dto.User) bool {
-	return usuario.Rol == "Administrador"
+	return usuario.Rol == string(utils.Administrador)
 }
 
 func (service *CamionService) camionTieneEnviosActualmente(camion *dto.Camion) (error, bool) {
@@ -119,7 +119,7 @@ func (service *CamionService) camionTieneEnviosActualmente(camion *dto.Camion) (
 	filtro := utils.FiltroEnvio{PatenteCamion: camion.Patente, Estado: model.ADespachar}
 
 	//Obtengo los envios de la base de datos
-	enviosADespachar, err := service.envioRepository.ObtenerEnvios(filtro)
+	enviosADespachar, err := service.envioRepository.ObtenerEnvios(&filtro)
 
 	if err != nil {
 		return errors.New("error al obtener los envios a despachar"), false
@@ -128,7 +128,7 @@ func (service *CamionService) camionTieneEnviosActualmente(camion *dto.Camion) (
 	//Hacemos lo mismo para los envios que estan En Ruta
 	filtro.Estado = model.EnRuta
 
-	enviosEnRuta, err := service.envioRepository.ObtenerEnvios(filtro)
+	enviosEnRuta, err := service.envioRepository.ObtenerEnvios(&filtro)
 
 	if err != nil {
 		return errors.New("error al obtener los envios en ruta"), false

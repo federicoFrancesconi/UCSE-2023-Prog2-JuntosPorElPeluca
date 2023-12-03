@@ -30,8 +30,8 @@ func NewEnvio(envio model.Envio) *Envio {
 	}
 }
 
-func (envio Envio) GetModel() model.Envio {
-	return model.Envio{
+func (envio Envio) GetModel() *model.Envio {
+	return &model.Envio{
 		ObjectId:                 utils.GetObjectIDFromStringID(envio.Id),
 		FechaCreacion:            envio.FechaCreacion,
 		FechaUltimaActualizacion: envio.FechaUltimaActualizacion,

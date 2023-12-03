@@ -6,12 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const (
-    RolAdministrador = "Administrador"
-    RolUsuario       = "Usuario"
-    RolConductor     = "Conductor"
-)
-
 func SetUserInContext(c *gin.Context, user *responses.UserInfo) {
 	c.Set("UserInfo", user)
 }
