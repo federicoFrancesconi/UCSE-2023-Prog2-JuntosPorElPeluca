@@ -25,17 +25,15 @@ document.addEventListener("DOMContentLoaded", function (event) {
     document
       .getElementById("buttonSave")
       .addEventListener("click", function (event) {
-        guardarProducto(event);
+        actualizarProducto(event);
       });
-
-    document.getElementById("CodigoProducto").value = codProducto;
 
     obtenerProductoPorId(codProducto);
   } else {
     document
       .getElementById("buttonSave")
       .addEventListener("click", function (event) {
-        actualizarProducto(event);
+        guardarProducto(event);
       });
   }
 });
@@ -45,7 +43,7 @@ const urlConFiltro = `http://localhost:8080/productos`;
 function guardarProducto() {
   //armo la data a enviar
   const data = {
-    codigo_producto: '',
+    codigo_producto: "",
     fecha_creacion: "2023-10-14T12:00:00Z",
     fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
     tipo_producto: document.getElementById("TipoProducto").value,
@@ -72,7 +70,7 @@ function guardarProducto() {
 
 function actualizarProducto() {
   const data = {
-    codigo_producto: '',
+    codigo_producto: "",
     fecha_creacion: "2023-10-14T12:00:00Z",
     fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
     tipo_producto: document.getElementById("TipoProducto").value,
@@ -137,7 +135,6 @@ function obtenerProductoPorId(codProducto) {
 }
 
 function exitoObtenerProducto(data) {
-  document.getElementById("CodigoProducto").value = data.codigo_producto;
   document.getElementById("TipoProducto").value = data.tipo_producto;
   document.getElementById("Nombre").value = data.nombre;
   document.getElementById("PesoUnitario").value = data.peso_unitario;

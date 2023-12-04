@@ -27,9 +27,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     document.getElementById("Patente").value = patente;
     document.getElementById("tituloFormulario").innerHTML = "Editar camion";
 
-    //asigno valor a los input si los tiene 
+    //asigno valor a los input si los tiene
     obtenerCamionPorId(patente);
-
   } else if (patente != "" && patente != null && operacion == "ELIMINAR") {
     eliminarCamion(patente);
     document.getElementById("tituloFormulario").innerHTML = "Eliminar camion";
@@ -124,7 +123,7 @@ function eliminarCamion(patente) {
 }
 
 function obtenerCamionPorId(patente) {
-  var url = `"http://localhost:8080/camiones/${patente}"`;
+  var url = `http://localhost:8080/camiones/${patente}`;
 
   makeRequest(
     url,
@@ -135,7 +134,7 @@ function obtenerCamionPorId(patente) {
     exitoObtenerCamion,
     errorObtenerCamion
   );
-}	
+}
 
 function exitoObtenerCamion(data) {
   document.getElementById("Patente").value = data.patente;
