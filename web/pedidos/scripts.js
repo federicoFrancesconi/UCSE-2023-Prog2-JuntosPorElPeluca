@@ -36,21 +36,21 @@ function obtenerPedidos() {
 var url = new URL(urlConFiltro);
 
 function obtenerPedidoFiltrado() {
-  if (document.getElementById("FiltroId").value != '') {
-    url.searchParams.set(
-      "idEnvio",
-      document.getElementById("FiltroId").value
-    );
+  if (document.getElementById("FiltroId").value != "") {
+    url.searchParams.set("idEnvio", document.getElementById("FiltroId").value);
   }
 
-  if (document.getElementById("FiltroEstado").value != '') {
+  if (document.getElementById("FiltroEstado").value != "") {
     url.searchParams.set(
       "estado",
       document.getElementById("FiltroEstado").value
     );
   }
 
-  if (document.getElementById("FechaDesde").value != '' && document.getElementById("FechaHasta").value != '') {
+  if (
+    document.getElementById("FechaDesde").value != "" &&
+    document.getElementById("FechaHasta").value != ""
+  ) {
     url.searchParams.set(
       "fechaCreacionComienzo",
       document.getElementById("FechaDesde").value
@@ -116,7 +116,7 @@ function exitoObtenerPedidos(data) {
 }
 
 function errorObtenerPedidos(response) {
-  alert(response.Error);
+  alert(`Error del servidor: ${response.error}`);
   console.log(response.json());
   throw new Error(response.Error);
 }

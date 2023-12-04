@@ -49,9 +49,9 @@ function exitoObtenerPedidosEnvio(data) {
   console.log(elementosTable);
 
   data.forEach((elemento) => {
-      const row = document.createElement("tr"); //crear una fila
+    const row = document.createElement("tr"); //crear una fila
 
-      row.innerHTML = ` 
+    row.innerHTML = ` 
                   <td><input type="checkbox" class="pedido-checkbox"></td>
                   <td>${elemento.id}</td>
                   <td>${elemento.ciudad_destino}</td>
@@ -60,12 +60,12 @@ function exitoObtenerPedidosEnvio(data) {
                   <td>${elemento.fecha_ultima_actualizacion}</td>
                   <td>${elemento.id_creador}</td>
                  `;
-      const nuevoObjetoPedido = {
-        id: elemento.id,
-        productos: elemento.productos_elegidos,
-      };
-      productosPedidos.push(nuevoObjetoPedido);
-      elementosTable.appendChild(row);
+    const nuevoObjetoPedido = {
+      id: elemento.id,
+      productos: elemento.productos_elegidos,
+    };
+    productosPedidos.push(nuevoObjetoPedido);
+    elementosTable.appendChild(row);
   });
 }
 
@@ -124,7 +124,7 @@ function exitoEnvio(data) {
 }
 
 function errorEnvio(response) {
-  alert(response.Error);
+  alert(`Error del servidor: ${response.error}`);
   console.log(response.json());
   throw new Error(response.Error);
 }

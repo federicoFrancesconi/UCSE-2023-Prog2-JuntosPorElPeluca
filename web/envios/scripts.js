@@ -100,7 +100,7 @@ function exitoObtenerEnvio(data) {
 }
 
 function errorEnvio(response) {
-  alert(response.Error);
+  alert(`Error del servidor: ${response.error}`);
   console.log(response.json());
   throw new Error(response.Error);
 }
@@ -108,24 +108,27 @@ function errorEnvio(response) {
 function obtenerEnvioFiltrado() {
   var url = new URL(urlConFiltro);
 
-  if(document.getElementById("FiltroPatente").value != ""){
+  if (document.getElementById("FiltroPatente").value != "") {
     url.searchParams.set(
       "patente",
       document.getElementById("FiltroPatente").value
     );
   }
 
-  if(document.getElementById("FiltroEstado").value != ""){
+  if (document.getElementById("FiltroEstado").value != "") {
     url.searchParams.set(
       "estado",
       document.getElementById("FiltroEstado").value
     );
   }
 
-  if(document.getElementById("FechaDesde").value != "" && document.getElementById("FechaHasta").value != ""){
+  if (
+    document.getElementById("FechaDesde").value != "" &&
+    document.getElementById("FechaHasta").value != ""
+  ) {
     url.searchParams.set(
       "fechaCreacionComienzo",
-      document.getElementById("FechaDesde").value 
+      document.getElementById("FechaDesde").value
     );
     url.searchParams.set(
       "fechaCreacionFin",
@@ -133,7 +136,7 @@ function obtenerEnvioFiltrado() {
     );
   }
 
-  if(document.getElementById("FiltroCiudad").value != ""){
+  if (document.getElementById("FiltroCiudad").value != "") {
     url.searchParams.set(
       "ultimaParada",
       document.getElementById("FiltroCiudad").value

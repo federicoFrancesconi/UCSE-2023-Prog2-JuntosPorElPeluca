@@ -74,7 +74,7 @@ function exitoCamion(data) {
 }
 
 function errorCamion(response) {
-  alert(response.Error);
+  alert(`Error del servidor: ${response.error}`);
   console.log(response.json());
   throw new Error(response.Error);
 }
@@ -143,7 +143,7 @@ function exitoObtenerCamion(data) {
 }
 
 function errorObtenerCamion(response) {
-  alert(response.Error);
+  alert(`Error del servidor: ${response.error}`);
   console.log(response.json());
   throw new Error(response.Error);
 }

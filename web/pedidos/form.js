@@ -127,7 +127,7 @@ function exitoPedido(data) {
 }
 
 function errorPedido(response) {
-  alert(response.Error);
+  alert(`Error del servidor: ${response.error}`);
   console.log(response.json());
   throw new Error(response.Error);
 }
