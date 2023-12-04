@@ -9,7 +9,8 @@ import (
 )
 
 type ProductoService struct {
-	repository repositories.ProductoRepositoryInterface
+	productoRepository repositories.ProductoRepositoryInterface
+	pedidoRepository   repositories.PedidoRepositoryInterface
 }
 
 type ProductoServiceInterface interface {
@@ -20,9 +21,10 @@ type ProductoServiceInterface interface {
 	EliminarProducto(*dto.Producto, *dto.User) error
 }
 
-func NewProductoService(repository repositories.ProductoRepositoryInterface) *ProductoService {
+func NewProductoService(productoRepository repositories.ProductoRepositoryInterface, pedidoRepository repositories.PedidoRepositoryInterface) *ProductoService {
 	return &ProductoService{
-		repository: repository,
+		productoRepository: productoRepository,
+		pedidoRepository:   pedidoRepository,
 	}
 }
 
@@ -40,7 +42,7 @@ func (service *ProductoService) CrearProducto(producto *dto.Producto, usuario *d
 	//Le agregamos el codigo del usuario que lo creo
 	producto.IdCreador = usuario.Codigo
 
-	return service.repository.CrearProducto(producto.GetModel())
+	return service.productoRepository.CrearProducto(producto.GetModel())
 }
 
 func (service *ProductoService) ObtenerProductos(filtro utils.FiltroProducto) ([]dto.Producto, error) {
@@ -49,7 +51,7 @@ func (service *ProductoService) ObtenerProductos(filtro utils.FiltroProducto) ([
 		return nil, errors.New("el tipo de producto ingresado no es válido")
 	}
 
-	productos, err := service.repository.ObtenerProductos(filtro)
+	productos, err := service.productoRepository.ObtenerProductos(filtro)
 
 	if err != nil {
 		return nil, err
@@ -66,7 +68,7 @@ func (service *ProductoService) ObtenerProductos(filtro utils.FiltroProducto) ([
 }
 
 func (service *ProductoService) ObtenerProductoPorCodigo(productoConCodigo *dto.Producto, usuario *dto.User) (*dto.Producto, error) {
-	productoDB, err := service.repository.ObtenerProductoPorCodigo(productoConCodigo.GetModel())
+	productoDB, err := service.productoRepository.ObtenerProductoPorCodigo(productoConCodigo.GetModel())
 
 	//Inicializamos el envio por si no hay ninguno
 	var producto *dto.Producto = &dto.Producto{}
@@ -98,7 +100,7 @@ func (service *ProductoService) ActualizarProducto(producto *dto.Producto, usuar
 		return errors.New("el usuario no tiene permisos para actualizar un producto")
 	}
 
-	return service.repository.ActualizarProducto(producto.GetModel())
+	return service.productoRepository.ActualizarProducto(producto.GetModel())
 }
 
 func (service *ProductoService) EliminarProducto(producto *dto.Producto, usuario *dto.User) error {
@@ -107,7 +109,48 @@ func (service *ProductoService) EliminarProducto(producto *dto.Producto, usuario
 		return errors.New("el usuario no tiene permisos para eliminar un producto")
 	}
 
-	return service.repository.EliminarProducto(producto.GetModel())
+	//Valido que el producto a eliminar no tenga pedidos asociados en estado pendiente o aceptado
+	err := service.productoTienePedidosEnCurso(producto)
+
+	if err != nil {
+		return err
+	}
+
+	return service.productoRepository.EliminarProducto(producto.GetModel())
+}
+
+func (service *ProductoService) productoTienePedidosEnCurso(producto *dto.Producto) error {
+	//Primero armamos el filtro
+	filtroPendientes := utils.FiltroPedido{
+		CodigoProducto: producto.CodigoProducto,
+		Estado:         model.Pendiente,
+	}
+
+	pedidosPendientes, err := service.pedidoRepository.ObtenerPedidos(&filtroPendientes)
+	if err != nil {
+		return err
+	}
+
+	if len(pedidosPendientes) > 0 {
+		return errors.New("no se puede eliminar el producto: tiene pedidos pendientes")
+	}
+
+	filtroAceptados := utils.FiltroPedido{
+		CodigoProducto: producto.CodigoProducto,
+		Estado:         model.Aceptado,
+	}
+
+	pedidosAceptados, err := service.pedidoRepository.ObtenerPedidos(&filtroAceptados)
+
+	if err != nil {
+		return err
+	}
+
+	if len(pedidosAceptados) > 0 {
+		return errors.New("no se puede eliminar el producto: tiene pedidos aceptados")
+	}
+
+	return nil
 }
 
 func (service *ProductoService) validarRol(usuario *dto.User) bool {

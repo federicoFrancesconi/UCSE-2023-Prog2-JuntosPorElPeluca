@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"TPIntegrador/dto"
+	"TPIntegrador/model"
 	"TPIntegrador/services"
 	"TPIntegrador/utils"
 	"TPIntegrador/utils/logging"
-	"TPIntegrador/model"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"TPIntegrador/database"
-	"TPIntegrador/utils"
 	"TPIntegrador/model"
+	"TPIntegrador/utils"
 	"context"
 	"errors"
 	"time"
@@ -77,6 +77,7 @@ func (repository *PedidoRepository) obtenerPedidos(filtro bson.M) ([]*model.Pedi
 func (repository *PedidoRepository) ObtenerPedidos(filtro *utils.FiltroPedido) ([]*model.Pedido, error) {
 	//Desestructuramos el filtro
 	idPedidos := filtro.IdPedidos
+	codigoProducto := filtro.CodigoProducto
 	estado := filtro.Estado
 	fechaCreacionComienzo := filtro.FechaCreacionComienzo
 	fechaCreacionFin := filtro.FechaCreacionFin
@@ -100,6 +101,13 @@ func (repository *PedidoRepository) ObtenerPedidos(filtro *utils.FiltroPedido) (
 	//Tomo el estado vacio como la ausencia de filtro
 	if estado != "" {
 		filter["estado"] = estado
+	}
+
+	//Tomo el codigoProducto vacio como la ausencia de filtro
+	if codigoProducto != "" {
+		filter["productos_elegidos"] = bson.M{
+			"$elemMatch": bson.M{"codigo_producto": codigoProducto},
+		}
 	}
 
 	//Tomo la fecha de creacion en 0001-01-01 como la ausencia de filtro
@@ -157,7 +165,7 @@ func (repository *PedidoRepository) ActualizarPedido(pedido *model.Pedido) error
 
 	//Solo permitimos que se actualicen ciertos campos
 	actualizacion := bson.M{"$set": bson.M{
-		"estado":                    pedido.Estado,
+		"estado":                     pedido.Estado,
 		"fecha_ultima_actualizacion": pedido.FechaUltimaActualizacion,
 	}}
 
