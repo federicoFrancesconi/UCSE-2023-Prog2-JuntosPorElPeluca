@@ -26,6 +26,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     document.getElementById("Patente").value = patente;
     document.getElementById("tituloFormulario").innerHTML = "Editar camion";
+
+    //asigno valor a los input si los tiene 
+    obtenerCamionPorId(patente);
+
   } else if (patente != "" && patente != null && operacion == "ELIMINAR") {
     eliminarCamion(patente);
     document.getElementById("tituloFormulario").innerHTML = "Eliminar camion";
@@ -117,4 +121,30 @@ function eliminarCamion(patente) {
   } else {
     window.location = document.location.origin + "/web/camiones/index.html";
   }
+}
+
+function obtenerCamionPorId(patente) {
+  var url = `"http://localhost:8080/camiones/${patente}"`;
+
+  makeRequest(
+    url,
+    Method.GET,
+    null,
+    ContentType.JSON,
+    CallType.PRIVATE,
+    exitoObtenerCamion,
+    errorObtenerCamion
+  );
+}	
+
+function exitoObtenerCamion(data) {
+  document.getElementById("Patente").value = data.patente;
+  document.getElementById("PesoMaximo").value = data.peso_maximo;
+  document.getElementById("CostoPorKm").value = data.costo_por_kilometro;
+}
+
+function errorObtenerCamion(response) {
+  alert(response.Error);
+  console.log(response.json());
+  throw new Error(response.Error);
 }
