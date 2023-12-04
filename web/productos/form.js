@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     document
       .getElementById("buttonSave")
       .addEventListener("click", function (event) {
-        actualizarProducto(event);
+        actualizarProducto(codProducto);
       });
 
     obtenerProductoPorId(codProducto);
@@ -68,9 +68,9 @@ function guardarProducto() {
   );
 }
 
-function actualizarProducto() {
+function actualizarProducto(codProducto) {
   const data = {
-    codigo_producto: "",
+    codigo_producto: codProducto,
     fecha_creacion: "2023-10-14T12:00:00Z",
     fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
     tipo_producto: document.getElementById("TipoProducto").value,
