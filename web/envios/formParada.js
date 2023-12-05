@@ -67,18 +67,10 @@ function errorAgregarParada(response) {
 
 function finalizarViaje(id) {
   if (confirm("¿Estás seguro de que deseas finalizar el viaje?")) {
-    //TODO: le pasamos un id como parametro a agregarParada, pero no hay funcion que reciba un id
     agregarParada();
-    debugger;
 
     dataEnvio = {
       id: id,
-      fecha_creacion: "2023-10-14T12:00:00Z",
-      fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
-      patente_camion: "",
-      paradas: [],
-      pedidos: [],
-      id_creador: 0,
       estado: "Despachado",
     };
 

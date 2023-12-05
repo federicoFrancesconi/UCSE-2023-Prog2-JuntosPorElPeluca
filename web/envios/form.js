@@ -136,12 +136,6 @@ function errorEnvio(response) {
 function iniciarViaje(id) {
   dataEnvio = {
     id: id,
-    fecha_creacion: "2023-10-14T12:00:00Z",
-    fecha_ultima_actualizacion: "2023-10-14T12:00:00Z",
-    patente_camion: "",
-    paradas: [],
-    pedidos: [],
-    id_creador: 0,
     estado: "En Ruta",
   };
 

@@ -29,14 +29,19 @@ func NewProductoService(productoRepository repositories.ProductoRepositoryInterf
 }
 
 func (service *ProductoService) CrearProducto(producto *dto.Producto, usuario *dto.User) error {
-	//Valido el tipo de producto
-	if !model.EsUnTipoProductoValido(producto.TipoDeProducto) {
-		return errors.New("el tipo de producto ingresado no es válido")
-	}
-
 	//valido el usuario
 	if !service.validarRol(usuario) {
 		return errors.New("el usuario no tiene permisos para crear un producto")
+	}
+
+	//valido que el producto tenga todos los campos completos
+	if !service.productoTieneCamposCompletos(producto) {
+		return errors.New("el producto no tiene todos los campos completos")
+	}
+
+	//Valido el tipo de producto
+	if !model.EsUnTipoProductoValido(producto.TipoDeProducto) {
+		return errors.New("el tipo de producto ingresado no es válido")
 	}
 
 	//Le agregamos el codigo del usuario que lo creo
@@ -95,6 +100,11 @@ func (service *ProductoService) ActualizarProducto(producto *dto.Producto, usuar
 		return errors.New("el tipo de producto ingresado no es válido")
 	}
 
+	//valido que el producto tenga todos los campos completos
+	if !service.productoTieneCamposCompletos(producto) {
+		return errors.New("el producto no tiene todos los campos completos")
+	}
+
 	//valido el usuario
 	if !service.validarRol(usuario) {
 		return errors.New("el usuario no tiene permisos para actualizar un producto")
@@ -151,6 +161,14 @@ func (service *ProductoService) productoTienePedidosEnCurso(producto *dto.Produc
 	}
 
 	return nil
+}
+
+func (service *ProductoService) productoTieneCamposCompletos(producto *dto.Producto) bool {
+	return producto.Nombre != "" &&
+		producto.TipoDeProducto != "" &&
+		producto.PrecioUnitario != 0 &&
+		producto.StockMinimo != 0 &&
+		producto.StockActual != 0
 }
 
 func (service *ProductoService) validarRol(usuario *dto.User) bool {

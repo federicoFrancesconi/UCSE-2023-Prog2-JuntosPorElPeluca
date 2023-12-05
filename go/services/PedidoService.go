@@ -37,6 +37,16 @@ func (service *PedidoService) CrearPedido(pedido *dto.Pedido, usuario *dto.User)
 		return errors.New("el usuario no tiene permisos para crear un pedido")
 	}
 
+	//Aseguramos que el pedido tenga productos
+	if len(pedido.ProductosElegidos) == 0 {
+		return errors.New("el pedido debe tener al menos un producto")
+	}
+
+	//Aseguramos que el pedido tenga destino
+	if pedido.CiudadDestino == "" {
+		return errors.New("el pedido debe tener un destino")
+	}
+
 	//Obligamos a que el estado del pedido sea Pendiente
 	if pedido.Estado != model.Pendiente {
 		pedido.Estado = model.Pendiente

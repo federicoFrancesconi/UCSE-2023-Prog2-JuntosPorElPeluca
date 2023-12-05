@@ -389,9 +389,8 @@ func (service *EnvioService) CambiarEstadoEnvio(envio *dto.Envio, usuario *dto.U
 		return false, errors.New("el envio no puede pasar al estado " + fmt.Sprint(estadoDeseado) + " si esta en estado " + fmt.Sprint(envioDB.Estado))
 	}
 
-	envioDB.Estado = estadoDeseado
-
 	//Actualizamos el envio en la base de datos
+	envioDB.Estado = estadoDeseado
 	err = service.envioRepository.ActualizarEnvio(envioDB)
 
 	if err != nil {
