@@ -64,6 +64,10 @@ function exitoObtenerGraficoPedidos(data) {
   var cantidadPedidos = [];
   var estadoPedidos = [];
 
+  if (data.length == 0) {
+    document.getElementById("mensajeSinPedidos").innerHTML = "No hay pedidos cargados";
+  }
+
   for (let i = 0; i < data.length; i++) {
     const element = data[i];
     cantidadPedidos.push(element.Cantidad);
@@ -114,6 +118,11 @@ function dibujarGraficoEnvios() {
 function exitoObtenerGraficoEnvios(data) {
   var cantidadEnvios = [];
   var estadoEnvios = [];
+
+  if (data.length == 0) {
+    document.getElementById("mensajeSinEnvios").innerHTML = "No hay envios cargados";
+    return;
+  }
 
   for (let i = 0; i < data.length; i++) {
     const element = data[i];
