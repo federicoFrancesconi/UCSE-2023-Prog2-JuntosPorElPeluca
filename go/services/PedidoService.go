@@ -232,7 +232,7 @@ func (service *PedidoService) CancelarPedido(pedidoPorCancelar *dto.Pedido, usua
 
 	//Valida que el pedido esté en estado Pendiente
 	if pedido.Estado != model.Pendiente {
-		return nil
+		return errors.New("el pedido no se encuentra en estado Pendiente")
 	}
 
 	//Cambia el estado del pedido a Cancelado, si es que no estaba ya en ese estado

@@ -47,15 +47,13 @@ function obtenerPedidoFiltrado() {
     );
   }
 
-  if (
-    document.getElementById("FechaDesde").value != "" &&
-    document.getElementById("FechaHasta").value != ""
-  ) {
+  if (document.getElementById("FechaDesde").value != "") {
     url.searchParams.set(
       "fechaCreacionComienzo",
       document.getElementById("FechaDesde").value
     );
-
+  }
+  if (document.getElementById("FechaHasta").value != "") {
     url.searchParams.set(
       "fechaCreacionFin",
       document.getElementById("FechaHasta").value
