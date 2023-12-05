@@ -64,25 +64,16 @@ function errorObtenerProductos(response) {
   throw new Error(response.Error);
 }
 
+var url = new URL(`http://localhost:8080/productos`);
+
 function obtenerProductoFiltrado(tipo) {
-  var url = new URL(urlConFiltro);
+  if (document.getElementById("TipoProducto").value != "" && document.getElementById("TipoProducto").value != "Ninguno") {
+    url.searchParams.set("tipoProducto", document.getElementById("TipoProducto").value);
+  } 
 
-  switch (tipo) {
-    case "stock":
-      url.searchParams.set("filtrarPorStockMinimo", true);
-      break;
-    case "tipo":
-      url.searchParams.set(
-        "tipoProducto",
-        document.getElementById("TipoProducto").value
-      );
-      break;
-    default:
-      url.href = `http://localhost:8080/productos`;
-      break;
+  if(tipo == "stock"){
+    url.searchParams.set("filtrarPorStockMinimo", true);
   }
-
-  console.log(url.href);
 
   makeRequest(
     `${url.href}`,
