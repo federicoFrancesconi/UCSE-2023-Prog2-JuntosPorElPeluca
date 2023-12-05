@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     finalizarViaje(idEnvio);
   } else {
     document
-      .getElementById("form")
-      .addEventListener("submit", function (event) {
+      .getElementById("buttonSave")
+      .addEventListener("click", function (event) {
         guardarEnvio(event);
       });
 

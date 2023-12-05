@@ -18,14 +18,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
   if (operacion == "FINALIZAR") {
     document.getElementById("CiudadText").innerHTML = "Ciudad Final";
     document
-      .getElementById("formParada")
-      .addEventListener("submit", function (event) {
+      .getElementById("buttonSave")
+      .addEventListener("click", function (event) {
         finalizarViaje(idEnvio);
       });
   } else {
     document
-      .getElementById("formParada")
-      .addEventListener("submit", function (event) {
+      .getElementById("buttonSave")
+      .addEventListener("click", function (event) {
         agregarParada(event);
       });
   }
