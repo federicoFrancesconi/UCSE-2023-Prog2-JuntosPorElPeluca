@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
   const operacion = urlParams.get("tipo");
 
   if (codProducto != "" && codProducto != null && operacion == "ELIMINAR") {
+    document.getElementById("form").style.display = "none";
     eliminarProducto(codProducto);
   } else if (
     codProducto != "" &&

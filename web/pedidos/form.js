@@ -17,8 +17,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   if (idPedido != "" && idPedido != null && operacion == "ACEPTAR") {
     aceptarPedido(idPedido);
+    document.getElementById("form").style.display = "none";
   } else if (idPedido != "" && idPedido != null && operacion == "CANCELAR") {
     cancelarPedido(idPedido);
+    document.getElementById("form").style.display = "none";
   } else {
     document
       .getElementById("buttonSave")

@@ -11,8 +11,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   if (idEnvio != "" && idEnvio != null && operacion == "INICIAR") {
     iniciarViaje(idEnvio);
+    document.getElementById("form").style.display = "none";
+    document.getElementById("listaPedidos").style.display = "none";
   } else if (idEnvio != "" && idEnvio != null && operacion == "FINALIZAR") {
     finalizarViaje(idEnvio);
+    document.getElementById("form").style.display = "none";
+    document.getElementById("listaPedidos").style.display = "none";
   } else {
     document
       .getElementById("buttonSave")

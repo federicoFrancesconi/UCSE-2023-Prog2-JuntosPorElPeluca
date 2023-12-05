@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
   } else if (patente != "" && patente != null && operacion == "ELIMINAR") {
     eliminarCamion(patente);
     document.getElementById("tituloFormulario").innerHTML = "Eliminar camion";
+    document.getElementById("form").style.display = "none";
   } else {
     document
       .getElementById("form")
