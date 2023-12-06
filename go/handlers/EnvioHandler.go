@@ -84,7 +84,7 @@ func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
 func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 	user := dto.NewUser(utils.GetUserInfoFromContext(c))
 
-	// Convierte las fechas string a time.Time
+	//Convierte las fechas string a time.Time
 	fechaDesdeStr := c.DefaultQuery("fechaDesde", "0001-01-01")
 	fechaDesde, err := time.Parse("2006-01-02", fechaDesdeStr)
 	if err != nil {

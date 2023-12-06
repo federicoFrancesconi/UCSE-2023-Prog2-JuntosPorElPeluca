@@ -210,6 +210,11 @@ func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvi
 		return 0, err
 	}
 
+	//Valido que haya envios despachados
+	if len(envios) == 0 {
+		return 0, errors.New("no hay envios despachados entre las fechas ingresadas")
+	}
+
 	//Suma el precio de los pedidos de cada envio
 	var beneficioBruto float64 = 0
 	for _, envio := range envios {
@@ -331,10 +336,9 @@ func (service *EnvioService) AgregarParada(parada *dto.NuevaParada, usuario *dto
 		return false, err
 	}
 
-	//Validamos que el envio pertenezca al camionero
-	valido, err := service.validarUsuario(dto.NewEnvio(*envioDB), usuario)
-	if !valido {
-		return false, err
+	//Validamos el rol del usuario
+	if !service.validarRol(usuario) {
+		return false, errors.New("el usuario no tiene permisos para agregar una parada")
 	}
 
 	//Validamos que el envio esté en estado EnRuta
@@ -365,10 +369,9 @@ func (service *EnvioService) CambiarEstadoEnvio(envio *dto.Envio, usuario *dto.U
 		return false, err
 	}
 
-	//Validamos que el envio pertenezca al camionero
-	valido, err := service.validarUsuario(envio, usuario)
-	if !valido {
-		return false, err
+	//Validamos el rol del usuario
+	if !service.validarRol(usuario) {
+		return false, errors.New("el usuario no tiene permisos para cambiar el estado del envio")
 	}
 
 	//Si el estado del envio no es compatible con el deseado, devolvemos un error
@@ -474,22 +477,6 @@ func (service *EnvioService) descontarStockProducto(productoPedido dto.ProductoP
 
 	//Actualizamos la base de datos
 	return service.productoRepository.ActualizarProducto(producto)
-}
-
-func (service *EnvioService) validarUsuario(envio *dto.Envio, usuario *dto.User) (bool, error) {
-	//Primero buscamos el envio por id
-	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envio.GetModel())
-
-	if err != nil {
-		return false, err
-	}
-
-	//Validamos que el envio pertenezca al camionero
-	if envioDB.IdCreador != usuario.Codigo {
-		return false, errors.New("el envio no pertenece al camionero")
-	}
-
-	return true, nil
 }
 
 func (service *EnvioService) validarRol(usuario *dto.User) bool {

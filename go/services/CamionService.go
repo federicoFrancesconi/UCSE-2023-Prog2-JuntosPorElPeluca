@@ -163,7 +163,7 @@ func (service *CamionService) validarUsuario(camion *dto.Camion, usuario *dto.Us
 
 	//Validamos que el envio pertenezca al camionero
 	if camionDB.IdCreador != usuario.Codigo {
-		return false, errors.New("el envio no pertenece al camionero")
+		return false, errors.New("el camion no pertenece al usuario")
 	}
 
 	return true, nil

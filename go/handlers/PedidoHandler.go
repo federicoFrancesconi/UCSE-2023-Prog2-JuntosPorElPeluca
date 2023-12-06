@@ -28,7 +28,7 @@ func (handler *PedidoHandler) ObtenerPedidos(c *gin.Context) {
 	//Convierto el estado a integer para buscar el Estado en el "enum" de EstadoPedido
 	estado := c.DefaultQuery("estado", "")
 
-	// Convierte las fechas string a time.Time
+	//Convierte las fechas string a time.Time
 	fechaCreacionComienzoStr := c.DefaultQuery("fechaCreacionComienzo", "0001-01-01")
 	fechaCreacionComienzo, err := time.Parse("2006-01-02", fechaCreacionComienzoStr)
 	if err != nil {
