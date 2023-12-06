@@ -16,5 +16,3 @@ type Camion struct {
 	IdCreador                string             `bson:"id_creador"`
 	EstaActivo               bool               `bson:"esta_activo"`
 }
-
-//TODO: funcion para validar,

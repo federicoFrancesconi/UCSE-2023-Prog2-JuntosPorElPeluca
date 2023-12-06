@@ -64,9 +64,9 @@ func (service *CamionService) ObtenerCamiones(filtro utils.FiltroCamion) ([]*dto
 }
 
 func (service *CamionService) ActualizarCamion(camion *dto.Camion, usuario *dto.User) error {
-	//TODO: validar que sea el conductor, no solo por rol
-	if !service.validarRol(usuario) {
-		return errors.New("el usuario no tiene permisos para actualizar un camion")
+	valido, err := service.validarUsuario(camion, usuario)
+	if !valido {
+		return err
 	}
 
 	//Aseguramos que el camion sigue activo
@@ -77,9 +77,9 @@ func (service *CamionService) ActualizarCamion(camion *dto.Camion, usuario *dto.
 
 // En lugar de eliminar el camion, actualiza el campo esta_activo a false
 func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion, usuario *dto.User) error {
-	//TODO: validar que sea el conductor, no solo por rol
-	if !service.validarRol(usuario) {
-		return errors.New("el usuario no tiene permisos para eliminar un camion")
+	valido, err := service.validarUsuario(camionConPatente, usuario)
+	if !valido {
+		return err
 	}
 
 	//Creamos el filtro para obtener el camion
@@ -144,6 +144,29 @@ func (service *CamionService) camionTieneEnviosActualmente(camion *dto.Camion) (
 	}
 
 	return nil, true
+}
+
+func (service *CamionService) validarUsuario(camion *dto.Camion, usuario *dto.User) (bool, error) {
+	//Primero buscamos el camion por patente
+	filtro := utils.FiltroCamion{Patente: camion.Patente}
+
+	camiones, err := service.camionRepository.ObtenerCamiones(filtro)
+	if err != nil {
+		return false, errors.New("problema al validar usuario: " + err.Error())
+	}
+
+	if len(camiones) == 0 {
+		return false, errors.New("no existe el camion")
+	}
+
+	camionDB := camiones[0]
+
+	//Validamos que el envio pertenezca al camionero
+	if camionDB.IdCreador != usuario.Codigo {
+		return false, errors.New("el envio no pertenece al camionero")
+	}
+
+	return true, nil
 }
 
 func (service *CamionService) validarRol(usuario *dto.User) bool {
