@@ -40,10 +40,10 @@ function exitoObtenerBeneficioEntreFechas(data) {
   document.getElementById("beneficio").innerHTML = data.beneficio;
 }
 
-function errorGraficos(response) {
-  alert(response.Error);
-  console.log(response.json());
-  throw new Error(response.Error);
+function errorGraficos(status, body) {
+  alert(body.error);
+  console.log(body.json());
+  throw new Error(status.Error);
 }
 
 function dibujarGraficoPedidos() {

@@ -128,11 +128,10 @@ function exitoPedido(data) {
   window.location = window.location.origin + "/web/pedidos/index.html";
 }
 
-function errorPedido(response) {
-  debugger;
-  alert(`Error del servidor: ${response.error}`);
-  console.log(response.json());
-  throw new Error(response.Error);
+function errorPedido(status, body) {
+  alert(`Error del servidor: ${body.error}`);
+  console.log(body.json());
+  throw new Error(status.Error);
 }
 
 function aceptarPedido(id) {

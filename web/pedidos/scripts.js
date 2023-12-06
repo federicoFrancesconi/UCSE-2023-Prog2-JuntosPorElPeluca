@@ -113,8 +113,8 @@ function exitoObtenerPedidos(data) {
   }
 }
 
-function errorObtenerPedidos(response) {
-  alert(`Error del servidor: ${response.error}`);
-  console.log(response.json());
-  throw new Error(response.Error);
+function errorObtenerPedidos(status, body) {
+  alert(`Error del servidor: ${body.error}`);
+  console.log(body.json());
+  throw new Error(status.Error);
 }

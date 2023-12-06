@@ -58,10 +58,10 @@ function exitoObtenerProductos(data) {
   }
 }
 
-function errorObtenerProductos(response) {
-  alert(`Error del servidor: ${response.error}`);
-  console.log(response.json());
-  throw new Error(response.Error);
+function errorObtenerProductos(status, body) {
+  alert(`Error del servidor: ${body.error}`);
+  console.log(body.json());
+  throw new Error(status.Error);
 }
 
 var url = new URL(`http://localhost:8080/productos`);

@@ -101,10 +101,10 @@ function exitoProducto(data) {
   window.location = window.location.origin + "/web/productos/index.html";
 }
 
-function errorProducto(response) {
-  alert(`Error del servidor: ${response.error}`);
-  console.log(response.json());
-  throw new Error(response.Error);
+function errorProducto(status, body) {
+  alert(`Error del servidor: ${body.error}`);
+  console.log(body.json());
+  throw new Error(status.Error);
 }
 
 function eliminarProducto(codProducto) {

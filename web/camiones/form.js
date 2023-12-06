@@ -74,10 +74,10 @@ function exitoCamion(data) {
   window.location = window.location.origin + "/web/camiones/index.html";
 }
 
-function errorCamion(response) {
-  alert(`Error del servidor: ${response.error}`);
-  console.log(response.json());
-  throw new Error(response.Error);
+function errorCamion(status, body) {
+  alert(`Error del servidor: ${body.error}`);
+  console.log(body.json());
+  throw new Error(status.Error);
 }
 
 function actualizarCamion(event) {
@@ -143,8 +143,8 @@ function exitoObtenerCamion(data) {
   document.getElementById("CostoPorKm").value = data.costo_por_kilometro;
 }
 
-function errorObtenerCamion(response) {
-  alert(`Error del servidor: ${response.error}`);
-  console.log(response.json());
-  throw new Error(response.Error);
+function errorObtenerCamion(status, body) {
+  alert(`Error del servidor: ${body.error}`);
+  console.log(body.json());
+  throw new Error(status.Error);
 }
