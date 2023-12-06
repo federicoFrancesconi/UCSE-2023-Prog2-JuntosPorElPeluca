@@ -107,7 +107,6 @@ function guardarEnvio() {
   };
 
   //convierte a json la data
-  debugger;
   const json = JSON.stringify(data);
   console.log(json);
 

@@ -21,7 +21,7 @@
 
     <h1>Juntos por el Peluca - Technological Solutions</h1>
 
-    <div>
+    <div id="contenidoInicio">
         <h3>Beneficio entre fechas</h3>
         <div>
             <label for="">Desde</label>
@@ -32,22 +32,24 @@
             <input type="date" name="FechaHasta" id="FechaHasta">
         </div>
         <div>
-            <input type="button" value="Filtrar" onclick="obtenerBeneficioEntreFechas('tipo')">
+            <input type="button" value="Calcular" onclick="obtenerBeneficioEntreFechas('tipo')">
         </div>
         <h4>Beneficio: </h4>
         <h4 id="beneficio"></h4>
     </div>
     
-    <div>
-        <h3>Cantidad de pedidos por estado</h3>
-        <h4 id="mensajeSinPedidos"></h4>
-        <canvas id="graficoPedidos" class="grafico"></canvas>
-    </div>
-
-    <div>
-        <h3>Cantidad de envios por estado</h3>
-        <h4 id="mensajeSinEnvios"></h4>
-        <canvas id="graficoEnvios" class="grafico"></canvas>
+    <div id="graficos">
+        <div>
+            <h3>Cantidad de pedidos por estado</h3>
+            <h4 id="mensajeSinPedidos"></h4>
+            <canvas id="graficoPedidos" class="grafico"></canvas>
+        </div>
+    
+        <div>
+            <h3>Cantidad de envios por estado</h3>
+            <h4 id="mensajeSinEnvios"></h4>
+            <canvas id="graficoEnvios" class="grafico"></canvas>
+        </div>
     </div>
 
     <script src="scripts.js"></script>
