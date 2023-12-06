@@ -52,7 +52,7 @@ func (handler *EnvioHandler) ObtenerEnvios(c *gin.Context) {
 	}
 
 	//Llama al service
-	envios, err := handler.envioService.ObtenerEnvios(filtro, &user)
+	envios, err := handler.envioService.ObtenerEnvios(filtro)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
@@ -69,7 +69,7 @@ func (handler *EnvioHandler) ObtenerEnvioPorId(c *gin.Context) {
 
 	id := c.Param("id")
 
-	envio, err := handler.envioService.ObtenerEnvioPorId(&dto.Envio{Id: id}, &user)
+	envio, err := handler.envioService.ObtenerEnvioPorId(&dto.Envio{Id: id})
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
@@ -112,7 +112,7 @@ func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 	}
 
 	//Llama al service
-	beneficio, err := handler.envioService.ObtenerBeneficioEntreFechas(filtro, &user)
+	beneficio, err := handler.envioService.ObtenerBeneficioEntreFechas(filtro)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {

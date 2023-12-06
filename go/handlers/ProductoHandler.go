@@ -62,7 +62,7 @@ func (handler *ProductoHandler) ObtenerProductoPorCodigo(c *gin.Context) {
 	//Creamos el objeto producto
 	productoConCodigo := dto.Producto{CodigoProducto: codigo}
 
-	producto, err := handler.productoService.ObtenerProductoPorCodigo(&productoConCodigo, &user)
+	producto, err := handler.productoService.ObtenerProductoPorCodigo(&productoConCodigo)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {

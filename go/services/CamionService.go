@@ -64,6 +64,7 @@ func (service *CamionService) ObtenerCamiones(filtro utils.FiltroCamion) ([]*dto
 }
 
 func (service *CamionService) ActualizarCamion(camion *dto.Camion, usuario *dto.User) error {
+	//TODO: validar que sea el conductor, no solo por rol
 	if !service.validarRol(usuario) {
 		return errors.New("el usuario no tiene permisos para actualizar un camion")
 	}
@@ -76,6 +77,7 @@ func (service *CamionService) ActualizarCamion(camion *dto.Camion, usuario *dto.
 
 // En lugar de eliminar el camion, actualiza el campo esta_activo a false
 func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion, usuario *dto.User) error {
+	//TODO: validar que sea el conductor, no solo por rol
 	if !service.validarRol(usuario) {
 		return errors.New("el usuario no tiene permisos para eliminar un camion")
 	}
@@ -116,10 +118,6 @@ func (service *CamionService) EliminarCamion(camionConPatente *dto.Camion, usuar
 	return service.camionRepository.ActualizarCamion(camion)
 }
 
-func (service *CamionService) validarRol(usuario *dto.User) bool {
-	return usuario.Rol == string(utils.Administrador)
-}
-
 func (service *CamionService) camionTieneEnviosActualmente(camion *dto.Camion) (error, bool) {
 	//Creamos el filtro para obtener los envios
 	filtro := utils.FiltroEnvio{PatenteCamion: camion.Patente, Estado: model.ADespachar}
@@ -146,4 +144,8 @@ func (service *CamionService) camionTieneEnviosActualmente(camion *dto.Camion) (
 	}
 
 	return nil, true
+}
+
+func (service *CamionService) validarRol(usuario *dto.User) bool {
+	return usuario.Rol == string(utils.Administrador)
 }

@@ -11,9 +11,9 @@ import (
 
 type EnvioServiceInterface interface {
 	CrearEnvio(*dto.Envio, *dto.User) error
-	ObtenerEnvios(utils.FiltroEnvio, *dto.User) ([]*dto.Envio, error)
-	ObtenerEnvioPorId(*dto.Envio, *dto.User) (*dto.Envio, error)
-	ObtenerBeneficioEntreFechas(utils.FiltroEnvio, *dto.User) (float64, error)
+	ObtenerEnvios(utils.FiltroEnvio) ([]*dto.Envio, error)
+	ObtenerEnvioPorId(*dto.Envio) (*dto.Envio, error)
+	ObtenerBeneficioEntreFechas(utils.FiltroEnvio) (float64, error)
 	ObtenerCantidadEnviosPorEstado() ([]utils.CantidadEstado, error)
 	AgregarParada(*dto.NuevaParada, *dto.User) (bool, error)
 	CambiarEstadoEnvio(*dto.Envio, *dto.User) (bool, error)
@@ -75,7 +75,7 @@ func (service *EnvioService) CrearEnvio(envio *dto.Envio, usuario *dto.User) err
 	return service.envioRepository.CrearEnvio(envio.GetModel())
 }
 
-func (service *EnvioService) ObtenerEnvios(filtroEnvio utils.FiltroEnvio, usuario *dto.User) ([]*dto.Envio, error) {
+func (service *EnvioService) ObtenerEnvios(filtroEnvio utils.FiltroEnvio) ([]*dto.Envio, error) {
 	//Validamos el estado que se paso para filtrar
 	if filtroEnvio.Estado != "" {
 		if !model.EsUnEstadoEnvioValido(filtroEnvio.Estado) {
@@ -93,20 +93,14 @@ func (service *EnvioService) ObtenerEnvios(filtroEnvio utils.FiltroEnvio, usuari
 	envios := []*dto.Envio{}
 
 	for _, envioDB := range enviosDB {
-		//valido que el envio sea del camionero que lo esta filtrando
-		valido, err := service.validarUsuario(dto.NewEnvio(*envioDB), usuario)
-
-		if valido && err == nil {
-			envio := dto.NewEnvio(*envioDB)
-			envios = append(envios, envio)
-		} else if err != nil {
-			return nil, err
-		}
+		envio := dto.NewEnvio(*envioDB)
+		envios = append(envios, envio)
 	}
+	
 	return envios, nil
 }
 
-func (service *EnvioService) ObtenerEnvioPorId(envioConID *dto.Envio, usuario *dto.User) (*dto.Envio, error) {
+func (service *EnvioService) ObtenerEnvioPorId(envioConID *dto.Envio) (*dto.Envio, error) {
 	envioDB, err := service.envioRepository.ObtenerEnvioPorId(envioConID.GetModel())
 
 	//Inicializamos el envio por si no hay ninguno
@@ -116,13 +110,6 @@ func (service *EnvioService) ObtenerEnvioPorId(envioConID *dto.Envio, usuario *d
 		return nil, err
 	} else {
 		envio = dto.NewEnvio(*envioDB)
-	}
-
-	//valido que el envio sea del camionero que lo esta filtrando
-	valido, err := service.validarUsuario(envio, usuario)
-
-	if !valido && err != nil {
-		return nil, err
 	}
 
 	return envio, nil
@@ -212,12 +199,12 @@ func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido) error {
 	return nil
 }
 
-func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvio, usuario *dto.User) (float64, error) {
+func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvio) (float64, error) {
 	//Le agrega el estado despachado al filtro, ya que el beneficio lo tienen los despachados
 	filtro.Estado = model.Despachado
 
 	//Obtengo los envios despachados entre las dos fechas pasadas como parametro
-	envios, err := service.ObtenerEnvios(filtro, usuario)
+	envios, err := service.ObtenerEnvios(filtro)
 
 	if err != nil {
 		return 0, err
@@ -346,8 +333,8 @@ func (service *EnvioService) AgregarParada(parada *dto.NuevaParada, usuario *dto
 
 	//Validamos que el envio pertenezca al camionero
 	valido, err := service.validarUsuario(dto.NewEnvio(*envioDB), usuario)
-	if !valido && err == nil {
-		return false, errors.New("el envio no pertenece al camionero")
+	if !valido {
+		return false, err
 	}
 
 	//Validamos que el envio esté en estado EnRuta
@@ -380,7 +367,7 @@ func (service *EnvioService) CambiarEstadoEnvio(envio *dto.Envio, usuario *dto.U
 
 	//Validamos que el envio pertenezca al camionero
 	valido, err := service.validarUsuario(envio, usuario)
-	if !valido && err != nil {
+	if !valido {
 		return false, err
 	}
 
@@ -500,11 +487,6 @@ func (service *EnvioService) validarUsuario(envio *dto.Envio, usuario *dto.User)
 	//Validamos que el envio pertenezca al camionero
 	if envioDB.IdCreador != usuario.Codigo {
 		return false, errors.New("el envio no pertenece al camionero")
-	}
-
-	//Verifico si debe ser un conductor quien hace la consulta
-	if !service.validarRol(usuario) {
-		return false, errors.New("el usuario no tiene permisos ya que no es un conductor")
 	}
 
 	return true, nil

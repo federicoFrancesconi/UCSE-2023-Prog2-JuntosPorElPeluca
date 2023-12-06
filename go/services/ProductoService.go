@@ -16,7 +16,7 @@ type ProductoService struct {
 type ProductoServiceInterface interface {
 	CrearProducto(*dto.Producto, *dto.User) error
 	ObtenerProductos(utils.FiltroProducto) ([]dto.Producto, error)
-	ObtenerProductoPorCodigo(*dto.Producto, *dto.User) (*dto.Producto, error)
+	ObtenerProductoPorCodigo(*dto.Producto) (*dto.Producto, error)
 	ActualizarProducto(*dto.Producto, *dto.User) error
 	EliminarProducto(*dto.Producto, *dto.User) error
 }
@@ -72,7 +72,7 @@ func (service *ProductoService) ObtenerProductos(filtro utils.FiltroProducto) ([
 	return productosDTO, nil
 }
 
-func (service *ProductoService) ObtenerProductoPorCodigo(productoConCodigo *dto.Producto, usuario *dto.User) (*dto.Producto, error) {
+func (service *ProductoService) ObtenerProductoPorCodigo(productoConCodigo *dto.Producto) (*dto.Producto, error) {
 	productoDB, err := service.productoRepository.ObtenerProductoPorCodigo(productoConCodigo.GetModel())
 
 	//Inicializamos el envio por si no hay ninguno
@@ -82,13 +82,6 @@ func (service *ProductoService) ObtenerProductoPorCodigo(productoConCodigo *dto.
 		return nil, err
 	} else {
 		producto = dto.NewProducto(productoDB)
-	}
-
-	//valido que el envio sea del camionero que lo esta filtrando
-	valido := service.validarRol(usuario)
-
-	if !valido && err != nil {
-		return nil, err
 	}
 
 	return producto, nil
