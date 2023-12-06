@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
       .addEventListener("click", function (event) {
         finalizarViaje(idEnvio);
       });
-    document.getElementById("formParada").style.display = "none";
   } else {
     document
       .getElementById("buttonSave")
