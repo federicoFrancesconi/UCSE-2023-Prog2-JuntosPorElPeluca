@@ -1,0 +1,96 @@
+[{
+  "_id": {
+    "$oid": "656ca190ed8199d6a8ff77a9"
+  },
+  "patente": "ABC123",
+  "peso_maximo": 2000,
+  "costo_por_kilometro": 25,
+  "fecha_creacion": {
+    "$date": "2023-12-03T15:41:04.734Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-05T01:00:59.055Z"
+  },
+  "id_creador": "638371277510195677",
+  "esta_activo": true
+},
+{
+  "_id": {
+    "$oid": "656e628c1270e691ea1c7dda"
+  },
+  "patente": "HFK873",
+  "peso_maximo": 1500,
+  "costo_por_kilometro": 58,
+  "fecha_creacion": {
+    "$date": "2023-12-04T23:36:44.988Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-05T01:00:43.206Z"
+  },
+  "id_creador": "638371277510195677",
+  "esta_activo": false
+},
+{
+  "_id": {
+    "$oid": "656e765adcaf41dfe5a8b41c"
+  },
+  "patente": "HFK292",
+  "peso_maximo": 3000,
+  "costo_por_kilometro": 60,
+  "fecha_creacion": {
+    "$date": "2023-12-05T01:01:14.417Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-05T01:01:14.417Z"
+  },
+  "id_creador": "638371277510195677",
+  "esta_activo": true
+},
+{
+  "_id": {
+    "$oid": "65707fc25af7a0ed651e960d"
+  },
+  "patente": "HOIU833",
+  "peso_maximo": 2000,
+  "costo_por_kilometro": 2,
+  "fecha_creacion": {
+    "$date": "2023-12-06T14:05:54.829Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-06T14:06:03.196Z"
+  },
+  "id_creador": "638371277510195677",
+  "esta_activo": false
+},
+{
+  "_id": {
+    "$oid": "657107d42b31ae7e970ba4d3"
+  },
+  "patente": "TRE389",
+  "peso_maximo": 5000,
+  "costo_por_kilometro": 15,
+  "fecha_creacion": {
+    "$date": "2023-12-06T23:46:28.065Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-06T23:46:28.065Z"
+  },
+  "id_creador": "638371277510195677",
+  "esta_activo": true
+},
+{
+  "_id": {
+    "$oid": "65710d612b31ae7e970ba4e3"
+  },
+  "patente": "AAA000",
+  "peso_maximo": 20,
+  "costo_por_kilometro": 2000,
+  "fecha_creacion": {
+    "$date": "2023-12-07T00:10:09.897Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-07T00:10:09.897Z"
+  },
+  "id_creador": "638371277510195677",
+  "esta_activo": true
+}]

@@ -107,7 +107,8 @@ func (repository EnvioRepository) ObtenerEnvios(filtroEnvio *utils.FiltroEnvio) 
 		filtro["fecha_creacion"] = filtroFecha
 	}
 
-	if ultimaParada != "" {
+	//Si el estado es despachado, no tiene paradas y no tiene sentido filtrar por ultima parada
+	if ultimaParada != "" && estado != model.ADespachar{
 		customJavaScript := "this.paradas[this.paradas.length - 1].ciudad === '" + ultimaParada + "'"
 
 		filtro["$where"] = customJavaScript

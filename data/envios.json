@@ -1,0 +1,74 @@
+[{
+  "_id": {
+    "$oid": "656fa0c60fa5a3ee5eedd87a"
+  },
+  "fecha_creacion": {
+    "$date": "2023-12-05T22:14:30.613Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-06T12:18:08.686Z"
+  },
+  "patente_camion": "ABC123",
+  "paradas": [
+    {
+      "ciudad": "Rosario",
+      "km_recorridos": 300
+    },
+    {
+      "ciudad": "Purmamarca",
+      "km_recorridos": 1500
+    },
+    {
+      "ciudad": "El Centro",
+      "km_recorridos": 20
+    }
+  ],
+  "pedidos": [
+    "656e76e1dcaf41dfe5a8b41e"
+  ],
+  "id_creador": "638371276919552964",
+  "estado": "Despachado"
+},
+{
+  "_id": {
+    "$oid": "65710d8e2b31ae7e970ba4e5"
+  },
+  "fecha_creacion": {
+    "$date": "2023-12-07T00:10:54.470Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-07T00:10:54.470Z"
+  },
+  "patente_camion": "TRE389",
+  "paradas": null,
+  "pedidos": [
+    "65710cbd2b31ae7e970ba4df",
+    "65710ce42b31ae7e970ba4e1"
+  ],
+  "id_creador": "638371276919552964",
+  "estado": "A Despachar"
+},
+{
+  "_id": {
+    "$oid": "65710db92b31ae7e970ba4e7"
+  },
+  "fecha_creacion": {
+    "$date": "2023-12-07T00:11:37.665Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-07T00:12:05.128Z"
+  },
+  "patente_camion": "HFK292",
+  "paradas": [
+    {
+      "ciudad": "Olmos",
+      "km_recorridos": 25
+    }
+  ],
+  "pedidos": [
+    "656e6ab4f9ebe69bfc223e00",
+    "656fa0640fa5a3ee5eedd878"
+  ],
+  "id_creador": "638371276919552964",
+  "estado": "En Ruta"
+}]

@@ -1,0 +1,234 @@
+[{
+  "_id": {
+    "$oid": "656c9de138ee51867892005a"
+  },
+  "tipo_producto": "Golosinas",
+  "nombre": "Caramelo",
+  "peso_unitario": 0.5,
+  "precio_unitario": 0.7,
+  "stock_minimo": 30,
+  "stock_actual": 29,
+  "fecha_creacion": {
+    "$date": "2023-12-03T15:25:21.232Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-03T15:25:21.232Z"
+  },
+  "id_creador": "638371277510195677"
+},
+{
+  "_id": {
+    "$oid": "656e624f1270e691ea1c7dd4"
+  },
+  "tipo_producto": "Cigarrillos",
+  "nombre": "Marlboro",
+  "peso_unitario": 0.5,
+  "precio_unitario": 800,
+  "stock_minimo": 100,
+  "stock_actual": 120,
+  "fecha_creacion": {
+    "$date": "2023-12-04T23:35:43.976Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-04T23:35:43.976Z"
+  },
+  "id_creador": "638371277510195677"
+},
+{
+  "_id": {
+    "$oid": "656e62631270e691ea1c7dd6"
+  },
+  "tipo_producto": "Comestibles",
+  "nombre": "Manzana",
+  "peso_unitario": 1,
+  "precio_unitario": 1100,
+  "stock_minimo": 35,
+  "stock_actual": 32,
+  "fecha_creacion": {
+    "$date": "2023-12-04T23:36:03.087Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-04T23:36:03.087Z"
+  },
+  "id_creador": "638371277510195677"
+},
+{
+  "_id": {
+    "$oid": "656e627a1270e691ea1c7dd8"
+  },
+  "tipo_producto": "Bebidas",
+  "nombre": "Vodka",
+  "peso_unitario": 2,
+  "precio_unitario": 2000,
+  "stock_minimo": 10,
+  "stock_actual": 21,
+  "fecha_creacion": {
+    "$date": "2023-12-04T23:36:26.809Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-04T23:36:26.809Z"
+  },
+  "id_creador": "638371277510195677"
+},
+{
+  "_id": {
+    "$oid": "656e75f0dcaf41dfe5a8b418"
+  },
+  "tipo_producto": "Higiene y Salud",
+  "nombre": "Jabon",
+  "peso_unitario": 1,
+  "precio_unitario": 200,
+  "stock_minimo": 45,
+  "stock_actual": 48,
+  "fecha_creacion": {
+    "$date": "2023-12-05T00:59:28.718Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-05T00:59:28.718Z"
+  },
+  "id_creador": "638371277510195677"
+},
+{
+  "_id": {
+    "$oid": "656e7608dcaf41dfe5a8b41a"
+  },
+  "tipo_producto": "Comestibles",
+  "nombre": "Pollo",
+  "peso_unitario": 2,
+  "precio_unitario": 3500,
+  "stock_minimo": 15,
+  "stock_actual": 36,
+  "fecha_creacion": {
+    "$date": "2023-12-05T00:59:52.358Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-05T00:59:52.358Z"
+  },
+  "id_creador": "638371277510195677"
+},
+{
+  "_id": {
+    "$oid": "656f9b7434fd0cfac25d8f8e"
+  },
+  "tipo_producto": "Bebidas",
+  "nombre": "Whisky Gigante",
+  "peso_unitario": 1000,
+  "precio_unitario": 20000,
+  "stock_minimo": 5,
+  "stock_actual": 14,
+  "fecha_creacion": {
+    "$date": "2023-12-05T21:51:48.017Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-05T21:51:48.017Z"
+  },
+  "id_creador": "638371277510195677"
+},
+{
+  "_id": {
+    "$oid": "656f9bad34fd0cfac25d8f90"
+  },
+  "tipo_producto": "Higiene y Salud",
+  "nombre": "Preservativo con Tachas",
+  "peso_unitario": 0.5,
+  "precio_unitario": 300,
+  "stock_minimo": 450,
+  "stock_actual": 455,
+  "fecha_creacion": {
+    "$date": "2023-12-05T21:52:45.421Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-05T21:52:45.421Z"
+  },
+  "id_creador": "638371277510195677"
+},
+{
+  "_id": {
+    "$oid": "6571080a2b31ae7e970ba4d5"
+  },
+  "tipo_producto": "Higiene y Salud",
+  "nombre": "Shampoo Anticaida",
+  "peso_unitario": 0.5,
+  "precio_unitario": 2300,
+  "stock_minimo": 23,
+  "stock_actual": 27,
+  "fecha_creacion": {
+    "$date": "2023-12-06T23:47:22.110Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-06T23:47:22.110Z"
+  },
+  "id_creador": "638371277510195677"
+},
+{
+  "_id": {
+    "$oid": "6571082c2b31ae7e970ba4d7"
+  },
+  "tipo_producto": "Comestibles",
+  "nombre": "Repollo Brasilero por kg",
+  "peso_unitario": 1,
+  "precio_unitario": 7000,
+  "stock_minimo": 30,
+  "stock_actual": 22,
+  "fecha_creacion": {
+    "$date": "2023-12-06T23:47:56.629Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-06T23:47:56.629Z"
+  },
+  "id_creador": "638371277510195677"
+},
+{
+  "_id": {
+    "$oid": "657108472b31ae7e970ba4d9"
+  },
+  "tipo_producto": "Golosinas",
+  "nombre": "Ferrero Rocher",
+  "peso_unitario": 1,
+  "precio_unitario": 12000,
+  "stock_minimo": 7,
+  "stock_actual": 9,
+  "fecha_creacion": {
+    "$date": "2023-12-06T23:48:23.707Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-06T23:48:23.707Z"
+  },
+  "id_creador": "638371277510195677"
+},
+{
+  "_id": {
+    "$oid": "657108612b31ae7e970ba4db"
+  },
+  "tipo_producto": "Bebidas",
+  "nombre": "Blue Label",
+  "peso_unitario": 2,
+  "precio_unitario": 175000,
+  "stock_minimo": 49,
+  "stock_actual": 12,
+  "fecha_creacion": {
+    "$date": "2023-12-06T23:48:49.803Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-06T23:48:49.803Z"
+  },
+  "id_creador": "638371277510195677"
+},
+{
+  "_id": {
+    "$oid": "657109a22b31ae7e970ba4dd"
+  },
+  "tipo_producto": "Cigarrillos",
+  "nombre": "Super Cohiba",
+  "peso_unitario": 3,
+  "precio_unitario": 20000,
+  "stock_minimo": 18,
+  "stock_actual": 13,
+  "fecha_creacion": {
+    "$date": "2023-12-06T23:54:10.630Z"
+  },
+  "fecha_ultima_actualizacion": {
+    "$date": "2023-12-06T23:54:10.630Z"
+  },
+  "id_creador": "638371277510195677"
+}]

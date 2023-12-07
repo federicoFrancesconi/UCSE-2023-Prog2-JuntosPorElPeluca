@@ -230,7 +230,7 @@ func (service *PedidoService) ObtenerCantidadPedidosPorEstado() ([]utils.Cantida
 func (service *PedidoService) CancelarPedido(pedidoPorCancelar *dto.Pedido, usuario *dto.User) error {
 	//Validamos el rol del usuario
 	if !service.validarRol(usuario) {
-		return errors.New("el usuario no tiene permisos para crear un pedido")
+		return errors.New("el usuario no tiene permisos para cancelar un pedido")
 	}
 
 	//Primero buscamos el pedido a cancelar
