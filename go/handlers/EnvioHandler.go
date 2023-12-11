@@ -112,7 +112,7 @@ func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 	}
 
 	//Llama al service
-	beneficio, err := handler.envioService.ObtenerBeneficioEntreFechas(filtro)
+	beneficioTemporal, err := handler.envioService.ObtenerBeneficioTemporal(filtro)
 
 	//Si hay un error, lo devolvemos
 	if err != nil {
@@ -120,11 +120,8 @@ func (handler *EnvioHandler) ObtenerBeneficioEntreFechas(c *gin.Context) {
 		return
 	}
 
-	// Meto el beneficio dentro de una estructura para que el json quede con el formato que se pide
-	response := map[string]float64{"beneficio": beneficio}
-
 	//Agregamos un log para indicar información relevante del resultado
-	logging.LoggearResultadoYResponder(c, "EnvioHandler", "ObtenerBeneficioEntreFechas", response, &user)
+	logging.LoggearResultadoYResponder(c, "EnvioHandler", "ObtenerBeneficioEntreFechas", beneficioTemporal, &user)
 }
 
 func (handler *EnvioHandler) ObtenerCantidadEnviosPorEstado(c *gin.Context) {

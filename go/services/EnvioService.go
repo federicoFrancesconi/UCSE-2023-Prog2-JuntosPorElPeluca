@@ -7,13 +7,14 @@ import (
 	"TPIntegrador/utils"
 	"errors"
 	"fmt"
+	"time"
 )
 
 type EnvioServiceInterface interface {
 	CrearEnvio(*dto.Envio, *dto.User) error
 	ObtenerEnvios(utils.FiltroEnvio) ([]*dto.Envio, error)
 	ObtenerEnvioPorId(*dto.Envio) (*dto.Envio, error)
-	ObtenerBeneficioEntreFechas(utils.FiltroEnvio) (float64, error)
+	ObtenerBeneficioTemporal(utils.FiltroEnvio) (dto.BeneficioTemporal, error)
 	ObtenerCantidadEnviosPorEstado() ([]utils.CantidadEstado, error)
 	AgregarParada(*dto.NuevaParada, *dto.User) (bool, error)
 	CambiarEstadoEnvio(*dto.Envio, *dto.User) (bool, error)
@@ -199,7 +200,63 @@ func (service *EnvioService) enviarPedido(pedidoPorEnviar *dto.Pedido) error {
 	return nil
 }
 
-func (service *EnvioService) ObtenerBeneficioEntreFechas(filtro utils.FiltroEnvio) (float64, error) {
+func (service *EnvioService) ObtenerBeneficioTemporal(filtro utils.FiltroEnvio) (dto.BeneficioTemporal, error) {
+	//Inicializamos el beneficio temporal
+	beneficioTemporal := dto.BeneficioTemporal{}
+
+	//Valida que la fecha desde sea menor a la fecha hasta
+	if filtro.FechaCreacionDesde.After(filtro.FechaCreacionHasta) {
+		return beneficioTemporal, errors.New("la fecha desde debe ser menor o igual a la fecha hasta")
+	}
+
+	//Obtiene el beneficio anual
+	//Por cada año en el rango de fechas, obtiene el beneficio
+	for año := filtro.FechaCreacionDesde.Year(); año <= filtro.FechaCreacionHasta.Year(); año++ {
+		filtroPorAño := utils.FiltroEnvio{
+			FechaCreacionDesde: time.Date(año, 1, 1, 0, 0, 0, 0, time.UTC),
+			FechaCreacionHasta: time.Date(año, 12, 31, 23, 59, 59, 999999999, time.UTC),
+		}
+
+		montoBeneficioAnual, err := service.obtenerBeneficioEntreFechas(filtroPorAño)
+
+		if err != nil {
+			return beneficioTemporal, err
+		}
+
+		beneficioAnual := dto.BeneficioAnual{Año: año, Monto: montoBeneficioAnual}
+
+		beneficioTemporal.BeneficiosAnuales = append(beneficioTemporal.BeneficiosAnuales, beneficioAnual)
+	}
+
+	//Hacemos lo mismo con los meses
+	for año, mes := filtro.FechaCreacionDesde.Year(), filtro.FechaCreacionDesde.Month(); !((año == filtro.FechaCreacionHasta.Year()) && (mes > filtro.FechaCreacionHasta.Month())); {
+		filtroPorMes := utils.FiltroEnvio{
+			FechaCreacionDesde: time.Date(año, mes, 1, 0, 0, 0, 0, time.UTC),
+			FechaCreacionHasta: time.Date(año, mes+1, 0, 23, 59, 59, 999999999, time.UTC),
+		}
+
+		if mes == 12 {
+			año++
+			mes = 1
+		} else {
+			mes++
+		}
+
+		montoBeneficioMensual, err := service.obtenerBeneficioEntreFechas(filtroPorMes)
+
+		if err != nil {
+			return beneficioTemporal, err
+		}
+
+		beneficioMensual := dto.BeneficioMensual{Mes: int(mes), Monto: montoBeneficioMensual}
+
+		beneficioTemporal.BeneficiosMensuales = append(beneficioTemporal.BeneficiosMensuales, beneficioMensual)
+	}
+
+	return beneficioTemporal, nil
+}
+
+func (service *EnvioService) obtenerBeneficioEntreFechas(filtro utils.FiltroEnvio) (float64, error) {
 	//Le agrega el estado despachado al filtro, ya que el beneficio lo tienen los despachados
 	filtro.Estado = model.Despachado
 
