@@ -124,7 +124,7 @@ function exitoObtenerBeneficioEntreFechas(data) {
   });
 
   // Dibuja el gráfico de barras en el elemento canvas 
-  new Chart(contextoBarras, miGraficoBarrasAnios);
+  new Chart(contextoBarrasAnio, miGraficoBarrasAnios);
 }
 
 function errorGraficos(status, body) {
