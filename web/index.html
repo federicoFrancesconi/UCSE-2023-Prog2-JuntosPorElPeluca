@@ -1,60 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Inicio</title>
+    <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="estilos.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestion</title>
 </head>
 <body>
     <header>
-        <nav class="navbar">
-            <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="/web/pedidos/index.html">Pedidos</a></li>
-                <li><a href="/web/envios/index.html">Envíos</a></li>
-                <li><a href="/web/productos/index.html">Productos</a></li>
-                <li><a href="/web/camiones/index.html">Camiones</a></li>
-                <li><a href="/web/login/login.html">Iniciar Sesión</a></li>
-            </ul>
-        </nav>
+        <h1>Sistema de Gestión</h1>
     </header>
 
-    <h1>Juntos por el Peluca - Technological Solutions</h1>
+    <nav class="nav-container">
+        <a class="nav-link" href="/web/pedidos/index.html">Pedidos</a>
+        <a class="nav-link" href="/web/camiones/index.html">Camiones</a>
+        <a class="nav-link" href="/web/envios/index.html">Envíos</a>
+        <a class="nav-link" href="/web/productos/index.html">Productos</a>
+        <a class="nav-link" href="/web/reportes.html">Reportes</a>
+    </nav>
 
-    <div id="contenidoInicio">
-        <h3>Beneficio entre fechas</h3>
-        <div>
-            <label for="">Desde</label>
-            <input type="date" name="FechaDesde" id="FechaDesde">
-        </div>
-        <div>
-            <label for="">Hasta</label>
-            <input type="date" name="FechaHasta" id="FechaHasta">
-        </div>
-        <div>
-            <input type="button" value="Calcular" onclick="obtenerBeneficioEntreFechas('tipo')">
-        </div>
-        <h4>Beneficio: </h4>
-        <h4 id="mensajeSinBeneficio"></h4>
-        <canvas id="graficoBeneficioMes" class="grafico"></canvas>
-        <canvas id="graficoBeneficioAnio" class="grafico"></canvas>
-    </div>
-    
-    <div id="graficos">
-        <div>
-            <h3>Cantidad de pedidos por estado</h3>
-            <h4 id="mensajeSinPedidos"></h4>
-            <canvas id="graficoPedidos" class="grafico"></canvas>
-        </div>
-    
-        <div>
-            <h3>Cantidad de envios por estado</h3>
-            <h4 id="mensajeSinEnvios"></h4>
-            <canvas id="graficoEnvios" class="grafico"></canvas>
-        </div>
+    <div class="main-content">
+        <p>Bienvenido al sistema de gestión. Selecciona una opción:</p>
+        <a class="main-link" href="/web/pedidos/index.html">Pedidos</a>
+        <a class="main-link" href="/web/camiones/index.html">Camiones</a>
+        <a class="main-link" href="/web/envios/index.html">Envíos</a>
+        <a class="main-link" href="/web/productos/index.html">Productos</a>
+        <a class="main-link" href="/web/reportes.html">Reportes</a>
     </div>
 
-    <script src="scripts.js"></script>
-    <script src="request.js"></script>
+    <footer>
+        <p>&copy; 2023 Sistema de Gestión</p>
+    </footer>
 </body>
 </html>
