@@ -42,6 +42,8 @@ function exitoObtenerBeneficioEntreFechas(data) {
   var meses = [];
   var anios = [];
 
+  Chart.defaults.font.size = 16;
+
   if (data.length === 0) {
     document.getElementById("mensajeSinBeneficio").innerHTML = "No hay beneficios cargados en esas fechas";
     return; // Agregamos un return para salir de la función si no hay datos
@@ -90,14 +92,22 @@ function exitoObtenerBeneficioEntreFechas(data) {
   };
 
   // Obtener el contexto del lienzo de barras de meses
-  var contextoBarrasMeses = document.getElementById('graficoBeneficioMes').getContext('2d');
+  const contextoBarrasMeses = document.getElementById('graficoBeneficioMes').getContext('2d');
 
   // Crear el gráfico de barras de meses
-  var miGraficoBarrasMeses = new Chart(contextoBarrasMeses, {
+  const configBarrasMeses = {
     type: 'bar',
     data: datosMeses,
     options: configuracionBarras,
-  });
+  };
+
+  // Destroy existing chart if it exists
+  if (window.myChartMeses) {
+    window.myChartMeses.destroy();
+  }
+
+  // Create the new chart for months
+  window.myChartMeses = new Chart(contextoBarrasMeses, configBarrasMeses);
 
   const datosAnios = {
     labels: anios,
@@ -110,19 +120,22 @@ function exitoObtenerBeneficioEntreFechas(data) {
   };
 
   // Obtener el contexto del lienzo de barras de años
-  var contextoBarrasAnio = document.getElementById('graficoBeneficioAnio').getContext('2d');
+  const contextoBarrasAnio = document.getElementById('graficoBeneficioAnio').getContext('2d');
 
   // Crear el gráfico de barras de años
-  var miGraficoBarrasAnios = new Chart(contextoBarrasAnio, {
+  const configBarrasAnios = {
     type: 'bar',
     data: datosAnios,
     options: configuracionBarras,
-  });
+  };
 
-  new Chart(contextoBarrasMeses, miGraficoBarrasMeses);
+  // Destroy existing chart if it exists
+  if (window.myChartAnios) {
+    window.myChartAnios.destroy();
+  }
 
-  new Chart(contextoBarrasAnio, miGraficoBarrasAnios);
-
+  // Create the new chart for years
+  window.myChartAnios = new Chart(contextoBarrasAnio, configBarrasAnios);
 }
 
 
@@ -149,6 +162,8 @@ function dibujarGraficoPedidos() {
 function exitoObtenerGraficoPedidos(data) {
   var cantidadPedidos = [];
   var estadoPedidos = [];
+
+  Chart.defaults.font.size = 16;
 
   if (data.length == 0) {
     document.getElementById("mensajeSinPedidos").innerHTML = "No hay pedidos cargados";
@@ -208,17 +223,17 @@ function exitoObtenerGraficoPedidos(data) {
   };
 
   // Obtener el contexto del lienzo de barras
-  var contextoBarras = document.getElementById('graficoPedidosBarra').getContext('2d');
+  const contextoBarras = document.getElementById('graficoPedidosBarra').getContext('2d');
 
   // Crear el gráfico de barras
-  var miGraficoBarras = new Chart(contextoBarras, {
+  const configBarras = {
       type: 'bar',
       data: datos,
       options: configuracionBarras
-  });
+  };
 
   // Dibuja el gráfico de barras en el elemento canvas 
-  new Chart(contextoBarras, miGraficoBarras);
+  new Chart(contextoBarras, configBarras);
 }
 
 function dibujarGraficoEnvios() {
@@ -238,6 +253,8 @@ function dibujarGraficoEnvios() {
 function exitoObtenerGraficoEnvios(data) {
   var cantidadEnvios = [];
   var estadoEnvios = [];
+
+  Chart.defaults.font.size = 16;
 
   if (data.length == 0) {
     document.getElementById("mensajeSinEnvios").innerHTML = "No hay envios cargados";
