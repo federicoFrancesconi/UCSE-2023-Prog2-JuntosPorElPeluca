@@ -62,10 +62,21 @@ function exitoObtenerBeneficioEntreFechas(data) {
   const configuracionBarras = {
     responsive: true,
     scales: {
-      y: {
-        beginAtZero: true,
+      x: {
+        scaleLabel: {
+          display: true,
+          labelString: 'Eje X',
+          fontSize: 16  // Ajusta el tamaño del título del eje X
+        }
       },
-    },
+      y: {
+        scaleLabel: {
+          display: true,
+          labelString: 'Eje Y',
+          fontSize: 16  // Ajusta el tamaño del título del eje Y
+        }
+      }
+    }
   };
 
   const datosMeses = {
@@ -179,9 +190,20 @@ function exitoObtenerGraficoPedidos(data) {
   var configuracionBarras = {
     responsive: true,
     scales: {
-        y: {
-            beginAtZero: true
+      x: {
+        scaleLabel: {
+          display: true,
+          labelString: 'Eje X',
+          fontSize: 16  // Ajusta el tamaño del título del eje X
         }
+      },
+      y: {
+        scaleLabel: {
+          display: true,
+          labelString: 'Eje Y',
+          fontSize: 16  // Ajusta el tamaño del título del eje Y
+        }
+      }
     }
   };
 
@@ -258,10 +280,21 @@ function exitoObtenerGraficoEnvios(data) {
   var configuracionBarras = {
     responsive: true,
     scales: {
-        y: {
-            beginAtZero: true
+      x: {
+        scaleLabel: {
+          display: true,
+          labelString: 'Eje X',
+          fontSize: 16  // Ajusta el tamaño del título del eje X
         }
-    }
+      },
+      y: {
+        scaleLabel: {
+          display: true,
+          labelString: 'Eje Y',
+          fontSize: 16  // Ajusta el tamaño del título del eje Y
+        }
+      }
+    },
   };
 
   const configBarras = {
