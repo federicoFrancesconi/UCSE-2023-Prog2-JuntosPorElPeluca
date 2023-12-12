@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
   obtenerEnvios();
 });
 
-urlConFiltro = `http://localhost:8080/envios`;
+urlConFiltro = `http://go-app:8080/envios`;
 
 function obtenerEnvios() {
   makeRequest(

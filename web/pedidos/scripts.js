@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     });
 });
 
-var urlConFiltro = `http://localhost:8080/pedidos`;
+var urlConFiltro = `http://go-app:8080/pedidos`;
 
 function obtenerPedidos() {
   makeRequest(

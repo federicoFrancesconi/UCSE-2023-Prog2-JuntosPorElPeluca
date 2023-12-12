@@ -41,7 +41,7 @@ function agregarParada() {
     km_recorridos: parseInt(document.getElementById("KmRecorridos").value),
   };
 
-  const urlConFiltro = `http://localhost:8080/envios/nuevaParada`;
+  const urlConFiltro = `http://go-app:8080/envios/nuevaParada`;
 
   makeRequest(
     `${urlConFiltro}`,
@@ -74,7 +74,7 @@ function finalizarViaje(id) {
     };
 
     makeRequest(
-      `http://localhost:8080/envios/cambiarEstado`,
+      `http://go-app:8080/envios/cambiarEstado`,
       Method.PUT,
       dataEnvio,
       ContentType.JSON,

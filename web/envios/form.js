@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 //obtiene los pedidos para mostrar en el form de crear
 function obtenerPedidos() {
-  const urlConFiltro = `http://localhost:8080/pedidos?estado=Aceptado`;
+  const urlConFiltro = `http://go-app:8080/pedidos?estado=Aceptado`;
 
   makeRequest(
     `${urlConFiltro}`,
@@ -90,7 +90,7 @@ function obtenerPedidosArray() {
   return PedidosSeleccionados;
 }
 
-const urlConFiltro = `http://localhost:8080/envios`;
+const urlConFiltro = `http://go-app:8080/envios`;
 
 function guardarEnvio() {
   const pedidosArray = obtenerPedidosArray();

@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 //obtiene los productos para mostrar en el form de crear
 function obtenerProductos() {
-  const urlConFiltro = `http://localhost:8080/productos`;
+  const urlConFiltro = `http://go-app:8080/productos`;
 
   makeRequest(
     `${urlConFiltro}`,
@@ -110,7 +110,7 @@ function guardarPedido() {
     estado: "Pendiente",
   };
 
-  const urlConFiltro = `http://localhost:8080/pedidos`;
+  const urlConFiltro = `http://go-app:8080/pedidos`;
 
   makeRequest(
     `${urlConFiltro}`,
@@ -136,7 +136,7 @@ function errorPedido(status, body) {
 
 function aceptarPedido(id) {
   if (confirm("¿Estás seguro de que deseas aceptar este pedido?")) {
-    const urlConFiltro = `http://localhost:8080/pedidos/${id}/aceptar`;
+    const urlConFiltro = `http://go-app:8080/pedidos/${id}/aceptar`;
 
     data = [];
 
@@ -156,7 +156,7 @@ function aceptarPedido(id) {
 
 function cancelarPedido(id) {
   if (confirm("¿Estás seguro de que deseas cancelar este pedido?")) {
-    const urlConFiltro = `http://localhost:8080/pedidos/${id}/cancelar`;
+    const urlConFiltro = `http://go-app:8080/pedidos/${id}/cancelar`;
     data = [];
     makeRequest(
       `${urlConFiltro}`,
