@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 
-const urlConFiltro = `http://go-app:8080/productos`;
+const urlConFiltro = `http://localhost:8080/productos`;
 
 function guardarProducto() {
   //armo la data a enviar

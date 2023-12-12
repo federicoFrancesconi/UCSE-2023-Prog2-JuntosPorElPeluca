@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 function obtenerProductos() {
-  urlConFiltro = `http://go-app:8080/productos`;
+  urlConFiltro = `http://localhost:8080/productos`;
 
   makeRequest(
     `${urlConFiltro}`,
@@ -64,7 +64,7 @@ function errorObtenerProductos(status, body) {
   throw new Error(status.Error);
 }
 
-var url = new URL(`http://go-app:8080/productos`);
+var url = new URL(`http://localhost:8080/productos`);
 
 function obtenerProductoFiltrado(tipo) {
   if (document.getElementById("TipoProducto").value != "" && document.getElementById("TipoProducto").value != "Ninguno") {

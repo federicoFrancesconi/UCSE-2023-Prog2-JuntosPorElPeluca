@@ -4,7 +4,7 @@ customHeaders.append("Accept", "*/*");
 customHeaders.append("Accept-Encoding", "gzip, deflate, br");
 customHeaders.append("Connection", "keep-alive");
 
-const urlConFiltro = "http://go-app:8080/camiones";
+const urlConFiltro = "http://localhost:8080/camiones";
 
 document.addEventListener("DOMContentLoaded", function (event) {
   if (!isUserLogged()) {
@@ -124,7 +124,7 @@ function eliminarCamion(patente) {
 }
 
 function obtenerCamionPorId(patente) {
-  var url = `http://go-app:8080/camiones/${patente}`;
+  var url = `http://localhost:8080/camiones/${patente}`;
 
   makeRequest(
     url,

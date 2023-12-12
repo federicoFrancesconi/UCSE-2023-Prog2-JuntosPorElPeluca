@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 function obtenerCamiones() {
-  urlConFiltro = `http://go-app:8080/camiones`; //ver que url colocariamos
+  urlConFiltro = `http://localhost:8080/camiones`; //ver que url colocariamos
   makeRequest(
     `${urlConFiltro}`,
     Method.GET,
