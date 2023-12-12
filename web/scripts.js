@@ -42,90 +42,78 @@ function exitoObtenerBeneficioEntreFechas(data) {
   var meses = [];
   var anios = [];
 
-  if (data.length == 0) {
+  if (data.length === 0) {
     document.getElementById("mensajeSinBeneficio").innerHTML = "No hay beneficios cargados en esas fechas";
+    return; // Agregamos un return para salir de la función si no hay datos
   }
 
-  for (let i = 0; i < data.meses.length; i++) {
-    const element = data.meses[i];
+  // Procesar datos por mes
+  data.meses.forEach((element) => {
     montoFechasMes.push(element.Monto);
     meses.push(element.Nombre);
-  }
+  });
 
-  for (let i = 0; i < data.años.length; i++) {
-    const element = data.años[i];
+  // Procesar datos por año
+  data.años.forEach((element) => {
     montoFechasAnio.push(element.Monto);
     anios.push(element.Nombre);
-  }
+  });
+
+  const configuracionBarras = {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
 
   const datosMeses = {
     labels: meses,
     datasets: [
       {
-        data: montoFechasMes, // Monto por mes
-        backgroundColor: [
-          "#FF5733",
-          "#FFC300",
-          "#33FF57",
-          "#339CFF",
-          "#FFA500",
-        ], // Colores para cada sector del gráfico
+        data: montoFechasMes,
+        backgroundColor: ["#FF5733", "#FFC300", "#33FF57", "#339CFF", "#FFA500"],
       },
     ],
   };
 
-  // Configuración del gráfico de barras
-  var configuracionBarras = {
-    responsive: true,
-    scales: {
-        y: {
-            beginAtZero: true
-        }
-    }
-  };
-
-  // Obtener el contexto del lienzo de barras
+  // Obtener el contexto del lienzo de barras de meses
   var contextoBarrasMeses = document.getElementById('graficoBeneficioMes').getContext('2d');
 
-  // Crear el gráfico de barras
+  // Crear el gráfico de barras de meses
   var miGraficoBarrasMeses = new Chart(contextoBarrasMeses, {
-      type: 'bar',
-      data: datosMeses,
-      options: configuracionBarras
+    type: 'bar',
+    data: datosMeses,
+    options: configuracionBarras,
   });
-
-  // Dibuja el gráfico de barras en el elemento canvas 
-  new Chart(contextoBarras, miGraficoBarrasMeses);
 
   const datosAnios = {
     labels: anios,
     datasets: [
       {
-        data: montoFechasAnio, // Monto por anio
-        backgroundColor: [
-          "#FF5733",
-          "#FFC300",
-          "#33FF57",
-          "#339CFF",
-          "#FFA500",
-        ], // Colores para cada sector del gráfico
+        data: montoFechasAnio,
+        backgroundColor: ["#FF5733", "#FFC300", "#33FF57", "#339CFF", "#FFA500"],
       },
     ],
   };
 
-  // Obtener el contexto del lienzo de barras
+  // Obtener el contexto del lienzo de barras de años
   var contextoBarrasAnio = document.getElementById('graficoBeneficioAnio').getContext('2d');
 
-  // Crear el gráfico de barras
+  // Crear el gráfico de barras de años
   var miGraficoBarrasAnios = new Chart(contextoBarrasAnio, {
-      type: 'bar',
-      data: datosAnios,
-      options: configuracionBarras
+    type: 'bar',
+    data: datosAnios,
+    options: configuracionBarras,
   });
 
-  // Dibuja el gráfico de barras en el elemento canvas 
+  new Chart(contextoBarrasMeses, miGraficoBarrasMeses);
+
   new Chart(contextoBarrasAnio, miGraficoBarrasAnios);
+
 }
+
 
 function errorGraficos(status, body) {
   alert(body.error);
