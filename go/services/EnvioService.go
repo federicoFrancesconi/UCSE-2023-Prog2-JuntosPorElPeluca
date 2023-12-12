@@ -84,6 +84,14 @@ func (service *EnvioService) ObtenerEnvios(filtroEnvio utils.FiltroEnvio) ([]*dt
 		}
 	}
 
+	fechaDesde := filtroEnvio.FechaCreacionDesde
+	fechaHasta := filtroEnvio.FechaCreacionHasta
+
+	//Valida que la fecha desde sea menor a la fecha hasta, solo si se pasaron ambas para filtrar
+	if fechaDesde.Year() != 1 && fechaHasta.Year() != 1 && fechaDesde.After(fechaHasta) {
+		return nil, errors.New("la fecha desde debe ser menor o igual a la fecha hasta")
+	}
+
 	enviosDB, err := service.envioRepository.ObtenerEnvios(&filtroEnvio)
 
 	if err != nil {

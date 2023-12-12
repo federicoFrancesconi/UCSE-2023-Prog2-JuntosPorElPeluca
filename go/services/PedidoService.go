@@ -62,6 +62,14 @@ func (service *PedidoService) ObtenerPedidos(filtroPedido utils.FiltroPedido) ([
 	//Obtenemos el id del envio, si es que se filtró por el mismo
 	idEnvio := filtroPedido.IdEnvio
 
+	fechaDesde := filtroPedido.FechaCreacionComienzo
+	fechaHasta := filtroPedido.FechaCreacionFin
+
+	//Valida que la fecha desde sea menor a la fecha hasta, solo si se pasaron ambas para filtrar
+	if fechaDesde.Year() != 1 && fechaHasta.Year() != 1 && fechaDesde.After(fechaHasta) {
+		return nil, errors.New("la fecha desde debe ser menor o igual a la fecha hasta")
+	}
+
 	var idPedidos []string
 
 	//Lo primero es ver si hace falta filtrar por envio
