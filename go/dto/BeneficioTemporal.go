@@ -1,6 +1,6 @@
 package dto
 
 type BeneficioTemporal struct {
-	BeneficiosAnuales []BeneficioAnual `json:"años"`
+	BeneficiosAnuales []BeneficioAnual `json:"anios"`
 	BeneficiosMensuales []BeneficioMensual `json:"meses"`
 }

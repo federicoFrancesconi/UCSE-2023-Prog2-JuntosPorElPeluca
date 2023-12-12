@@ -7,7 +7,7 @@ function obtenerBeneficioEntreFechas() {
   var fechaDesde = document.getElementById("FechaDesde").value;
   var fechaHasta = document.getElementById("FechaHasta").value;
 
-  var urlConFiltro = `http://go-app:8080/envios/beneficioEntreFechas`;
+  var urlConFiltro = `http://go-app-container:8080/envios/beneficioEntreFechas`;
 
   //Si fechaDesde esta vacio, no se agrega al filtro
   if (fechaDesde != "") {
@@ -54,7 +54,7 @@ function exitoObtenerBeneficioEntreFechas(data) {
   });
 
   // Procesar datos por año
-  data.años.forEach((element) => {
+  data.anios.forEach((element) => {
     montoFechasAnio.push(element.Monto);
     anios.push(element.Nombre);
   });
@@ -133,7 +133,7 @@ function errorGraficos(status, body) {
 }
 
 function dibujarGraficoPedidos() {
-  var urlConFiltro = `http://go-app:8080/pedidos/cantidadPorEstado`;
+  var urlConFiltro = `http://go-app-container:8080/pedidos/cantidadPorEstado`;
 
   makeRequest(
     `${urlConFiltro}`,
@@ -222,7 +222,7 @@ function exitoObtenerGraficoPedidos(data) {
 }
 
 function dibujarGraficoEnvios() {
-  var urlConFiltro = `http://go-app:8080/envios/cantidadPorEstado`;
+  var urlConFiltro = `http://go-app-container:8080/envios/cantidadPorEstado`;
 
   makeRequest(
     `${urlConFiltro}`,
