@@ -62,23 +62,16 @@ function exitoObtenerBeneficioEntreFechas(data) {
   });
 
   const configuracionBarras = {
-    responsive: true,
-    scales: {
-      x: {
-        scaleLabel: {
-          display: true,
-          labelString: 'Eje X',
-          fontSize: 16  // Ajusta el tamaño del título del eje X
-        }
+    plugins: {
+      legend: {
+        position: 'top',
       },
-      y: {
-        scaleLabel: {
-          display: true,
-          labelString: 'Eje Y',
-          fontSize: 16  // Ajusta el tamaño del título del eje Y
-        }
+      title: {
+        display: true,
+        text: 'Beneficio Mensual'
       }
-    }
+    },
+    responsive: true
   };
 
   const datosMeses = {
@@ -122,11 +115,24 @@ function exitoObtenerBeneficioEntreFechas(data) {
   // Obtener el contexto del lienzo de barras de años
   const contextoBarrasAnio = document.getElementById('graficoBeneficioAnio').getContext('2d');
 
+  const configuracionBarrasAnio = {
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Beneficio Anual'
+      }
+    },
+    responsive: true
+  };
+
   // Crear el gráfico de barras de años
   const configBarrasAnios = {
     type: 'bar',
     data: datosAnios,
-    options: configuracionBarras,
+    options: configuracionBarrasAnio,
   };
 
   // Destroy existing chart if it exists
@@ -203,23 +209,16 @@ function exitoObtenerGraficoPedidos(data) {
 
   // Configuración del gráfico de barras
   var configuracionBarras = {
-    responsive: true,
-    scales: {
-      x: {
-        scaleLabel: {
-          display: true,
-          labelString: 'Eje X',
-          fontSize: 16  // Ajusta el tamaño del título del eje X
-        }
+    plugins: {
+      legend: {
+        position: 'top',
       },
-      y: {
-        scaleLabel: {
-          display: true,
-          labelString: 'Eje Y',
-          fontSize: 16  // Ajusta el tamaño del título del eje Y
-        }
+      title: {
+        display: true,
+        text: 'Cantidad Pedidos por Estado'
       }
-    }
+    },
+    responsive: true,
   };
 
   // Obtener el contexto del lienzo de barras
@@ -295,23 +294,16 @@ function exitoObtenerGraficoEnvios(data) {
 
   // Configuración del gráfico de barras
   var configuracionBarras = {
-    responsive: true,
-    scales: {
-      x: {
-        scaleLabel: {
-          display: true,
-          labelString: 'Eje X',
-          fontSize: 16  // Ajusta el tamaño del título del eje X
-        }
+    plugins: {
+      legend: {
+        position: 'top',
       },
-      y: {
-        scaleLabel: {
-          display: true,
-          labelString: 'Eje Y',
-          fontSize: 16  // Ajusta el tamaño del título del eje Y
-        }
+      title: {
+        display: true,
+        text: 'Cantidad Envios por Estado'
       }
     },
+    responsive: true
   };
 
   const configBarras = {
