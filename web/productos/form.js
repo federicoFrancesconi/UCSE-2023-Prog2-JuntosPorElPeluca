@@ -7,7 +7,7 @@ customHeaders.append("Connection", "keep-alive");
 document.addEventListener("DOMContentLoaded", function (event) {
   if (!isUserLogged()) {
     window.location =
-      document.location.origin + "/web/login/login.html?reason=login_required";
+      document.location.origin + "/login/login.html?reason=login_required";
   }
 
   //verifico si tiene el parametro id
@@ -98,7 +98,7 @@ function actualizarProducto(codProducto) {
 
 function exitoProducto(data) {
   alert("Operacion exitosa");
-  window.location = window.location.origin + "/web/productos/index.html";
+  window.location = window.location.origin + "/productos/index.html";
 }
 
 function errorProducto(status, body) {
@@ -119,7 +119,7 @@ function eliminarProducto(codProducto) {
       errorProducto
     );
   } else {
-    window.location = document.location.origin + "/web/productos/index.html";
+    window.location = document.location.origin + "/productos/index.html";
   }
 }
 

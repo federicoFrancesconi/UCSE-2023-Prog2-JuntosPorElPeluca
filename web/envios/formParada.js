@@ -7,7 +7,7 @@ customHeaders.append("Connection", "keep-alive");
 document.addEventListener("DOMContentLoaded", function (event) {
   if (!isUserLogged()) {
     window.location =
-      document.location.origin + "/web/login/login.html?reason=login_required";
+      document.location.origin + "/login/login.html?reason=login_required";
   }
 
   //verifico si tiene el parametro id
@@ -55,7 +55,7 @@ function agregarParada() {
 }
 
 function exitoAgregarParada(data) {
-  window.location = document.location.origin + "/web/envios/index.html";
+  window.location = document.location.origin + "/envios/index.html";
 }
 
 function errorAgregarParada(status, body) {
@@ -83,6 +83,6 @@ function finalizarViaje(id) {
       errorAgregarParada
     );
   } else {
-    window.location = document.location.origin + "/web/envios/index.html";
+    window.location = document.location.origin + "/envios/index.html";
   }
 }

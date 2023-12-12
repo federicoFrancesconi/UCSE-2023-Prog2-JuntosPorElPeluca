@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function (event) {
   if (!isUserLogged()) {
     window.location =
-      document.location.origin + "/web/login/login.html?reason=login_required";
+      document.location.origin + "/login/login.html?reason=login_required";
   }
 
   //verifico si tiene el parametro id
@@ -123,7 +123,7 @@ function guardarEnvio() {
 
 function exitoEnvio(data) {
   alert("Operacion exitosa");
-  window.location = window.location.origin + "/web/envios/index.html";
+  window.location = window.location.origin + "/envios/index.html";
 }
 
 function errorEnvio(status, body) {
@@ -149,12 +149,12 @@ function iniciarViaje(id) {
       errorEnvio
     );
   } else {
-    window.location = document.location.origin + "/web/envios/index.html";
+    window.location = document.location.origin + "/envios/index.html";
   }
 }
 
 function finalizarViaje(id) {
   window.location =
     document.location.origin +
-    `/web/envios/nuevaParada.html?id=${id}&tipo=FINALIZAR`;
+    `/envios/nuevaParada.html?id=${id}&tipo=FINALIZAR`;
 }

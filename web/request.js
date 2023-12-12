@@ -64,7 +64,7 @@ async function makeRequest(
   if (isPrivateCall && !token) {
     window.location =
       window.location.origin +
-      "/web/login/login.html?reason=private_call_without_token";
+      "/login/login.html?reason=private_call_without_token";
     return;
   }
 
@@ -104,7 +104,7 @@ async function makeRequest(
 
       if (response.status === 401) {
         window.location =
-          window.location.origin + "/web/login/login.html?reason=token_invalid";
+          window.location.origin + "/login/login.html?reason=token_invalid";
       }
 
       errorCallback(response.status, responseBody);

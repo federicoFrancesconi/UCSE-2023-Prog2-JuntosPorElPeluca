@@ -7,7 +7,7 @@ customHeaders.append("Connection", "keep-alive");
 document.addEventListener("DOMContentLoaded", function (event) {
   if (!isUserLogged()) {
     window.location =
-      document.location.origin + "/web/login/login.html?reason=login_required";
+      document.location.origin + "/login/login.html?reason=login_required";
   }
 
   //verifico si tiene el parametro id
@@ -125,7 +125,7 @@ function guardarPedido() {
 
 function exitoPedido(data) {
   alert("Operacion exitosa");
-  window.location = window.location.origin + "/web/pedidos/index.html";
+  window.location = window.location.origin + "/pedidos/index.html";
 }
 
 function errorPedido(status, body) {
@@ -150,7 +150,7 @@ function aceptarPedido(id) {
       errorPedido
     );
   } else {
-    window.location = document.location.origin + "/web/pedidos/index.html";
+    window.location = document.location.origin + "/pedidos/index.html";
   }
 }
 
@@ -168,6 +168,6 @@ function cancelarPedido(id) {
       errorPedido
     );
   } else {
-    window.location = document.location.origin + "/web/pedidos/index.html";
+    window.location = document.location.origin + "/pedidos/index.html";
   }
 }

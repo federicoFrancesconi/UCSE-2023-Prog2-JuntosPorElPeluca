@@ -9,7 +9,7 @@ const urlConFiltro = "http://go-app:8080/camiones";
 document.addEventListener("DOMContentLoaded", function (event) {
   if (!isUserLogged()) {
     window.location =
-      document.location.origin + "/web/login/login.html?reason=login_required";
+      document.location.origin + "/login/login.html?reason=login_required";
   }
 
   //verifico si tiene el parametro id
@@ -71,7 +71,7 @@ function guardarCamion(event) {
 
 function exitoCamion(data) {
   alert("Operacion exitosa");
-  window.location = window.location.origin + "/web/camiones/index.html";
+  window.location = window.location.origin + "/camiones/index.html";
 }
 
 function errorCamion(status, body) {
@@ -119,7 +119,7 @@ function eliminarCamion(patente) {
       errorCamion
     );
   } else {
-    window.location = document.location.origin + "/web/camiones/index.html";
+    window.location = document.location.origin + "/camiones/index.html";
   }
 }
 

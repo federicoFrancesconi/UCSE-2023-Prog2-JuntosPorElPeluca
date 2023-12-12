@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function (eventDOM) {
 
 function successFn(response) {
   console.log("Éxito:", response);
-  window.location = document.location.origin + "/web/index.html";
+  window.location = document.location.origin + "/index.html";
 }
 
 function errorFn(status, response) {

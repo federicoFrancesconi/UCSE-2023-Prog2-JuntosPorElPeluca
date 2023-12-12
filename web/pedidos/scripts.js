@@ -7,7 +7,7 @@ customHeaders.append("Connection", "keep-alive");
 document.addEventListener("DOMContentLoaded", function (event) {
   if (!isUserLogged()) {
     window.location =
-      document.location.origin + "/web/login/login.html?reason=login_required";
+      document.location.origin + "/login/login.html?reason=login_required";
   }
 
   obtenerPedidos();

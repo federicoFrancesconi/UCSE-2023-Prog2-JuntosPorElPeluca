@@ -7,7 +7,7 @@ customHeaders.append("Connection", "keep-alive");
 document.addEventListener("DOMContentLoaded", function (event) {
   if (!isUserLogged()) {
     window.location =
-      document.location.origin + "/web/login/login.html?reason=login_required";
+      document.location.origin + "/login/login.html?reason=login_required";
   }
 
   document
@@ -85,7 +85,7 @@ function exitoObtenerEnvio(data) {
                 }</td>
                 <td>${elemento.id_creador}</td>
                 <td>${elemento.estado}</td>
-                <td class="acciones"><a class="anchorVerde" href="/web/envios/nuevaParada.html?id=${
+                <td class="acciones"><a class="anchorVerde" href="/envios/nuevaParada.html?id=${
                   elemento.id
                 }">Nueva Parada</a> <a class="anchorVerde" href="form.html?id=${
         elemento.id

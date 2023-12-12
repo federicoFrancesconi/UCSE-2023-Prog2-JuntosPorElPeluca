@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function (eventDOM) {
 
 function successFn(response) {
   console.log("Éxito:", response);
-  window.location = window.location.origin + "/web/login/login.html";
+  window.location = window.location.origin + "/login/login.html";
 }
 
 function errorFn(status, response) {
