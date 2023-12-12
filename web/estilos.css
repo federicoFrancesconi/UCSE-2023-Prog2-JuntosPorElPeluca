@@ -194,8 +194,9 @@ section {
 }
 
 .grafico{
-  width: 800px!important;
-  height: 800px!important;
+  width: 600px!important;
+  height: 600px!important;
+  font-size: 16px;
 }
 
 /* Estilos del botón de inicio de sesión */
