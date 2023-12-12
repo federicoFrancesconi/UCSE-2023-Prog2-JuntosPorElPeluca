@@ -8,17 +8,19 @@ Tenemos tres directorios principales en el root del proyecto:
 * data: archivos JSON para importar a mongoDB y agilizar las pruebas.
 
 ## Instrucciones para levantar el proyecto
-1. Iniciar el contenedor con mongoDB
-2. Iniciar la API de Go desde la pestaña Run and Debug en VSCode
-3. Iniciar el frontend con clic derecho sobre el archivo index.html dentro del directorio web. Elegir "Open with Live Server"
+1. Abrir una terminal parados en el root, y correr el comando `docker-compose up`.
+2. En el explorador de preferencia, ingresar a `localhost:80` para visualizar el frontend.
+### Para usar datos de prueba del directorio "data"
+1. Abrir MongoDB Compass y crear las colecciones `pedidos`, `productos`, `camiones` y `envios` dentro de la base de datos `empresa` (se crea automáticamente luego de abrir el frontend).
+2. En cada colección, importar el archivo .json con el mismo nombre
 
 ## Usuarios para tests
 ### Admin
-mail: admin@gmail.com
-contraseña: SoyAdmin123$
+* Mail: admin@gmail.com
+* Contraseña: SoyAdmin123$
 ### Conductor
-mail: conductor@gmail.com
-contraseña: SoyConductor123$
+* Mail: conductor@gmail.com
+* Contraseña: SoyConductor123$
 ### Operador
-mail: operador@gmail.com
-contraseña: SoyConductor123$
+* Mail: operador@gmail.com
+* Contraseña: SoyConductor123$
